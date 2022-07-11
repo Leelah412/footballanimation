@@ -1,27 +1,121 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <Editor />
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+<script lang="ts" setup>
+import Editor from './components/Editor.vue';
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-});
 </script>
 
 <style lang="scss">
+
+*{
+  margin: 0;
+  padding: 0;
+
+  --primary: #0b530b;
+  --primary-dark: #021a02;
+  --secondary: #105650;
+  --secondary-light: #167e75;
+  --secondary-dark: #0a3633;
+  --accent: #ac6e29;
+  --accent-dark: #643907;
+
+  --dark: #111;
+  --dark-2: #1a1a1a;
+  --dark-3: #222;
+  --dark-4: #333;
+  --dark-5: #444;
+  --dark-6: #515151;
+
+  --light: #f7f7f7;
+  --light-2: #ddd;
+  --light-3: #ccc;
+  --light-4: #aaa;
+  --light-5: #999;
+  --light-6: #888;
+}
+
+html, body{
+  overflow: hidden;
+}
+
+button{
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+
+.input-number{
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  background: #f7f7f7;
+  color: #333;
+  box-shadow: inset 0 0 2px #000;
+  text-align: center;
+  
+}
+
+.input-number-dark{
+  @extend .input-number;
+  background: #1a1a1a;
+  color: #ccc;
+}
+
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Poppins, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: #ccc;
+  min-height: 100vh;
 }
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-column{
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-grow{
+  flex-grow: 100;
+}
+
+.align-center{
+  align-items: center;
+  justify-content: center;
+}
+
+.position-relative{
+  position: relative;
+}
+
+.position-absolute{
+  position: absolute;
+}
+
+input{
+  background: var(--light);
+  border: 1px solid var(--light-5);
+  border-radius: 4px;
+  padding: 4px;
+  color: var(--dark-4);
+}
+
 </style>

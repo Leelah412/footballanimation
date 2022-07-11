@@ -1,0 +1,44 @@
+<svg width="105px" height="68px" viewBox="0 0 105 68">
+   <g id="layer1">
+      <rect
+      style="fill:none;stroke:#f2f2f2;stroke-width:4;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+      id="outer-lines"
+      width="104.81563"
+      height="67.815628"
+      x="0.12500298"
+      y="0.12500361" />
+      <path
+      style="fill:none;stroke:#f2f2f2;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+      d="m 52.532807,0.03281 v 68"
+      id="center-line" />
+      <g
+      id="center-circle">
+      <circle
+            style="fill:none;stroke:#f2f2f2;stroke-width:4;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            id="path1079"
+            cx="52.53281"
+            cy="34.03281"
+            r="15" />
+      </g>
+      <g
+      id="penarea-left">
+      <rect
+            style="fill:none;stroke:#f2f2f2;stroke-width:4;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+            id="rect833-6-6"
+            width="16.443743"
+            height="40.243744"
+            x="0.12500298"
+            y="13.910938" />
+      </g>
+      <g
+      id="penarea-right">
+      <rect
+            style="fill:none;stroke:#f2f2f2;stroke-width:4;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+            id="rect833-6-6-2"
+            width="16.443743"
+            height="40.243744"
+            x="88.496895"
+            y="13.910954" />
+      </g>
+   </g>
+</svg>

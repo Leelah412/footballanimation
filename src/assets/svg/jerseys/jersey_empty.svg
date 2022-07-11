@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   viewBox="0 0 33.866667 33.866668"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="jersey_empty.svg">
+  <defs
+     id="defs2">
+    <rect
+       x="15.768902"
+       y="5.0781212"
+       width="54.255714"
+       height="10.557146"
+       id="rect905" />
+    <rect
+       x="10.557146"
+       y="13.096207"
+       width="37.150463"
+       height="32.339615"
+       id="rect899" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="3.9597979"
+     inkscape:cx="73.742035"
+     inkscape:cy="68.246701"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     units="px" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="jersey"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-114.85979,-62.366048)">
+    <path
+       style="fill:#bebebe;fill-opacity:0.559846;stroke:none;stroke-width:0.112939;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="m 126.31615,63.355876 -11.12539,2.831378 c -0.95647,2.381185 0.27012,6.638914 2.26926,8.469009 l 4.69914,-1.109489 v 20.576585 c 0,0 -0.0115,0.649344 1.45216,0.303421 8.98301,-2.123909 11.96184,2.944461 17.81565,-0.303421 l -5e-5,-20.576585 4.6993,1.109489 c 1.99916,-1.830095 3.22574,-6.087824 2.26927,-8.469009 l -11.12556,-2.831378 c -1.45451,0.647444 -3.42431,1.04619 -5.61776,1.107475 -2.46598,-0.140114 -4.07792,-0.56838 -5.33602,-1.107475 z"
+       id="jersey"
+       sodipodi:nodetypes="cccccsccccccc" />
+  </g>
+</svg>
