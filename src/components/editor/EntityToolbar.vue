@@ -8,13 +8,13 @@
         </svg>
     </div>
     <div class="eet-item" id="eet-home">
-        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>selectEntity(ev, EntityType.PLAYERAWAY)">
+        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.PLAYERAWAY)">
             <!-- <circle r="10" cx="12" cy="12" :fill="settings.entityColors.homeColors.main" :stroke="settings.entityColors.homeColors.secondary" stroke-width="4" /> -->
             <PlayerVue :player="dummyPlayerHome" :asTool="true"/>
         </svg>
     </div>
     <div class="eet-item" id="eet-away">
-        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>selectEntity(ev, EntityType.PLAYERAWAY)">
+        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.PLAYERAWAY)">
             <!-- <circle r="10" cx="12" cy="12" :fill="settings.entityColors.awayColors.main" :stroke="settings.entityColors.awayColors.secondary" stroke-width="4" /> -->
             <PlayerVue :player="dummyPlayerAway" :asTool="true" />
         </svg>
@@ -22,7 +22,7 @@
     <div class="eet-divider"></div>
     <!-- <span class="eet-desc">Drawing Tools</span> -->
     <div :class="`eet-item ${selected === EntityType.LINE ? 'selected' : ''}`" id="eet-line">
-        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>selectEntity(ev, EntityType.LINE)">
+        <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.LINE)">
             <LineVue :line="dummyLine" :asTool="true"/>
         </svg>
     </div>
@@ -52,10 +52,10 @@ const dummyPlayerHome = ref(new Player(new Vector2(3,3)));
 const dummyPlayerAway = ref(new Player(new Vector2(3,3)));
 const dummyLine = ref(new Line(new Vector2(0, 0), new Vector2(32,32), new Vector2()));
 
-const emit = defineEmits(['selectEntity']);
+const emit = defineEmits(['newEntity']);
 
-function selectEntity(ev, entityType: EntityType){
-    emit('selectEntity', ev, entityType, true);
+function newEntity(ev, entityType: EntityType){
+    emit('newEntity', ev, entityType, true);
 }
 
 </script>

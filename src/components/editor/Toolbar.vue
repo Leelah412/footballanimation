@@ -81,7 +81,8 @@ $img-height: $img-width;
 
     padding: 8px;
     margin-bottom: 8px;
-    border-radius: 2px;
+    border-radius: 4px;
+    background: var(--dark-3);
     svg{
         width: $img-width;
         height: $img-height;

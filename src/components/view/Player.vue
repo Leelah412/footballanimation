@@ -62,8 +62,8 @@ function onmousedown(ev){
     // left mb
     if(ev.button === 0){
         leftMBDown = true;
-        var pos = getMousePosition(ev);
-        if(pos === null) return;
+        var pos = new Vector2(ev.clientX, ev.clientY);
+        
         dragStartPos = pos;
         // connect with canvas events
         connectCanvasEvent();
@@ -84,8 +84,8 @@ function onmouseup(ev){
         disconnectCanvasEvent();
 
         leftMBDown = false;
-        var pos = getMousePosition(ev);
-        if(pos === null) return;
+        var pos = new Vector2(ev.clientX, ev.clientY);
+        
         if(dragStartPos.length(pos) < selectRadius){
             selected.value = !selected.value;
             emit("playerSelected", selected.value);
@@ -104,8 +104,7 @@ function onmousemove(ev){
     // only relevant, if left mb is down
     if(!leftMBDown) return;
 
-    var pos = getMousePosition(ev);
-    if(pos === null) return;
+    var pos = new Vector2(ev.clientX, ev.clientY);
 
     if(!dragging){
         if(dragStartPos.length(pos) < dragStartRadius) return;
@@ -144,16 +143,14 @@ function ontextclick(ev){
 /// HELPERS
 
 // get the mouse position relative to the svg canvas
-function getMousePosition(ev): Vector2 | null{
+/* function getMousePosition(ev): Vector2 | null{
     const rect = document.getElementById('svg-canvas')?.getBoundingClientRect();
     if(rect === undefined) return null;
     const x = ev.clientX - rect.left;
     const y = ev.clientY - rect.top;
-
-    /* console.log("mouse: x=", x, " y=", y); */
     
     return new Vector2(x, y);
-}
+} */
 
 function connectCanvasEvent(){
     // connect player with mousemove event of the canvas

@@ -24,7 +24,7 @@
 
     <div id="grid-left-canvas-right" class="flex-row flex-grow">
         <div id="grid-left" class="flex-row">
-            <EntityToolbar v-on:selectEntity="selectEntity" :selected="selectedEntityType"/>
+            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType"/>
         </div>
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
@@ -47,10 +47,10 @@
     </div>
 
     <!-- <Properties v-if="showProperties" :propertyType="propertyType" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/> -->
-    <!-- <EntityToolbar v-on:selectEntity="selectEntity" :selected="selectedEntityType"/> -->
+    <!-- <EntityToolbar v-on:newEntity="newEntity" :selected="entityType"/> -->
 
     <svg id="drag-entity"  width="32px" height="32px" viewBox="0 0 6 6" :display="dragging ? 'inline' : 'none'">
-        <PlayerVue v-if="selectedEntityType === EntityType.PLAYERHOME || selectedEntityType === EntityType.PLAYERAWAY" :player="selectedEntity" :asTool="true"/>
+        <PlayerVue v-if="entityType === EntityType.PLAYERHOME || entityType === EntityType.PLAYERAWAY" :player="entity" :asTool="true"/>
     </svg>
 
 </div>
@@ -153,17 +153,18 @@ function onMenuStateChanged(oldState: string, newState: string){
 const entityList = ref<EntityList>({});
 const dragging = ref<boolean>(false);
 var dragStart: Vector2;
-const selectedEntity = ref<CanvasObject | null>(null);
-const selectedEntityType = ref<EntityType | null>(null);
+const entity = ref<CanvasObject | null>(null);
+const entityType = ref<EntityType | null>(null);
 
-function selectEntity(ev, type: EntityType){
+// select an entity type from the toolbar to drag n drop on the canvas
+function newEntity(ev, type: EntityType){
     var de = document.getElementById("drag-entity");
     if(de === null || de === undefined) return;
 
-    if(selectedEntityType.value === type)
-        selectedEntityType.value = EntityType.NONE;
+    if(entityType.value === type)
+        entityType.value = EntityType.NONE;
     else
-        selectedEntityType.value = type;
+        entityType.value = type;
 
     switch(type){
         case EntityType.BALL:
@@ -172,11 +173,11 @@ function selectEntity(ev, type: EntityType){
         case EntityType.PLAYERHOME:
             console.log("playerhome");
             // Vector2(3,3) is for visual purposes and should be overwritten in the end, when dropping the entity on the canvas
-            selectedEntity.value = new Player(new Vector2(3,3));
+            entity.value = new Player(new Vector2(3,3));
             break;
         case EntityType.PLAYERAWAY:
             console.log("away");
-            selectedEntity.value = new Player(new Vector2(3,3));
+            entity.value = new Player(new Vector2(3,3));
             break;
         case EntityType.LINE:
             console.log("line");
@@ -195,7 +196,7 @@ function selectEntity(ev, type: EntityType){
     if(ed === null || ed === undefined) return;
 
     ed.addEventListener('mousemove', moveEntity);
-    ed.addEventListener('mouseup', deselectEntity);
+    ed.addEventListener('mouseup', dropEntity);
 }
 
 function moveEntity(ev){
@@ -206,31 +207,33 @@ function moveEntity(ev){
 
     var de = document.getElementById("drag-entity");
     if(de === null || de === undefined) return;
-    de.style.left = (ev.clientX - 16 - Global.canvasPosition.x).toString() + 'px';
-    de.style.top = (ev.clientY - 16 - Global.canvasPosition.y).toString() + 'px';
+    de.style.left = (ev.clientX - 16).toString() + 'px';
+    de.style.top = (ev.clientY - 16).toString() + 'px';
     console.log("change left top");
 
 }
 
-function deselectEntity(ev){
-    selectedEntityType.value = null;
+// try to drop the entity on the canvas
+function dropEntity(ev){
+    entityType.value = null;
     dragging.value = false;
-    // add a new entity, if addNew
-    if(selectedEntity.value !== null){
+    
+    if(entity.value !== null){
         // set the position correctly
-        selectedEntity.value.position = Global.viewportToPitch(new Vector2(ev.clientX, ev.clientY));
-        entityList.value[selectedEntity.value.id] = selectedEntity.value;
+        entity.value.position = Global.viewportToPitch(new Vector2(ev.clientX, ev.clientY));
+        
+        entityList.value[entity.value.id] = entity.value;
         console.log(entityList.value);
         
     }
 
-    selectedEntity.value = null;
+    entity.value = null;
     
     var ed = document.getElementById("editor");
     if(ed === null || ed === undefined) return;
 
     ed.removeEventListener('mousemove', moveEntity);
-    ed.removeEventListener('mouseup', deselectEntity);
+    ed.removeEventListener('mouseup', dropEntity);
 }
 
 function addEntity(type: EntityType){
@@ -366,6 +369,8 @@ function showSnapshot(snap: Snapshot){
 <style lang="scss" scoped>
 
 #editor{
+    position: relative;
+
     display: flex;
     flex-direction: column;
     height: 100vh;
@@ -426,6 +431,7 @@ function showSnapshot(snap: Snapshot){
 
 #drag-entity{
     position: absolute;
+    z-index: 100;
 }
 
 </style>

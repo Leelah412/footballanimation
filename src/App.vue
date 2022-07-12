@@ -163,4 +163,20 @@ input{
     }
 }
 
+.btn-secondary{
+  /* background: var(--secondary); */
+  border-radius: 100px;
+  font-size: var(--font-size-4);
+  /* font-weight: 600; */
+  letter-spacing: 1.2px;
+  color: var(--secondary-light);
+  padding: 6px 4px;
+  border: 1px solid var(--secondary-light);
+
+  &:hover{
+    background: var(--secondary-light);
+    color: var(--light-3);
+  }
+}
+
 </style>

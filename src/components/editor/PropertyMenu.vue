@@ -82,7 +82,7 @@ onMounted(setStyle);
     border-radius: 4px;
     overflow: hidden;
 
-    margin-bottom: 8px;     // padding 8px, therefore margin to the content below should be 8px too
+    margin-bottom: 16px;
 
     .pm-nav-divider{
         margin-top: auto;
@@ -95,6 +95,7 @@ onMounted(setStyle);
     height: var(--font-size-5);
     background: var(--dark-3);
 }
+
 .pm-nav-button{
     letter-spacing: 2px;
     font-weight: 300;
@@ -115,6 +116,8 @@ onMounted(setStyle);
 .pm-content{
     font-size: var(--font-size-4);
     font-weight: 300;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .pm-content-header{
@@ -123,6 +126,17 @@ onMounted(setStyle);
     font-weight: 600;
 }
 
+.pm-content-divider-v{
+    width: 1px;
+    height: 100%;
+    background: var(--dark-4);
+}
+
+.pm-content-divider-h{
+    height: 1px;
+    width: 100%;
+    background: var(--dark-4);
+}
 
 .pm-list-wrapper{
     .pm-list{

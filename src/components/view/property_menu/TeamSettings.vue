@@ -16,7 +16,7 @@
     </div>
 
     <div class="pm-content">
-
+        
         <div class="flex-row" style="margin-bottom: 8px;">
             <div class="flex-column" style="box-sizing: border-box; width: 75%; padding-right: 8px;">
                 <div class="pm-content-header">TEAM NAME</div>
@@ -27,6 +27,11 @@
                 <input type="text" class="input-dark">
             </div>
         </div>
+    </div>
+
+    <div class="pm-content-divider-h"></div>
+
+    <div class="pm-content">
         <div class="flex-row">
             <div class="flex-column">
                 <div id="pm-team-logo">
@@ -40,34 +45,39 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-column">
-                <div class="flex-column">
-                    <div class="pm-content-header">SCHEME</div>
-                    <div class="pm-team-color-container">
-                        <!-- no need to worry about picker border, if all colors are equal -->
-                        <input v-for="idx in 3" :key="`team-color-${idx-1}`" type="color" class="pm-team-color" v-model="currentTeam.colorPalette[idx-1]" :style="`background: ${currentTeam.colorPalette[idx-1]}`" />
-                    </div>
-                </div>
-
-                <div>
-                    verwalte spieler
+            <div class="flex-column align-center">
+                <div class="pm-content-header">TEAM COLORS</div>
+                <div class="pm-team-color-container">
+                    <!-- no need to worry about picker border, if all colors are equal -->
+                    <input v-for="idx in 3" :key="`team-color-${idx-1}`" type="color" class="pm-team-color" v-model="currentTeam.colorPalette[idx-1]" :style="`background: ${currentTeam.colorPalette[idx-1]}`" />
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div class="pm-content-divider-h"></div>
+
+    <div class="pm-content flex-row">
+        <div class="flex-column" style="width: 50%; padding-right: 8px; border-right: 1px solid var(--dark-4);">            
+            <div class="pm-content-header" style="text-align:center">PLAYER JERSEY</div>
+            <div style="padding: 8px">
+                <Jersey :jersey="visualizationJersey" :is-visual="true" :width="84" :height="84"/>
+            </div>
+            <button class="btn-secondary">CHANGE</button>
         </div>
 
-
-        <div>
-            Player Jersey
-
-            select jersey
+        <div class="flex-column" style="width: 50%; padding-left: 8px;">            
+            <div class="pm-content-header" style="text-align:center">KEEPER JERSEY</div>
+            <div style="padding: 8px">
+                <Jersey :jersey="visualizationJersey" :is-visual="true" :width="84" :height="84"/>
+            </div>
+            <button class="btn-secondary" >CHANGE</button>
         </div>
+    </div>
 
-        <div>
-            Goalkeeper Jersey
+    <div class="pm-content-divider-h"></div>
 
-            select jersey
-        </div>
+    <div class="pm-content">
 
         <div>
             visual:
@@ -89,6 +99,8 @@
 <script lang="ts" setup>
 import Team from "@/components/model/Team";
 import { ref } from "@vue/reactivity";
+import Jersey from "../Jersey.vue";
+import {visualizationJersey} from '@/components/model/Jersey';
 
 
 interface Props{
@@ -135,14 +147,12 @@ function changeScheme(color: string, idx: number){
 }
 
 
+
 .pm-content-header{
     text-align: left;
     margin-bottom: 4px;
 }
 
-.pm-nav{
-    margin-bottom: 16px;
-}
 
 $pm-nav-button-amount: 2;
 .pm-nav-button{
@@ -153,7 +163,7 @@ $pm-nav-button-amount: 2;
     @extend .pm-nav-button;
 }
 
-$logo-size: 96px;
+$logo-size: 128px;
 #pm-team-logo{
     width: $logo-size;
     height: $logo-size;
@@ -198,7 +208,12 @@ $logo-size: 96px;
 
 .pm-team-color-container{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+
+    .pm-team-color{
+        margin-top: 4px;
+        margin-bottom: 4px;
+    }
 
 }
 
