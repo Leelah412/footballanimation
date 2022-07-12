@@ -24,7 +24,6 @@
 
     <div id="grid-left-canvas-right" class="flex-row flex-grow">
         <div id="grid-left" class="flex-row">
-            <!-- <Toolbar :id="0" :elements="[]" :style="'width: var(--left-toolbar-width);'"/> -->
             <EntityToolbar v-on:selectEntity="selectEntity" :selected="selectedEntityType"/>
         </div>
 
@@ -33,10 +32,12 @@
         </div>
 
         <div id="grid-right" class="flex-row">
-            <PropertyMenu :id="54" :header="SETTINGS" :style="'width: var(--right-property-menu-width);'">
-                <SettingsVue :pitch="pitch"/>
+            <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :style="'width: var(--right-property-menu-width);'">
+                <SettingsVue v-if="menuState === menuList.settings.id" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/>
+                <PlayerList v-if="menuState === menuList.playerList.id" :home="{firstTeam: {name: 'First Team', players: []}}" :away="{firstTeam: {name: 'First Team', players: []}}" :other="[]"/>
+                <TeamSettings v-if="menuState === menuList.teamSettings.id" :home="home" :away="away"/>
             </PropertyMenu>
-            <Toolbar :id="1" :elements="[]" :style="'width: var(--right-toolbar-width);'"/>
+            <Toolbar :id="1" :elements="Object.values(menuList)" :style="'width: var(--right-toolbar-width);'" v-on:menuStateChanged="onMenuStateChanged"/>
         </div>
     </div>
 
@@ -69,7 +70,7 @@ import PlayerContainer from "./view/PlayerContainer.vue";
 import SnapshotEditor from "./view/SnapshotEditor.vue";
 import Settings from "./model/Settings";
 import { onMounted, onUnmounted, watch } from "@vue/runtime-core";
-import Global, { EntityType, PropertyType } from "./helper/Global";
+import Global, { EntityType} from "./helper/Global";
 import PlayerVue from "./view/Player.vue";
 import PlayerProperties from "./view/PlayerProperties.vue";
 import CanvasVue from "./editor/Canvas.vue";
@@ -81,7 +82,11 @@ import Toolbar from "./editor/Toolbar.vue";
 import PropertyMenu from "./editor/PropertyMenu.vue";
 import Navbar from "./editor/Navbar.vue";
 import Statusbar from "./editor/Statusbar.vue";
-import SettingsVue from "./editor/property_menus/Settings.vue";
+import SettingsVue from "@/components/view/property_menu/Settings.vue";
+import PropertyMenuList from "./model/PropertyMenuList";
+import PlayerList from "./view/property_menu/PlayerList.vue";
+import TeamSettings from "./view/property_menu/TeamSettings.vue";
+import Team from "./model/Team";
 
 
 
@@ -101,6 +106,19 @@ const props = defineProps({
 // TODO: save default settings on PC of user
 const settings = ref<Settings>(Settings.settings);
 
+
+//////////
+// TEAM //
+//////////
+
+const home = ref<Team>(new Team());
+const away = ref<Team>(new Team());
+
+
+///////////
+// PITCH //
+///////////
+
 const zoom = ref(1);
 const pitch = ref<Pitch>(new Pitch());
 
@@ -115,8 +133,22 @@ function pitchSizeChange(){
     svgResize();
 };
 
-const showProperties = ref<Boolean>(true);
-const propertyType = ref<PropertyType>(PropertyType.DEFAULT);
+
+///////////////////
+// PROPERTY MENU //
+///////////////////
+
+const menuList = PropertyMenuList;
+const menuState = ref<string>('');
+const additionalHeaderInfo = ref<string>('');
+
+function onMenuStateChanged(oldState: string, newState: string){
+    menuState.value = newState;
+}
+
+////////////
+// ENTITY //
+////////////
 
 const entityList = ref<EntityList>({});
 const dragging = ref<boolean>(false);
@@ -355,7 +387,7 @@ function showSnapshot(snap: Snapshot){
     }
 
     #grid-navbar{
-        min-height: var(--navbar-height);
+        /* min-height: var(--navbar-height); */
     }
 
 
@@ -373,17 +405,17 @@ function showSnapshot(snap: Snapshot){
     }
 
     #grid-left{
-        min-width: calc(var(--left-toolbar-width) + var(--left-property-menu-width));
+        /* min-width: calc(var(--left-toolbar-width) + var(--left-property-menu-width)); */
     }
     #grid-right{
-        min-width: calc(var(--right-toolbar-width) + var(--right-property-menu-width));
+        /* min-width: calc(var(--right-toolbar-width) + var(--right-property-menu-width)); */
         margin-left: auto;
         &:first-child{
             margin-left: auto;
         }
     }
     #grid-bottom{
-        min-height: calc(var(--editor-tools-height) + var(--statusbar-height));
+        /* min-height: calc(var(--editor-tools-height) + var(--statusbar-height)); */
     }
 
     @media screen {

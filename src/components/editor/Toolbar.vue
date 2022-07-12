@@ -3,18 +3,11 @@
 <!-- toolbar on the side -->
 <div class="editor-toolbar" :id="`toolbar-${id}`">
 
-    <div v-for="(el, idx) in elements" :key="`toolbar-element-${el.name}-${idx}`" class="toolbar-element"
-        @click="ev => el.click(ev)">
-        <img :src="el.avatarPath" />
-    </div>
-
-    <button :class="`toolbar-element${menuState === MENU_STATE.SETTINGS ? '-active' : ''}`" @click="ev => changeMenuState(MENU_STATE.SETTINGS)">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--light)">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
-        </svg>
+    <button v-for="el in elements" :key="`toolbar-element-${el.id}`" :class="`toolbar-element${menuState === el.id ? '-active' : ''}`"
+        @click="ev => changeMenuState(el.id)">
+        <svg v-html="el.avatar"></svg>
     </button>
-
+    
 </div>
 
 </template>
@@ -22,32 +15,19 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "@vue/runtime-core";
-
-
-interface ToolbarElement{
-    name: string
-    avatarPath: string
-    tooltip?: string
-
-    click: Function
-    mousedown?: Function
-    mouseup?: Function
-    mousemove?: Function
-    mouseleave?: Function
-}
+import { PropertyMenuListItem } from "../model/PropertyMenuList";
 
 interface Props{
     id: number
-    elements: ToolbarElement[]
+    elements: PropertyMenuListItem[]
     style?: string
 }
 
-enum MENU_STATE {NONE, SETTINGS};
-
 const props = defineProps<Props>();
-const emit = defineEmits(['settings']);
+const emit = defineEmits(['menuStateChanged']);
 
-const menuState = ref<MENU_STATE>(MENU_STATE.NONE);
+const menuState = ref<string>('');
+
 
 var setStyle = ()=>{
     
@@ -63,14 +43,14 @@ onMounted(setStyle);
 
 
 // call the basic settings property menu
-function changeMenuState(newState: MENU_STATE){
+function changeMenuState(newState: string){
     var old = menuState.value;
     // check, if new state == current state
     // if yes, set property menu to NONE instead
-    if(old === newState)    menuState.value = MENU_STATE.NONE; 
+    if(old === newState)    menuState.value = ''; 
     else                    menuState.value = newState;
     // emit the old and new property menu state
-    emit('settings', old, menuState.value);
+    emit('menuStateChanged', old, menuState.value);
 }
 
 </script>
@@ -90,11 +70,17 @@ $img-height: $img-width;
     /* border: 1px solid var(--dark); */
     /* border-radius: 2px; */
     background: var(--dark-2);
+    border-left: 1px solid var(--accent-dark);
     /* box-shadow: 0 0 2px var(--dark); */
 }
 
 .toolbar-element{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     padding: 8px;
+    margin-bottom: 8px;
     border-radius: 2px;
     svg{
         width: $img-width;

@@ -1,11 +1,9 @@
 import Vector2 from "../math/Vector2";
 
 // keep track of all Canvas objects
-interface EntityList{
+export interface EntityList{
     [key: number]: CanvasObject
 }
-
-export {EntityList};
 
 export default class CanvasObject{
     private _id: number;

@@ -1,7 +1,6 @@
 import Rect from "../math/Rect";
 import Vector2 from "../math/Vector2";
 
-export enum PropertyType {DEFAULT, PLAYER};
 export enum EntityType {NONE, BALL, PLAYERHOME, PLAYERAWAY, LINE};
 
 // static class holding global variables for easier access and less calculation

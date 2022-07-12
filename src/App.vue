@@ -15,10 +15,11 @@ import Editor from './components/Editor.vue';
 
   --primary: #0b530b;
   --primary-dark: #021a02;
-  --secondary: #105650;
   --secondary-light: #167e75;
+  --secondary: #105650;
   --secondary-dark: #0a3633;
-  --accent: #ac6e29;
+  --accent-light: #ac6e29;
+  --accent: #9c5e17;
   --accent-dark: #643907;
 
   --dark: #111;
@@ -34,6 +35,14 @@ import Editor from './components/Editor.vue';
   --light-4: #aaa;
   --light-5: #999;
   --light-6: #888;
+
+  // font sizes
+  --font-size-1: 32px;      // huge whatever
+  --font-size-2: 24px;      // big header
+  --font-size-3: 16px;      // header
+  --font-size-4: 12px;      // standard
+  --font-size-5: 10px;      // smaller
+  --font-size-6: 8px;       // tiny
 }
 
 html, body{
@@ -116,6 +125,42 @@ input{
   border-radius: 4px;
   padding: 4px;
   color: var(--dark-4);
+
+  &[type=color]{
+    // man why tf does a color picker need sooo many goddamn borders?!?!?
+    border: none;   
+
+    -webkit-appearance: none;
+    &::-webkit-color-swatch-wrapper {
+      padding: 0;
+    }
+    &::-webkit-color-swatch {
+      border: none;
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+    }
+  }
+}
+
+.input-dark{
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    background: var(--dark-4);
+    border: 1px solid var(--dark);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #ccc;
+    -moz-appearance: textfield;
+
+    &[type=number]{
+      width: 32px;
+      text-align: center;
+    }
 }
 
 </style>

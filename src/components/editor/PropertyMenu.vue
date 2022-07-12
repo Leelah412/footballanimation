@@ -1,9 +1,9 @@
 <template>
     
 <div class="editor-property-menu" :id="`property-menu-${id}`">
-    <div class="pm-header">{{header !== undefined ? header : ''}}</div>
+    <div class="property-menu-header">{{header !== undefined ? header.toUpperCase() : ''}}</div>
 
-    <div class="pm-content">
+    <div class="property-menu-content">
         <slot></slot>
     </div>
 </div>
@@ -45,7 +45,6 @@ onMounted(setStyle);
 
     display: flex;
     flex-direction: column;
-    padding: 8px;
     /* border: 1px solid var(--dark); */
     /* border-radius: 2px; */
     background: var(--dark-3);
@@ -53,11 +52,163 @@ onMounted(setStyle);
 }
 
 
-.pm-header{
+.property-menu-header{
+    text-align: left;
+    padding: 4px;
+    padding-left: 8px;
+    border-bottom: 1px solid var(--accent);
+    margin-bottom: 2px;
+    background: var(--dark-2);
+    letter-spacing: 2px;
+    font-size: 12px;
+    color: var(--light-5);
+    
+}
+
+.property-menu-content{
+    padding: 8px;
+
+}
+
+</style>
+
+
+<style lang="scss">
+
+.pm-nav{
+    display: flex;
+    flex-direction: row;
+    background: var(--dark-2);
+    border-radius: 4px;
+    overflow: hidden;
+
+    margin-bottom: 8px;     // padding 8px, therefore margin to the content below should be 8px too
+
+    .pm-nav-divider{
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+}
+
+.pm-nav-divider{
+    width: 1px;
+    height: var(--font-size-5);
+    background: var(--dark-3);
+}
+.pm-nav-button{
+    letter-spacing: 2px;
+    font-weight: 300;
+    font-size: var(--font-size-5);
+    color: var(--light-3);
+    padding: 8px;
+    &:hover{
+        background: var(--accent);
+    }
+}
+
+.pm-nav-button-active{
+    @extend .pm-nav-button;
+    background: var(--accent);
 
 }
 
 .pm-content{
+    font-size: var(--font-size-4);
+    font-weight: 300;
+}
+
+.pm-content-header{
+    font-size: var(--font-size-5);
+    letter-spacing: 1.2px;
+    font-weight: 600;
+}
+
+
+.pm-list-wrapper{
+    .pm-list{
+        margin-top: 8px;
+    }
+}
+
+.pm-list{
+    display: flex;
+    flex-direction: column;
+    font-size: var(--font-size-5);
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.pm-list-header{
+    box-sizing: border-box;
+    font-size: var(--font-size-4);
+    font-weight: 600;
+    background: var(--dark-2);
+    padding: 4px 6px;
+    text-align: left;
+    width: 100%;
+}
+
+.pm-list-content{
+    display: flex;
+    flex-direction: column;
+    height: 32px;
+    border: 1px solid var(dark);
+    background: var(--dark-4);
+}
+
+.pm-list-item{
+
+}
+
+
+
+.pm-footer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    &,*{
+        color: var(--light);
+    }
+    svg{
+        width: 16px;
+        height: 16px;
+        fill: var(--accent-light);
+    }
+
+    button{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-left: 8px;
+        margin-right: 8px;
+        padding: 4px 2px 4px 8px;
+        border-radius: 4px;
+        border: 1px solid var(--accent-light);
+        /* background: var(--accent); */
+        &,*{
+            color: var(--accent-light);
+            transition-duration: 0.2s;
+        }
+        font-size: var(--font-size-5);
+        span{
+            margin-right: 2px;
+            letter-spacing: 2px;
+        }
+
+        &:hover{
+            background: var(--accent-light);
+            svg{
+                fill: var(--light);
+            }
+            &,*{
+                color: var(--light);
+            }
+        }
+    }
 
 }
 

@@ -17,16 +17,16 @@
         <span>SAVE</span>
     </button>
     <button class="navbar-button" @click="onImport">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#000000">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
             <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
         </svg>
         <span>IMPORT</span>
     </button>
     <button class="navbar-button" @click="onExport">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" width="24px" viewBox="0 0 24 24" fill="#000000">
             <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+            <path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/>
         </svg>
         <span>EXPORT</span>
     </button>
@@ -87,20 +87,20 @@
         </svg>
         
         <div class="flex-column" style="margin-left: 16px">
-            <label for="pitch-width" style="font-weight: 300; font-size:10px; margin-top: 8px;">
+            <label for="navbar-pitch-width" style="font-weight: 300; font-size:10px; margin-top: 8px;">
                 Width
                 <span style="font-size:8px; color: var(--light-4);">(m)</span>
             </label>
-            <input type="number" id="pitch-width" min="90" max="120" v-model.lazy="pitch.size.x"
+            <input type="number" id="navbar-pitch-width" min="90" max="120" v-model.lazy="pitch.size.x"
                 style="margin-bottom: 16px;" @change="onPitchSizeChange"/>
         </div>
 
         <div class="flex-column">
-            <label for="pitch-height" style="font-weight: 300; font-size:10px; margin-top: 8px;">
+            <label for="navbar-pitch-height" style="font-weight: 300; font-size:10px; margin-top: 8px;">
                 Height
                 <span style="font-size:8px; color: var(--light-4);">(m)</span>
             </label>
-            <input type="number" id="pitch-height" min="60" max="90" v-model.lazy="pitch.size.y"
+            <input type="number" id="navbar-pitch-height" min="60" max="90" v-model.lazy="pitch.size.y"
                 style="margin-bottom: 16px;" @change="onPitchSizeChange"/>
         </div>
     </div>

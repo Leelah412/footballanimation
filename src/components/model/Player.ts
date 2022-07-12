@@ -1,7 +1,7 @@
 import Vector2 from "../math/Vector2";
 import CanvasObject from "./CanvasObject";
 
-interface PlayerList{
+export interface PlayerList{
     [key: number]: Player
 }
 
