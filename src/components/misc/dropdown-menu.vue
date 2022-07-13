@@ -2,7 +2,7 @@
 
 <!-- for simple dropdown menus, calling this component should be enough -->
 
-<div class="dropdown-menu noselect" :id="`dropdown-menu-lvl-${level}`">
+<div class="dropdown-menu noselect" :id="`dropdown-menu-lvl-${level}`" @contextmenu="onContextMenu">
 
     <div v-for="(it, idx) in items" :key="`dropdown-idx-${idx}`" class="dropdown-item"
         @click="it.action" @mouseover="ev=>{}">
@@ -19,11 +19,11 @@
 
         <!-- nested dropdown -->
         <div v-if="it.items !== undefined" class="dropdown-nested-indicator">
-            <svg viewBox="0 0 24 24" fill="var(--light)">
+            <svg viewBox="0 3 18 18" fill="var(--light-3)">
                 <path d="M10 17l5-5-5-5v10z"/>
-                <path d="M0 24V0h24v24H0z" fill="none"/>
             </svg>
         </div>
+        <div v-else class="dropdown-nested-indicator"></div>
     </div>
 
     <dropdown-menu v-if="openDropdownItem !== undefined && openDropdownItem.items !== undefined"
@@ -70,6 +70,13 @@ function onHover(item: DropdownItem){
 
 }
 
+
+// make sure you cant open a contextmenu on the contextmenu...
+function onContextMenu(ev){
+    ev.preventDefault();
+}
+
+
 </script>
 
 
@@ -91,7 +98,7 @@ function onHover(item: DropdownItem){
     &:last-child{
         border: none;
     }
-    padding: 4px;
+    padding: 4px 8px;
 
     &:hover{
         background: var(--dark-3);
@@ -110,12 +117,19 @@ $dd-icon-size: 16px;
 
 .dropdown-name{
     font-size: var(--font-size-4);
-    color: var(--light);
+    color: var(--light-2);
 }
 
-.dropdown-nested-indicator svg{
+.dropdown-nested-indicator{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: $dd-icon-size;
     height: $dd-icon-size;
+    svg{
+        width: 100%;
+        height: 100%;
+    }
 }
 
 </style>

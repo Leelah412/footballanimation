@@ -2,7 +2,7 @@
 
 <g class="noselect" :id="`player-${player.id}`" :transform="`translate(${pl.position.x}, ${pl.position.y})`">
     <g class="player-circle" @mousedown="onmousedown" @contextmenu="openDropdown">
-        <circle :r="radius" :fill="circleColors[0]" :stroke="circleColors[1]" :stroke-width="strokeWidth" />
+        <circle :r="radius" :fill="teamColors[0]" :stroke="teamColors[1]" :stroke-width="strokeWidth" />
         <g v-if="!asTool">
             <circle v-if="selected" :r="radius+1" stroke="var(--accent)" stroke-width="0.25"  stroke-linecap="round" fill="none" />
             <text class="player-number" v-show="pl.number > 0">{{pl.number}}</text>
@@ -23,6 +23,7 @@ import { watch } from "@vue/runtime-core";
 import Global from "../helper/Global";
 import Vector2 from "../math/Vector2";
 import { DropdownItem } from "../misc/dropdown-menu.vue";
+import Jersey from "../model/Jersey";
 import Player from "../model/Player";
 
 interface Props{
@@ -42,8 +43,20 @@ const emit = defineEmits(['playerSelected', 'playerMoved', 'dropdown']);
 const dropdown: DropdownItem[] = [
     {name: props.player.name || 'name' , action: ()=>{}},
     {name: 'Properties...', action: ()=>{}},
-    {name: 'Properties...', action: ()=>{}},
+    {name: 'Properties...', action: ()=>{}, items: [{name: 'Test', action: ()=>{}}]},
 ]
+
+//////////////
+
+const team = ref(props.player.team);
+var teamColors: string[] = props.circleColors;
+var jersey: Jersey | null = null;
+
+if(team.value !== undefined && team.value !== null){
+    teamColors = team.value.colorPalette;
+    if(props.player.isGoalkeeper)   jersey = team.value.goalkeeperJersey;
+    else                            jersey = team.value.playerJersey;
+}
 
 //////////////
 

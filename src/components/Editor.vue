@@ -24,7 +24,7 @@
 
     <div id="grid-left-canvas-right" class="flex-row flex-grow">
         <div id="grid-left" class="flex-row">
-            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" />
+            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" :homeColors="home.colorPalette" :awayColors="away.colorPalette"/>
         </div>
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
@@ -51,7 +51,8 @@
     <!-- <EntityToolbar v-on:newEntity="newEntity" :selected="entityType"/> -->
 
     <svg id="drag-entity"  width="32px" height="32px" viewBox="0 0 6 6" :display="dragging ? 'inline' : 'none'">
-        <PlayerVue v-if="entityType === EntityType.PLAYERHOME || entityType === EntityType.PLAYERAWAY" :player="entity" :asTool="true"/>
+        <PlayerVue v-if="entityType === EntityType.PLAYERHOME" :player="entity" :circleColors="home.colorPalette" :asTool="true"/>
+        <PlayerVue v-if="entityType === EntityType.PLAYERAWAY" :player="entity" :circleColors="away.colorPalette" :asTool="true"/>
     </svg>
 
     <div class="position-absolute" style="z-index: 200; top: var(--dropdown-top); left: var(--dropdown-left)">
