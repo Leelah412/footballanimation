@@ -50,6 +50,7 @@ html, body{
 }
 
 button{
+  @extend .noselect;
   border: none;
   background: none;
   cursor: pointer;
@@ -177,6 +178,11 @@ input{
     background: var(--secondary-light);
     color: var(--light-3);
   }
+}
+
+.span-placeholder{
+  font-style: italic;
+  opacity: 0.8;
 }
 
 </style>

@@ -165,16 +165,29 @@ onMounted(setStyle);
 .pm-list-content{
     display: flex;
     flex-direction: column;
-    height: 32px;
+    min-height: 32px;
     border: 1px solid var(dark);
     background: var(--dark-4);
 }
 
 .pm-list-item{
+    display: flex;
+    flex-direction: row;
 
+    padding: 4px;
+    &:nth-child(2n){
+        background: var(--dark-5);
+    }
 }
 
+.pm-list-item-col{
+    border-right: 1px solid var(--dark-3);
+    padding: 0 8px;
 
+    &:last-child{
+        border: none;
+    }
+}
 
 .pm-footer{
     display: flex;

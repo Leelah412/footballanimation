@@ -1,37 +1,51 @@
 <template>
+
 <g class="noselect" :id="`player-${player.id}`" :transform="`translate(${pl.position.x}, ${pl.position.y})`">
-    <g class="player-circle" @mousedown="onmousedown">
-        <circle :r="radius" :fill="Settings.settings.entityColors.homeColors.main" :stroke="Settings.settings.entityColors.homeColors.secondary" :stroke-width="strokeWidth" />
+    <g class="player-circle" @mousedown="onmousedown" @contextmenu="openDropdown">
+        <circle :r="radius" :fill="circleColors[0]" :stroke="circleColors[1]" :stroke-width="strokeWidth" />
         <g v-if="!asTool">
-            <circle v-if="selected" :r="radius+1" stroke="#ee0" stroke-width="0.25" stroke-dasharray="1,1" stroke-linecap="round" fill="none" />
+            <circle v-if="selected" :r="radius+1" stroke="var(--accent)" stroke-width="0.25"  stroke-linecap="round" fill="none" />
             <text class="player-number" v-show="pl.number > 0">{{pl.number}}</text>
             <text class="player-name" y="4" >{{pl.name}}</text>
         </g>
     </g>
-<!--     <foreignObject @click="ontextclick" :x="`-${30}`" y="0" width="60" height="20">
-        <input class="player-name" placeholder="<name>" v-model="name"/>
+<!--     <foreignObject @mouseup="onmouseup" :x="`-${30}`" y="0">
+        <dropdown-menu :items="dropdown"/>
     </foreignObject> -->
 </g>
+
 </template>
+
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 import Global from "../helper/Global";
 import Vector2 from "../math/Vector2";
+import { DropdownItem } from "../misc/dropdown-menu.vue";
 import Player from "../model/Player";
-import Settings from "../model/Settings";
 
-const props = defineProps({
-    player: {
-        type: Player,
-        required: true
-    },
-    asTool: {
-        type: Boolean,
-        default: false
-    }
+interface Props{
+    player: Player
+    circleColors: string[]
+    asTool: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    circleColors: ['#000', '#fff', '#ff0'],
+    asTool: false
 })
+
+const emit = defineEmits(['playerSelected', 'playerMoved', 'dropdown']);
+
+// dropdown to show, when click
+const dropdown: DropdownItem[] = [
+    {name: props.player.name || 'name' , action: ()=>{}},
+    {name: 'Properties...', action: ()=>{}},
+    {name: 'Properties...', action: ()=>{}},
+]
+
+//////////////
 
 const radius = ref(2);
 const strokeWidth = ref(1);
@@ -75,8 +89,6 @@ function onmousedown(ev){
 
 }
 
-const emit = defineEmits(['playerSelected', 'playerMoved']);
-
 function onmouseup(ev){
     // left mb
     if(ev.button === 0){
@@ -115,6 +127,14 @@ function onmousemove(ev){
     pl.value.position = Global.viewportToPitch(pos);
     emit('playerMoved', pl.value.position);
 
+}
+
+function openDropdown(ev){
+    if(ev.button == 2){
+        ev.preventDefault();
+        // open dropdown menu
+        emit('dropdown', dropdown, ev.clientX, ev.clientY);
+    }
 }
 
 function ontextover(ev){

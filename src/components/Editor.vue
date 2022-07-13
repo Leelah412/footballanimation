@@ -24,17 +24,18 @@
 
     <div id="grid-left-canvas-right" class="flex-row flex-grow">
         <div id="grid-left" class="flex-row">
-            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType"/>
+            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" />
         </div>
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
-            <CanvasVue :pitch="pitch" :entityList="entityList" :width="svgWidth" :height="svgHeight" :scale="svgScale" :yAxis="getYAxis()" :xAxis="getXAxis()"/>
+            <CanvasVue :pitch="pitch" :entityList="entityList" :width="svgWidth" :height="svgHeight" :scale="svgScale" :yAxis="getYAxis()" :xAxis="getXAxis()"
+                v-on:dropdown="openDropdown"/>
         </div>
 
         <div id="grid-right" class="flex-row">
             <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :style="'width: var(--right-property-menu-width);'">
                 <SettingsVue v-if="menuState === menuList.settings.id" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/>
-                <PlayerList v-if="menuState === menuList.playerList.id" :home="{firstTeam: {name: 'First Team', players: []}}" :away="{firstTeam: {name: 'First Team', players: []}}" :other="[]"/>
+                <PlayerList v-if="menuState === menuList.playerList.id" :home="home" :away="away" :other="[]"/>
                 <TeamSettings v-if="menuState === menuList.teamSettings.id" :home="home" :away="away"/>
             </PropertyMenu>
             <Toolbar :id="1" :elements="Object.values(menuList)" :style="'width: var(--right-toolbar-width);'" v-on:menuStateChanged="onMenuStateChanged"/>
@@ -53,6 +54,10 @@
         <PlayerVue v-if="entityType === EntityType.PLAYERHOME || entityType === EntityType.PLAYERAWAY" :player="entity" :asTool="true"/>
     </svg>
 
+    <div class="position-absolute" style="z-index: 200; top: var(--dropdown-top); left: var(--dropdown-left)">
+        <DropdownMenu v-if="showDropdown && dropdown !== undefined" :items="dropdown"/>
+    </div>
+
 </div>
 
 </template>
@@ -68,7 +73,7 @@ import Player from "./model/Player";
 import PitchVue from "./view/Pitch.vue";
 import PlayerContainer from "./view/PlayerContainer.vue";
 import SnapshotEditor from "./view/SnapshotEditor.vue";
-import Settings from "./model/Settings";
+/* import Settings from "./model/Settings"; */
 import { onMounted, onUnmounted, watch } from "@vue/runtime-core";
 import Global, { EntityType} from "./helper/Global";
 import PlayerVue from "./view/Player.vue";
@@ -87,6 +92,7 @@ import PropertyMenuList from "./model/PropertyMenuList";
 import PlayerList from "./view/property_menu/PlayerList.vue";
 import TeamSettings from "./view/property_menu/TeamSettings.vue";
 import Team from "./model/Team";
+import DropdownMenu, { DropdownItem } from "./misc/dropdown-menu.vue";
 
 
 
@@ -104,7 +110,7 @@ const props = defineProps({
 
 
 // TODO: save default settings on PC of user
-const settings = ref<Settings>(Settings.settings);
+/* const settings = ref<Settings>(Settings.settings); */
 
 
 //////////
@@ -133,6 +139,70 @@ function pitchSizeChange(){
     svgResize();
 };
 
+//////////////
+// DROPDOWN //
+//////////////
+
+const dropdown = ref<DropdownItem[] | undefined>(undefined);
+const showDropdown = ref<boolean>(false);
+
+function openDropdown(_dropdown: DropdownItem[], x: number, y: number){
+    if(_dropdown === undefined || _dropdown === null) return;    
+
+    // set the top left origin of the dropdown to the click position
+    var ed = document.getElementById('editor');
+    if(ed === undefined || ed === null) return;
+
+    ed.style.setProperty('--dropdown-top', `${y}px`);
+    ed.style.setProperty('--dropdown-left', `${x}px`);    
+
+    dropdown.value = _dropdown;
+    showDropdown.value = true;
+
+    document.addEventListener('click', closeDropdown);
+    document.addEventListener('keydown', closeDropdown);
+}
+
+function closeDropdown(ev){
+
+    // all necessary actions, when closing the DD menu
+    const closeDD = ()=>{
+        dropdown.value = undefined;
+        showDropdown.value = false;
+
+        document.removeEventListener('click', closeDropdown);
+        document.removeEventListener('keydown', closeDropdown);
+    }
+
+    // definitely close dropdown, if esc was clicked
+    if(ev.key == "Esc" || ev.key == "Escape"){
+        closeDD();
+        ev.preventDefault();
+        return;
+    }
+
+    // left mb must have been clicked to close a dd menu
+    if(ev.button != 0) return;
+
+    // traverse all recursively open dropdown menus and check, if click happened on there somewhere
+    var dda: HTMLCollectionOf<Element> = document.getElementsByClassName('dropdown-menu');
+    if(dda === undefined || dda === null) return;
+
+    var rect: DOMRect;
+    var x = ev.clientX;
+    var y = ev.clientY;
+    for (var i = 0; i < dda.length; i++) {
+        rect = dda[i].getBoundingClientRect();
+        // if something inside dd clicked, dd prob. already handled it and sent a "close" signal, if its supposed to be closed
+        // --> nothing to do, return
+        if(rect.x <= x && rect.x + rect.width > x
+            && rect.y <= y && rect.y + rect.height > y) return;
+    }
+
+    // if we are here, something outside dropdown was clicked -> close dropdown
+    closeDD();
+
+}
 
 ///////////////////
 // PROPERTY MENU //
@@ -215,7 +285,6 @@ function moveEntity(ev){
 
 // try to drop the entity on the canvas
 function dropEntity(ev){
-    entityType.value = null;
     dragging.value = false;
     
     if(entity.value !== null){
@@ -223,10 +292,17 @@ function dropEntity(ev){
         entity.value.position = Global.viewportToPitch(new Vector2(ev.clientX, ev.clientY));
         
         entityList.value[entity.value.id] = entity.value;
-        console.log(entityList.value);
         
+        // if player entity, add to home/away team first eleven list
+        if(entityType.value === EntityType.PLAYERHOME
+            ||entityType.value === EntityType.PLAYERAWAY){
+            console.log("adding player to a team");
+            
+            addPlayerToTeam((entity.value as Player), entityType.value);
+        }
     }
 
+    entityType.value = null;
     entity.value = null;
     
     var ed = document.getElementById("editor");
@@ -240,9 +316,22 @@ function addEntity(type: EntityType){
     
 }
 
-function addPlayer(pos: Vector2){
-    var pl = new Player(pos);
-    entityList.value[pl.id] = pl;
+function addPlayerToTeam(player: Player, type: EntityType){
+    switch(type){
+        case EntityType.PLAYERHOME: {
+            home.value.addPlayer(player, 'firstTeam');
+            console.log('Player List Home: ', home.value.playerList);
+            console.log('First Team Home: ', home.value.playerList);
+            
+            break;
+        }
+        case EntityType.PLAYERAWAY: {
+            away.value.addPlayer(player, 'firstTeam');
+            console.log('Player List Away: ', away.value.playerList);
+            console.log('First Team Away: ', away.value.playerList);
+            break;
+        }
+    }
 }
 
 // deletes a canvas object with the given ID
@@ -384,6 +473,9 @@ function showSnapshot(snap: Snapshot){
     --editor-tools-height: 192px;
     --statusbar-height: 24px;
 
+    // EXCLUSIVELY for the dropdown menu! (of course you can use it for other things, but why would u?)
+    --dropdown-top: 0;
+    --dropdown-left: 0;
 
     $z: 10;
     #grid-navbar,#grid-bottom{
@@ -433,5 +525,9 @@ function showSnapshot(snap: Snapshot){
     position: absolute;
     z-index: 100;
 }
+
+/* .dropdown-vue, .dropdown-menu{
+    z-index: 200;
+} */
 
 </style>

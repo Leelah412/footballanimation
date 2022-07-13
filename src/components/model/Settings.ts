@@ -1,4 +1,6 @@
-export interface TriColors{
+// TODO: currently deprecated, all colors will be taken directly from the "Team" instances
+
+/* export interface TriColors{
     main: string
     secondary: string
     alternative?: string
@@ -26,5 +28,5 @@ export default class Settings{
     // the current settings as a static variable, such that we can zugreifen darauf from anywhere
     // sorry, but this is waaayyy more comfortable than passing down props through 54051 levels idc
     static settings: Settings = new Settings();
-}
+} */
 

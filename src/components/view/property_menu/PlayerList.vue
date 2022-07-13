@@ -31,20 +31,45 @@
 
     <div class="pm-content">
         <div v-if="plState === PL_STATE.HOME" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, idx) in home" :key="`player-list-home-${idx}`">
+            <div class="pm-list" v-for="(value, idx) in home.squadList" :key="`player-list-home-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
-                    <div class="pm-list-item" v-for="(pl, idx) in value.players" :key="`player-list-home-player-${idx}`">
-
+                    <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-home-player-${idx2}`">
+                        {{pl}}
                     </div>
                 </div>
             </div>
         </div>
         <div v-if="plState === PL_STATE.AWAY" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, idx) in away" :key="`player-list-away-${idx}`">
+            <div class="pm-list" v-for="(value, idx) in away.squadList" :key="`player-list-away-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
-                    <div class="pm-list-item" v-for="(pl, idx) in value.players" :key="`player-list-away-player-${idx}`">
+                    <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-away-player-${idx2}`">
+                        
+                        <div class="pm-list-item-col flex-row align-center" id="player-number-col">
+                            <span v-if="pl.number !== -1">{{pl.number}}</span>
+                            <span v-else class="span-placeholder">Nr.</span>
+                        </div>
+
+                        <div class="pm-list-item-col flex-row align-center" id="player-name-col">
+                            <span v-if="pl.name !== ''">{{pl.name}}</span>
+                            <span v-else class="span-placeholder">Name</span>
+                        </div>
+
+                        <div class="pm-list-item-col flex-row align-center" id="player-position-col">
+                            <span>x: {{pl.position.x}}</span>
+                            <span>y: {{pl.position.y}}</span>
+                        </div>
+
+                        
+                        <div class="flex-row">
+                            <button class="button-edit">
+                                
+                            </button>
+                            <button class="button-delete">
+                                
+                            </button>
+                        </div>
 
                     </div>
                 </div>
@@ -81,25 +106,14 @@
 
 
 <script lang="ts" setup>
-import Player from '@/components/model/Player'
+import Player, { PlayerList } from '@/components/model/Player'
+import Team from '@/components/model/Team';
 import { ref } from '@vue/reactivity';
 
-
-interface PlayerSublist{
-    firstTeam: {
-        name: string,
-        players: Player[]
-    }
-    [key: string]: {
-        name: string,
-        players: Player[]
-    }
-}
-
 interface Props{
-    home: PlayerSublist
-    away: PlayerSublist
-    other: Player[]
+    home: Team
+    away: Team
+    other: PlayerList
 }
 
 const props = defineProps<Props>();
@@ -150,6 +164,22 @@ $pm-nav-button-amount: 3;
         height: 20px;
         fill: var(--light);
     }    
+}
+
+#player-number-col{
+    width: 32px;
+}
+
+#player-name-col{
+    width: 192px;
+    
+}
+
+#player-position-col{
+
+    span{
+
+    }
 }
 
 </style>

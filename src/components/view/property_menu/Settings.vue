@@ -42,6 +42,11 @@
         </div>
     </div>
 
+    <div class="pm-content flex-row">
+        <input type="checkbox" id="settings-show-timer">
+        <label for="settings-show-timer">Show Timer</label>
+    </div>
+
 </div>
 
 </template>

@@ -16,10 +16,13 @@ export default class CanvasObject{
 
     // position of the object in "meter" (as everything is supposed to happen relative to the pitch, whose dimensions are given in )
     position: Vector2;
+    // rotation of the object in degrees
+    rotation: number;
     
-    constructor(position: Vector2 = new Vector2()){
+    constructor(position: Vector2 = new Vector2(), rotation: number = 0){
         this._id = CanvasObject.objectCount++;
         this.position = position;
+        this.rotation = rotation;
     }
 
     copy(){};

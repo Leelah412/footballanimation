@@ -1,5 +1,5 @@
 <template>
-<div id="canvas" @mousedown="onCanvasMousedown">
+<div id="canvas" @mousedown="onCanvasMousedown" @contextmenu="onContextMenu">
     <!-- TOOD: viewBox position -->
     <svg id="svg-canvas" xmlns="http://www.w3.org/2000/svg"
         :width="width + 'px'" :height="height + 'px'" :viewBox="x + ' ' + y + ' ' + width + ' '  + height">
@@ -8,7 +8,8 @@
             <PitchVue :pitch="pitch" />
             <g v-for="(entity, key) in entityList" :key="key" :id="`player-id-${entity.id}`">
                 <PlayerVue v-if="(entity instanceof Player)" :player="entity"
-                    v-on:player-selected="sel=>playerSelected(entity, sel)" v-on:playerMoved="pos=>playerMoved(entity)" />
+                    v-on:player-selected="sel=>playerSelected(entity, sel)" v-on:playerMoved="pos=>playerMoved(entity)" 
+                    v-on:dropdown="openDropdown"/>
             </g>
         </g>
     </svg>
@@ -35,6 +36,7 @@ import Vector2 from '../math/Vector2';
 import Snapshot from '../model/Snapshot';
 import Settings from '../model/Settings';
 import { onMounted } from '@vue/runtime-core';
+import { DropdownItem } from '../misc/dropdown-menu.vue';
 
 interface Props{
     pitch: Pitch
@@ -47,6 +49,14 @@ interface Props{
 }
 
 const props = defineProps<Props>();
+
+const emit = defineEmits(['dropdown']);
+
+function openDropdown(items: DropdownItem[], x: number, y: number){
+    emit('dropdown', items, x, y);
+}
+
+////////////////
 
 onMounted(()=>setCanvasPosition(new Vector2()));
 
@@ -126,6 +136,18 @@ function onCanvasMouseup(ev){
     dragCanvas = false;
     
 }
+
+function onContextMenu(ev){
+    ev.preventDefault();
+
+    // only except context menu actions with right click
+    if(ev.button != 2) return;
+
+}
+
+////////////
+// VISUAL //
+////////////
 
 const x = ref(0);
 const y = ref(0);

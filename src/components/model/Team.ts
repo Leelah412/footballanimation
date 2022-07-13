@@ -1,5 +1,5 @@
 import Jersey from "./Jersey";
-import { PlayerList } from "./Player";
+import Player, { PlayerList } from "./Player";
 
 // list containing players on the field
 export interface OnFieldSquad{
@@ -23,7 +23,7 @@ export const defaultSquadList = () => {
     return {
             firstTeam: {
                 name: 'First Team',
-                players: []
+                players: {}
             }
         }
 }
@@ -34,7 +34,7 @@ export default class Team{
     name: string;                               // full name of the club
     short: string;                              // make sure it's 6 letters max.
 
-    playerList: PlayerList = [];                // list of players in the team
+    playerList: PlayerList = {};                // list of players in the team
     squadList: SquadList = defaultSquadList();  // list of player GROUPS (can contain players not in playerList, i.e. not in club!)
 
     // visual
@@ -45,11 +45,32 @@ export default class Team{
     playerJersey: Jersey | null = null;         // jersey the field players are wearing
     goalkeeperJersey: Jersey | null = null;     // jersey the keeper is wearing; wear player jersey, if null
 
-    constructor(){
+    constructor(id: string = '', name: string = '', short: string = ''){
+        this.id = id;
+        this.name = name;
+        this.short = short;
+    }
+
+    // add a player to the team and a squad, if given (default: other)
+    // also possibility to not be added into the player list of team by setting 'addToPlayerList' to false
+    addPlayer(player: Player, squad: string = 'other', addToPlayerList: boolean = true){
+
+        // create squad, if it doesnt exist
+        if(!(squad in this.squadList)){
+            this.squadList[squad] = {
+                name: squad,
+                players: {}
+            }
+        }
+        this.squadList[squad].players[player.id] = player;
+
+        // add to player list
+        if(!addToPlayerList) return;
+        this.playerList[player.id] = player;
     }
 
     // load the team data
-    loadTeam(name: string, short: string, playerList: PlayerList = [], squadList: SquadList = defaultSquadList()){
+    loadTeam(name: string, short: string, playerList: PlayerList = {}, squadList: SquadList = defaultSquadList()){
         name
         this.playerList = playerList;
     }
