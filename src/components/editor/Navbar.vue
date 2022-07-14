@@ -41,23 +41,23 @@
     <div class="navbar-divider"></div>
 
     <div id="navbar-pitch" class="flex-row align-center">
-        <svg :width="`${(105/68) * 32}px`" :height="`${32}px`" viewBox="-2 -2 109 72">
+        <svg :width="`${(105/68) * 32}px`" :height="`${32}px`" viewBox="-2 -2 109 72" style="opacity:0.6">
         <g id="layer1">
             <rect
-            style="fill:none;stroke:var(--secondary-dark);stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            style="fill:var(--secondary-dark);stroke:var(--light);stroke-width:6;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
             id="outer-lines"
             width="104.81563"
             height="67.815628"
             x="0.12500298"
             y="0.12500361" />
             <path
-            style="fill:none;stroke:var(--secondary-dark);stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            style="fill:var(--secondary-dark);stroke:var(--light);stroke-width:6;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
             d="m 52.532807,0.03281 v 68"
             id="center-line" />
             <g
             id="center-circle">
             <circle
-                style="fill:none;stroke:var(--secondary-dark);stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                style="fill:none;stroke:var(--light);stroke-width:6;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
                 id="path1079"
                 cx="52.53281"
                 cy="34.03281"
@@ -66,7 +66,7 @@
             <g
             id="penarea-left">
             <rect
-                style="fill:none;stroke:var(--secondary-dark);stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+                style="fill:var(--secondary-dark);stroke:var(--light);stroke-width:6;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
                 id="rect833-6-6"
                 width="16.443743"
                 height="40.243744"
@@ -76,7 +76,7 @@
             <g
             id="penarea-right">
             <rect
-                style="fill:none;stroke:var(--secondary-dark);stroke-width:3;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
+                style="fill:var(--secondary-dark);stroke:var(--light);stroke-width:6;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
                 id="rect833-6-6-2"
                 width="16.443743"
                 height="40.243744"

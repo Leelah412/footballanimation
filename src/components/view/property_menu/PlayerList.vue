@@ -17,9 +17,9 @@
 
         <div class="pm-nav-divider"></div>
 
-        <button :class="`pm-nav-button${plState === PL_STATE.OTHER ? '-active' : ''}`"
-            @click="()=>changePlState(PL_STATE.OTHER)">
-            OTHER
+        <button :class="`pm-nav-button${plState === PL_STATE.DB ? '-active' : ''}`"
+            @click="()=>changePlState(PL_STATE.DB)">
+            DATABASE
         </button>
         <button id="pm-db-search-button" @click="()=>changePlState(PL_STATE.DB)">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#000000">
@@ -30,58 +30,91 @@
     </div>
 
     <div class="pm-content">
+
         <div v-if="plState === PL_STATE.HOME" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, idx) in home.squadList" :key="`player-list-home-${idx}`">
+            <div class="pm-list" v-for="(value, key, idx) in home.squadList" :key="`player-list-home-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
                     <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-home-player-${idx2}`">
-                        {{pl}}
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-if="plState === PL_STATE.AWAY" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, idx) in away.squadList" :key="`player-list-away-${idx}`">
-                <div class="pm-list-header">{{value.name}}</div>
-                <div class="pm-list-content">
-                    <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-away-player-${idx2}`">
                         
-                        <div class="pm-list-item-col flex-row align-center" id="player-number-col">
+                        <div class="pm-list-item-col flex-row align-center">
                             <span v-if="pl.number !== -1">{{pl.number}}</span>
                             <span v-else class="span-placeholder">Nr.</span>
                         </div>
 
-                        <div class="pm-list-item-col flex-row align-center" id="player-name-col">
+                        <div class="pm-list-item-col flex-row align-center">
                             <span v-if="pl.name !== ''">{{pl.name}}</span>
                             <span v-else class="span-placeholder">Name</span>
                         </div>
 
-                        <div class="pm-list-item-col flex-row align-center" id="player-position-col">
+                        <div v-if="key === 'firstTeam'" class="pm-list-item-col flex-row align-center">
                             <span>x: {{pl.position.x}}</span>
                             <span>y: {{pl.position.y}}</span>
                         </div>
 
                         
-                        <div class="flex-row">
-                            <button class="button-edit">
-                                
-                            </button>
-                            <button class="button-delete">
-                                
-                            </button>
+                        <div class="player-list-crud">
+                            <svg-button-selection :selection="SVG_SELECTION.EDIT" :size="16"/>
+                            <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="16"
+                                @click="ev => onRemovePlayer(pl)"/>
+                            <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="16"/>
                         </div>
 
                     </div>
                 </div>
             </div>
         </div>
-        <div v-if="plState === PL_STATE.OTHER" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, idx) in other" :key="`player-list-other-${idx}`">
-                <div class="pm-list-content" v-for="(pl, idx) in value" :key="`player-list-other-player-${idx}`">
 
+        <div v-if="plState === PL_STATE.AWAY" class="pm-list-wrapper">
+            <div class="pm-list" v-for="(value, key, idx) in away.squadList" :key="`player-list-away-${idx}`">
+                <div class="pm-list-header">{{value.name}}</div>
+                <div class="pm-list-content">
+                    <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-away-player-${idx2}`">
+                        
+                        <div class="pm-list-item-col flex-row align-center">
+                            <span v-if="pl.number !== -1">{{pl.number}}</span>
+                            <span v-else class="span-placeholder">Nr.</span>
+                        </div>
+
+                        <div class="pm-list-item-col flex-row align-center">
+                            <span v-if="pl.name !== ''">{{pl.name}}</span>
+                            <span v-else class="span-placeholder">Name</span>
+                        </div>
+
+                        <div v-if="key === 'firstTeam'" class="pm-list-item-col flex-row align-center">
+                            <span>x: {{pl.position.x}}</span>
+                            <span>y: {{pl.position.y}}</span>
+                        </div>
+
+                        
+                        <div class="player-list-crud">
+                            <svg-button-selection :selection="SVG_SELECTION.EDIT" :size="16"/>
+                            <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="16"
+                                @click="ev => onRemovePlayer(pl)"/>
+                            <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="16"/>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
+
+        <div v-if="plState === PL_STATE.DB" class="pm-list">
+            <div class="pm-list-item" v-for="(pl, idx) in database" :key="`player-list-database-${idx}`">
+                <div class="pm-list-item-col flex-row align-center" style="font-size: var(--font-size-4)">
+                    <span v-if="pl.name !== ''">{{pl.name}}</span>
+                    <span v-else class="span-placeholder">Name</span>
+                </div>
+                
+                <div class="player-list-crud">
+                    <svg-button-selection :selection="SVG_SELECTION.EDIT" :size="20"/>
+                    <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="20"
+                        @click="ev => onRemovePlayer(pl)"/>
+                    <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="20"/>
+                </div>
+            </div>
+        </div>
+
     </div>
     <div class="pm-footer">
         <button>
@@ -109,20 +142,51 @@
 import Player, { PlayerList } from '@/components/model/Player'
 import Team from '@/components/model/Team';
 import { ref } from '@vue/reactivity';
+import SvgButtonSelection from '@/components/misc/svg-button-selection.vue';
+import { SVG_SELECTION } from '@/components/helper/enums';
 
 interface Props{
     home: Team
     away: Team
-    other: PlayerList
+    database: PlayerList
 }
 
 const props = defineProps<Props>();
+const emit = defineEmits(['removePlayer']);
 
-enum PL_STATE {NONE, HOME, AWAY, OTHER, DB};
+
+///////////////////////
+
+enum PL_STATE {NONE, HOME, AWAY, DB, SEARCH};
 const plState = ref<PL_STATE>(PL_STATE.NONE);
 
 function changePlState(newState: PL_STATE){
     plState.value = newState;
+}
+
+///////////////////////
+
+
+function onRemovePlayer(player: Player){
+    emit('removePlayer', player);
+/*     switch(plState.value){
+        case PL_STATE.HOME: {
+            emit('removePlayer', 'home');
+            break;
+        }
+        case PL_STATE.AWAY: {
+            emit('removePlayer', 'away');
+            break;
+        }
+        case PL_STATE.DB: {
+            // since database passed as reference, we can just delete player directly from it
+            if(player.id in props.database){
+                delete props.database[player.id];
+            }
+            break;
+        }
+        default: break;
+    } */
 }
 
 </script>
@@ -138,7 +202,6 @@ function changePlState(newState: PL_STATE){
         margin-top: 32px;
     }
 }
-
 
 $pm-nav-button-amount: 3;
 .pm-nav-button{
@@ -166,19 +229,17 @@ $pm-nav-button-amount: 3;
     }    
 }
 
-#player-number-col{
-    width: 32px;
-}
+.player-list-crud{
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    align-items: center;
 
-#player-name-col{
-    width: 192px;
-    
-}
-
-#player-position-col{
-
-    span{
-
+    .svg-button-selection{
+        margin: 0 1px;
+        &:last-child{
+            margin-right: 0;
+        }
     }
 }
 

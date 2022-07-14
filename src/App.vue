@@ -22,6 +22,10 @@ import Editor from './components/Editor.vue';
   --accent: #9c5e17;
   --accent-dark: #643907;
 
+  --red: #b71c1c;
+  --blue: #0d47a1;
+  --green: #1b5e20;
+
   --dark: #111;
   --dark-2: #1a1a1a;
   --dark-3: #222;
@@ -118,6 +122,19 @@ button{
 
 .position-absolute{
   position: absolute;
+}
+
+.m-left{
+  margin-right: auto;
+}
+.m-right{
+  margin-left: auto;
+}
+.m-top{
+  margin-bottom: auto;
+}
+.m-bottom{
+  margin-top: auto;
 }
 
 input{

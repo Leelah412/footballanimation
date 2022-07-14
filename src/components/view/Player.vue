@@ -37,13 +37,31 @@ const props = withDefaults(defineProps<Props>(), {
     asTool: false
 })
 
-const emit = defineEmits(['playerSelected', 'playerMoved', 'dropdown']);
+const emit = defineEmits(['playerSelected', 'startDragging', 'playerMoved', 'stopDragging', 'dropdown',
+                          'removeFromSquad', 'removeFromTeam', 'removeCompletely']);
 
 // dropdown to show, when click
 const dropdown: DropdownItem[] = [
-    {name: props.player.name || 'name' , action: ()=>{}},
-    {name: 'Properties...', action: ()=>{}},
-    {name: 'Properties...', action: ()=>{}, items: [{name: 'Test', action: ()=>{}}]},
+    {name: props.player.name || 'name', action(): boolean | undefined{return false}},
+    {name: 'Properties...', action(): boolean | undefined{return undefined}, items: [{name: 'Test', action(): boolean | undefined{return undefined}}]},
+    // remove player from first team
+    {name: 'Remove from Squad', action(): boolean | undefined{
+            emit('removeFromSquad', 'removeFromSquad');
+            return undefined
+        }
+    },
+    // remove player from team completely and send to "other" list
+    {name: 'Remove from Team', action(): boolean | undefined{
+            emit('removeFromTeam', 'removeFromTeam');
+            return undefined
+        }
+    },
+    // remove player completely from the local DB
+    {name: 'Remove completely', action(): boolean | undefined{
+            emit('removeCompletely', 'removeCompletely');
+            return undefined
+        }
+    },
 ]
 
 //////////////
@@ -121,7 +139,8 @@ function onmouseup(ev){
         rightMBDown = false;
     }
     if(dragging){
-        dragging = false;
+        dragging = false;        
+        emit('stopDragging', props.player);
     }
 }
 
@@ -134,6 +153,7 @@ function onmousemove(ev){
     if(!dragging){
         if(dragStartPos.length(pos) < dragStartRadius) return;
         dragging = true;
+        emit('startDragging', props.player);
     }
 
     // set the position based on the viewport-pitch projection
@@ -150,7 +170,7 @@ function openDropdown(ev){
     }
 }
 
-function ontextover(ev){
+/* function ontextover(ev){
     ev.preventDefault();
 }
 
@@ -171,19 +191,9 @@ function ontextclick(ev){
         playerNameClicked = true;
         playerNameClickTime = Date.now();
     }
-}
-
-/// HELPERS
-
-// get the mouse position relative to the svg canvas
-/* function getMousePosition(ev): Vector2 | null{
-    const rect = document.getElementById('svg-canvas')?.getBoundingClientRect();
-    if(rect === undefined) return null;
-    const x = ev.clientX - rect.left;
-    const y = ev.clientY - rect.top;
-    
-    return new Vector2(x, y);
 } */
+
+// HELPERS
 
 function connectCanvasEvent(){
     // connect player with mousemove event of the canvas

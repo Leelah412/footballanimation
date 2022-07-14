@@ -2,10 +2,13 @@
     
 <div class="dropdown-vue">
 
+    <!-- slot for unique kinds of items -->
+    <div class="dropdown-vue-unique">
+        <slot></slot>
+    </div>
+
     <DropdownMenu :items="items" />
 
-    <!-- slot for unique kinds of dropdown items -->
-    <slot></slot>
 
 </div>
 
@@ -28,9 +31,12 @@ const props = defineProps<Props>();
 <style lang="scss" scoped>
 
 .dropdown-vue{
-    position: relative;     // for recursiveness and for showing dd at click position relative to viewport
+    position: absolute;     // for recursiveness and for showing dd at click position relative to viewport
 
 }
 
+.dropdown-vue-unique{
+
+}
 
 </style>

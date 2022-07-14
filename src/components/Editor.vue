@@ -29,13 +29,15 @@
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
             <CanvasVue :pitch="pitch" :entityList="entityList" :width="svgWidth" :height="svgHeight" :scale="svgScale" :yAxis="getYAxis()" :xAxis="getXAxis()"
-                v-on:dropdown="openDropdown"/>
+                v-on:dropdown="openDropdown" v-on:playerSelected="onPlayerSelected"
+                v-on:deleteEntity="deleteEntity"/>
         </div>
 
         <div id="grid-right" class="flex-row">
             <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :style="'width: var(--right-property-menu-width);'">
                 <SettingsVue v-if="menuState === menuList.settings.id" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/>
-                <PlayerList v-if="menuState === menuList.playerList.id" :home="home" :away="away" :other="[]"/>
+                <PlayerListVue v-if="menuState === menuList.playerList.id" v-on:removePlayer="pl=>removePlayer(pl, true, true)"
+                    :home="home" :away="away" :database="database"/>
                 <TeamSettings v-if="menuState === menuList.teamSettings.id" :home="home" :away="away"/>
             </PropertyMenu>
             <Toolbar :id="1" :elements="Object.values(menuList)" :style="'width: var(--right-toolbar-width);'" v-on:menuStateChanged="onMenuStateChanged"/>
@@ -56,7 +58,7 @@
     </svg>
 
     <div class="position-absolute" style="z-index: 200; top: var(--dropdown-top); left: var(--dropdown-left)">
-        <DropdownMenu v-if="showDropdown && dropdown !== undefined" :items="dropdown"/>
+        <DropdownMenu v-if="showDropdown && dropdown !== undefined" :items="dropdown" v-on:close="()=>closeDropdown(null, true)"/>
     </div>
 
 </div>
@@ -70,11 +72,10 @@ import Vector2 from "./math/Vector2";
 import Rect from "./math/Rect";
 import CanvasObject, {EntityList} from "./model/CanvasObject";
 import Pitch from "./model/Pitch";
-import Player from "./model/Player";
+import Player, { PlayerList } from "./model/Player";
 import PitchVue from "./view/Pitch.vue";
 import PlayerContainer from "./view/PlayerContainer.vue";
 import SnapshotEditor from "./view/SnapshotEditor.vue";
-/* import Settings from "./model/Settings"; */
 import { onMounted, onUnmounted, watch } from "@vue/runtime-core";
 import Global, { EntityType} from "./helper/Global";
 import PlayerVue from "./view/Player.vue";
@@ -90,11 +91,11 @@ import Navbar from "./editor/Navbar.vue";
 import Statusbar from "./editor/Statusbar.vue";
 import SettingsVue from "@/components/view/property_menu/Settings.vue";
 import PropertyMenuList from "./model/PropertyMenuList";
-import PlayerList from "./view/property_menu/PlayerList.vue";
+import PlayerListVue from "./view/property_menu/PlayerList.vue";
 import TeamSettings from "./view/property_menu/TeamSettings.vue";
 import Team from "./model/Team";
 import DropdownMenu, { DropdownItem } from "./misc/dropdown-menu.vue";
-
+import { IObject } from "./helper/enums";
 
 
 // TODO: width and height should be calculated in "App.vue" depending on viewport n stuff
@@ -120,7 +121,7 @@ const props = defineProps({
 
 const home = ref<Team>(new Team());
 const away = ref<Team>(new Team());
-
+const database = ref<PlayerList>({});
 
 ///////////
 // PITCH //
@@ -164,7 +165,8 @@ function openDropdown(_dropdown: DropdownItem[], x: number, y: number){
     document.addEventListener('keydown', closeDropdown);
 }
 
-function closeDropdown(ev){
+// close dropdown, if necessary; setting 'close' to true will DEFINITELY close the DD
+function closeDropdown(ev, close: boolean = false){
 
     // all necessary actions, when closing the DD menu
     const closeDD = ()=>{
@@ -175,12 +177,17 @@ function closeDropdown(ev){
         document.removeEventListener('keydown', closeDropdown);
     }
 
+    if(close){
+        closeDD();
+        return;
+    }
+
     // definitely close dropdown, if esc was clicked
     if(ev.key == "Esc" || ev.key == "Escape"){
         closeDD();
         ev.preventDefault();
         return;
-    }
+    }    
 
     // left mb must have been clicked to close a dd menu
     if(ev.button != 0) return;
@@ -215,6 +222,12 @@ const additionalHeaderInfo = ref<string>('');
 
 function onMenuStateChanged(oldState: string, newState: string){
     menuState.value = newState;
+}
+
+const selectedPlayer = ref<Player | null>(null);
+
+function onPlayerSelected(player: Player | null){
+    selectedPlayer.value = player;
 }
 
 ////////////
@@ -286,9 +299,20 @@ function moveEntity(ev){
 
 // try to drop the entity on the canvas
 function dropEntity(ev){
-    dragging.value = false;
     
-    if(entity.value !== null){
+    // only dropdown, if mouse over canvas
+    var cnv = document.getElementById('grid-canvas'), rect, overCanvas = false;
+    var x = ev.clientX, y = ev.clientY;
+    console.log("X: ", x, " Y: ", y);
+    
+    if(cnv !== undefined && cnv !== null){
+        rect = cnv.getBoundingClientRect();
+        if(rect.x <= x && rect.x + rect.width > x
+            && rect.y <= y && rect.y + rect.height > y)
+            overCanvas = true;
+    }
+
+    if(entity.value !== null && overCanvas){
         // set the position correctly
         entity.value.position = Global.viewportToPitch(new Vector2(ev.clientX, ev.clientY));
         
@@ -303,6 +327,7 @@ function dropEntity(ev){
         }
     }
 
+    dragging.value = false;
     entityType.value = null;
     entity.value = null;
     
@@ -313,33 +338,96 @@ function dropEntity(ev){
     ed.removeEventListener('mouseup', dropEntity);
 }
 
-function addEntity(type: EntityType){
-    
+// deletes given canvas object
+// can take in additional data to be processed for specific kinds of entities
+function deleteEntity(entity: CanvasObject, data: any){
+    if(!(entity.id in entityList.value)) return;
+    delete entityList.value[entity.id];
+
+    // if type is Player, additionally remove from team list
+    if(entity instanceof Player){
+        // delete from team, keep player in database
+        if(data === 'removeFromTeam'){
+            removePlayer(entity as Player);
+            return;
+        }
+        // delete completely
+        if(data === 'removeCompletely'){
+            removePlayer(entity as Player, true, true);
+            return;
+        }
+        // delete from squad, keep player in team
+        removePlayer(entity as Player, false);
+    }
+
+}
+
+// deletes a canvas object with the given ID
+function deleteEntityById(id: number){
+    if(!(id in entityList.value)) return;
+    delete entityList.value[id];
 }
 
 function addPlayerToTeam(player: Player, type: EntityType){
     switch(type){
         case EntityType.PLAYERHOME: {
-            home.value.addPlayer(player, 'firstTeam');
-            console.log('Player List Home: ', home.value.playerList);
-            console.log('First Team Home: ', home.value.playerList);
-            
+            home.value.addPlayer(player, 'firstTeam');            
             break;
         }
         case EntityType.PLAYERAWAY: {
             away.value.addPlayer(player, 'firstTeam');
-            console.log('Player List Away: ', away.value.playerList);
-            console.log('First Team Away: ', away.value.playerList);
             break;
         }
     }
 }
 
-// deletes a canvas object with the given ID
-function deleteCanvasObject(id: number){
-    if(!(id in entityList.value)) return;
-    delete entityList.value[id];
+// removes player from squad, team, or completely
+// default: delete from squad team, push player to 'others' squad
+// if player not supposed to be removed completely, push him to database
+// if 'removeFromTeam' false and 'removeCompletely' true, ignore 'removeCompletely'
+function removePlayer(player: Player, removeFromTeam: boolean = true, removeCompletely: boolean = false){
+    // remove player from entity list, if it still is in it for some reason
+    if(player.id in entityList.value)
+        delete entityList.value[player.id];
+
+    var team: Team | null = player.team;
+    if(team !== null)
+        team.removePlayer(player, [], removeFromTeam);
+    else{
+        // make sure, that player REALLY has no team
+
+        var lst = home.value.playerList;
+        var keys: string[] = Object.keys(lst);
+        for(var i = 0; i < keys.length; i++){
+            if(lst[keys[i]] === player){
+                home.value.removePlayer(player, [], removeFromTeam);
+                break;
+            }
+        }
+
+        lst = away.value.playerList;
+        keys = Object.keys(lst);
+        for(var i = 0; i < keys.length; i++){
+            if(lst[keys[i]] === player){
+                away.value.removePlayer(player, [], removeFromTeam);
+                break;
+            }
+        }
+    }
+
+    // dont push into db and dont delete completely
+    if(!removeFromTeam) return;
+    // remove player completely, including database
+    if(removeCompletely){
+        if(player.id in database.value)
+            delete database.value[player.id];
+        return;
+    }
+    
+    database.value[player.id] = player;
 }
+
+
 
 ////////////
 // VISUAL //

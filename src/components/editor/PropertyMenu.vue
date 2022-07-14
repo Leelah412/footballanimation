@@ -102,6 +102,11 @@ onMounted(setStyle);
     font-size: var(--font-size-5);
     color: var(--light-3);
     padding: 8px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    overflow: hidden;
     &:hover{
         background: var(--accent);
     }
@@ -150,13 +155,15 @@ onMounted(setStyle);
     font-size: var(--font-size-5);
     overflow: hidden;
     border-radius: 4px;
+    box-shadow: 0 0 4px var(--dark);
 }
 
 .pm-list-header{
     box-sizing: border-box;
     font-size: var(--font-size-4);
     font-weight: 600;
-    background: var(--dark-2);
+    background: var(--secondary);
+    border-bottom: 2px solid var(--secondary-dark);
     padding: 4px 6px;
     text-align: left;
     width: 100%;
@@ -167,24 +174,25 @@ onMounted(setStyle);
     flex-direction: column;
     min-height: 32px;
     border: 1px solid var(dark);
-    background: var(--dark-4);
+    border-radius: 4px;
+    background: var(--dark-3);
 }
 
 .pm-list-item{
     display: flex;
     flex-direction: row;
-
+    
     padding: 4px;
     &:nth-child(2n){
-        background: var(--dark-5);
+        background: var(--dark-4);
     }
 }
 
 .pm-list-item-col{
-    border-right: 1px solid var(--dark-3);
+    border-left: 1px solid var(--dark-3);
     padding: 0 8px;
 
-    &:last-child{
+    &:first-child{
         border: none;
     }
 }

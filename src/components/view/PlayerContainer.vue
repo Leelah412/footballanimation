@@ -1,5 +1,5 @@
 <template>
-
+<!-- its never used, why does this even exist?!?! -->
 <g>
     <PlayerVue v-for="(player, key) in playerList" :key="key" :id="`player-id-${player.id}`"
         :player="player"/>

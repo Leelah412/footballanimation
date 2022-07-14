@@ -5,7 +5,7 @@
 <div class="dropdown-menu noselect" :id="`dropdown-menu-lvl-${level}`" @contextmenu="onContextMenu">
 
     <div v-for="(it, idx) in items" :key="`dropdown-idx-${idx}`" class="dropdown-item"
-        @click="it.action" @mouseover="ev=>{}">
+        @click="() => clickAction(it.action, it)" @mouseover="ev=>{}">
 
         <div v-if="it.icon !== undefined" class="dropdown-icon">
             <div v-if="it.iconAsImg === undefined && !it.iconAsImg" v-html="it.icon"></div>
@@ -39,22 +39,27 @@ import { ref } from "@vue/reactivity"
 
 export interface DropdownItem{
     name: string
-    action: Function        // all dropdown elements lead to an action, don't they?
-    icon?: string           // svg or img path; should be (optimized for) 16x16
-    iconAsImg?: boolean     // if true, show icon as img, if it exists
+    action(): boolean | undefined   // what to do after click; may return true indicating, that dd should be closed
+    icon?: string                   // svg or img path; should be (optimized for) 16x16
+    iconAsImg?: boolean             // if true, show icon as img, if it exists
 
-    items?: DropdownItem[]  // for nested dropdowns
+    items?: DropdownItem[]          // for nested dropdowns
 }
 
 interface Props{
     items: DropdownItem[]
-    level: number           // the recursive level of the current dropdown menu 
+    level: number                   // the recursive level of the current dropdown menu 
 }
 
 // create a recursive dropdown menu
 const props = withDefaults(defineProps<Props>(), {
     level: 0
 })
+
+const emit = defineEmits(['close']);
+
+
+
 // item holding the currently open dropdown menu
 const openDropdownItem = ref<DropdownItem | undefined>();
 
@@ -70,6 +75,19 @@ function onHover(item: DropdownItem){
 
 }
 
+// execute the given action and close the menu, if necessary
+function clickAction(action: Function, item: DropdownItem){
+    
+    // execute action and return, if dd should NOT be closed!
+    var close = action();
+    if(close === false) return;
+    // if element with nested items clicked, dont close
+    // TODO: after adding delay feature: open nested menu instead
+    if(close !== true && item.items !== undefined && item.items.length > 0) return;
+    
+    emit('close');
+}
+
 
 // make sure you cant open a contextmenu on the contextmenu...
 function onContextMenu(ev){
@@ -83,7 +101,9 @@ function onContextMenu(ev){
 <style lang="scss" scoped>
 
 .dropdown-menu{
-    position: absolute;     // for recursiveness
+    position: absolute;
+    display: flex;
+    flex-direction: column;
 
     background: var(--dark-2);
     border: var(--light-5);
@@ -117,7 +137,11 @@ $dd-icon-size: 16px;
 
 .dropdown-name{
     font-size: var(--font-size-4);
+    font-weight: 300;
     color: var(--light-2);
+    text-align: left;
+    white-space: nowrap;
+    max-width: 256px;
 }
 
 .dropdown-nested-indicator{
@@ -126,6 +150,7 @@ $dd-icon-size: 16px;
     justify-content: center;
     width: $dd-icon-size;
     height: $dd-icon-size;
+    margin-left: auto;
     svg{
         width: 100%;
         height: 100%;

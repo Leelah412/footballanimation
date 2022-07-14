@@ -85,11 +85,12 @@ export default class Team{
     removePlayer(player: Player, squadListKeys: string[] = [], removeFromTeam: boolean = true){
 
         // remove player from all lists
-        if(squadListKeys === []){
+        if(squadListKeys.length === 0){
             var keys = Object.keys(this.squadList);
             for(var i = 0; i < keys.length; i++){
-                if(player.id in this.squadList[keys[i]].players)
+                if(player.id in this.squadList[keys[i]].players){
                     delete this.squadList[keys[i]].players[player.id];
+                }
             }
         }
         // only remove from squads with given keys, if they exist
