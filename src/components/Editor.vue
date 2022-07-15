@@ -2,22 +2,6 @@
 
 <div id="editor">
 
-<!--     <div id="editor-toolbar">
-        <div id="editor-pitch-size" class="flex-row">
-            <div class="flex-column">
-                <span id="editor-pitch-size-width-label" style="font-weight: 300; font-size: small">Width</span>
-                <span id="editor-pitch-size-width" contenteditable="true">{{pitch.size.x}}</span>
-            </div>
-            <div class="flex-column">
-                <span id="editor-pitch-size-width-label" style="font-weight: 300; font-size: small">Height</span>
-                <span id="editor-pitch-size-height" contenteditable="true">{{pitch.size.y}}</span>
-            </div>
-        </div>
-        <div id="editor-player-list">
-
-        </div>
-    </div> -->
-
     <div id="grid-navbar">
         <Navbar :pitch="pitch" v-on:changePitchSize="pitchSizeChange"/>
     </div>
@@ -36,7 +20,8 @@
         <div id="grid-right" class="flex-row">
             <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :style="'width: var(--right-property-menu-width);'">
                 <SettingsVue v-if="menuState === menuList.settings.id" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/>
-                <PlayerListVue v-if="menuState === menuList.playerList.id" v-on:removePlayer="pl=>removePlayer(pl, true, true)"
+                <PlayerListVue v-if="menuState === menuList.playerList.id"
+                    v-on:removePlayer="pl=>removePlayer(pl, true, true)"
                     :home="home" :away="away" :database="database"/>
                 <TeamSettings v-if="menuState === menuList.teamSettings.id" :home="home" :away="away"/>
             </PropertyMenu>
@@ -96,6 +81,7 @@ import TeamSettings from "./view/property_menu/TeamSettings.vue";
 import Team from "./model/Team";
 import DropdownMenu, { DropdownItem } from "./misc/dropdown-menu.vue";
 import { IObject } from "./helper/enums";
+import store from "@/store";
 
 
 // TODO: width and height should be calculated in "App.vue" depending on viewport n stuff
@@ -540,6 +526,18 @@ function showSnapshot(snap: Snapshot){
     entityList.value = lst;
     console.log("show snapshot editor");
 }
+
+
+// create reactive reference to all objects, such that we may access them...
+// oh wait... GODDAMN IT I COMPLETELY FORGOT ABOUT THE EXISTENCE OF THE VUE STORE
+// what a waste of time...
+Global.objects = ref({
+    home: home,
+    away: away,
+    database: database,
+    pitch: pitch,
+    entityList: entityList,
+});
 
 </script>
 

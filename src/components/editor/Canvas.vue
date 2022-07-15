@@ -7,9 +7,15 @@
 
         <g :transform="`translate(${width/2},${height/2}), scale(${scale}) `" >
             <PitchVue :pitch="pitch" />
+
+            <!-- team names/logos -->
+<!--             <g>
+                <text v-if="" class="team-name" v-show="pl.number > 0">{{}}</text>
+            </g> -->
+
             <g v-for="(entity, key) in entityList" :key="key" :id="`player-id-${entity.id}`">
-                <PlayerVue v-if="(entity instanceof Player)" :player="entity"
-                    v-on:playerSelected="sel=>playerSelected(entity, sel)" v-on:playerMoved="pos=>playerMoved(entity)" 
+                <PlayerVue v-if="(entity instanceof Player)" :player="entity" :selected="selectedPlayer === entity"
+                    v-on:playerSelected="playerSelected" v-on:playerMoved="pos=>playerMoved(entity)" 
                     v-on:startDragging="onEntityStartDraggin" v-on:stopDragging="onEntityStopDraggin"
                     v-on:dropdown="openDropdown"
                     v-on:remove-from-squad="s => onDeleteEntity(entity, s)" v-on:remove-from-team="s => onDeleteEntity(entity, s)" v-on:remove-completely="s => onDeleteEntity(entity, s)"/>
@@ -124,15 +130,23 @@ function onDeleteEntity(entity: CanvasObject, data: any){
     emit('deleteEntity', entity, data);
 }
 
-
+// single player select TODO: extend this to CanvasObject in general
 const selectedPlayer = ref<Player | null>(null);
+// TODO: allow multi-select of canvas objects
+const selectedCanvasObjectList = ref<CanvasObject[]>([]);
 
 // emit signal, that player has been selected to show its properties in the menu and navbar
-function playerSelected(player: Player, isSelected: boolean){
-    selectedPlayer.value = isSelected ? player : null;
-    emit('playerSelected', selectedPlayer.value);
+function playerSelected(player: Player){
 
-    /* setPropertyMenuPosition(player); */
+    // if selected player was already selected, deselect him
+    if(selectedPlayer.value === player){
+        selectedPlayer.value = null;
+        emit('playerSelected', null);
+        return;
+    }
+
+    selectedPlayer.value = player;
+    emit('playerSelected', selectedPlayer.value);
 
 }
 

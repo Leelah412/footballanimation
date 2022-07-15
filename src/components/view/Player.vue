@@ -29,11 +29,13 @@ import Player from "../model/Player";
 interface Props{
     player: Player
     circleColors: string[]
+    selected: boolean
     asTool: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
     circleColors: ['#000', '#fff', '#ff0'],
+    selected: false,
     asTool: false
 })
 
@@ -83,7 +85,6 @@ const strokeWidth = ref(1);
 
 const pl = ref(props.player);
 const name = ref(props.player.name);
-const selected = ref(false);
 
 var selectRadius = 4;
 var leftMBDown: boolean = false;
@@ -130,8 +131,7 @@ function onmouseup(ev){
         var pos = new Vector2(ev.clientX, ev.clientY);
         
         if(dragStartPos.length(pos) < selectRadius){
-            selected.value = !selected.value;
-            emit("playerSelected", selected.value);
+            emit("playerSelected", props.player);
         };
     }
     // right mb

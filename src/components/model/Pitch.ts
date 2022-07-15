@@ -15,7 +15,14 @@ export default class Pitch{
     static get MINSIZEY(): number {return Pitch._MINSIZEY};
     static get MAXSIZEY(): number {return Pitch._MAXSIZEY};
 
-    size: Vector2;       // the size of the pitch in meters
+    size: Vector2;                      // the size of the pitch in meters
+    lineColor: string = '#f2f2f2';
+    pitchColor: string = 'var(--green)';
+
+    // TODO: SOON
+    //lineStructure = null;       // the chosen line structure
+    //pitchBackground: string | HTMLImageElement | null = null;
+
 
     constructor(size = new Vector2(105, 68)){
         this.size = size;

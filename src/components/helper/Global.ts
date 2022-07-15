@@ -1,3 +1,4 @@
+import { Ref } from "vue";
 import Rect from "../math/Rect";
 import Vector2 from "../math/Vector2";
 
@@ -47,10 +48,24 @@ export default class Global{
         return p;
     }
 
+    // referenz to all objects, that would otherwise reside in Editor.vue
+    // and where we would have to pass them down through the components all the goddamn time;
+    // all object members should be defined and initialized in Editor.vue
+    static objects: Ref | null = null;
+
     static scale: number = 1;
     static zoom: number = 1;
     static origin: Vector2 = new Vector2(0, 0);
     static canvasPosition: Vector2 = new Vector2(0, 0);
     // the position and size of the pitch relative to the viewport
     /* static pitchRect: Rect = {x: 0, y: 0, width: 0, height: 0}; */
+
+    // show given properties on canvas if true
+    static showTeamName: boolean = false;
+    static showTeamShort: boolean = false;
+    static showTeamLogo: boolean = false;
+    // TODO
+    static showTimer: boolean = false;
+    static showScore: boolean = false;
+    
 }

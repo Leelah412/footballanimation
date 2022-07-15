@@ -2,7 +2,7 @@ import Vector2 from "../math/Vector2";
 
 // keep track of all Canvas objects
 export interface EntityList{
-    [key: number]: CanvasObject
+    [key: string]: CanvasObject
 }
 
 export default class CanvasObject{

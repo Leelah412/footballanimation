@@ -97,6 +97,13 @@ button{
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+svg{
+  @extend .noselect;
+  *{
+    @extend .noselect;
+  }
+}
+
 .flex-row{
   display: flex;
   flex-direction: row;

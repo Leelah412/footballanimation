@@ -58,6 +58,7 @@
                             <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="16"
                                 @click="ev => onRemovePlayer(pl)"/>
                             <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="16"/>
+                            <svg-button-selection :selection="SVG_SELECTION.DRAG" :size="16"/>
                         </div>
 
                     </div>
@@ -91,7 +92,9 @@
                             <svg-button-selection :selection="SVG_SELECTION.EDIT" :size="16"/>
                             <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="16"
                                 @click="ev => onRemovePlayer(pl)"/>
-                            <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="16"/>
+                            <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="16"
+                                @click="ev => onMore(ev, pl)"/>
+                            <svg-button-selection :selection="SVG_SELECTION.DRAG" :size="16"/>
                         </div>
 
                     </div>
@@ -144,6 +147,7 @@ import Team from '@/components/model/Team';
 import { ref } from '@vue/reactivity';
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue';
 import { SVG_SELECTION } from '@/components/helper/enums';
+import { DropdownItem } from '@/components/misc/dropdown-menu.vue';
 
 interface Props{
     home: Team
@@ -152,7 +156,7 @@ interface Props{
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['removePlayer']);
+const emit = defineEmits(['movePlayer', 'removePlayer', 'moreMenu']);
 
 
 ///////////////////////
@@ -187,6 +191,33 @@ function onRemovePlayer(player: Player){
         }
         default: break;
     } */
+}
+
+function onMovePlayer(player: Player, _old: PL_STATE, _new: PL_STATE, _squad: string){
+
+    // still in same team/ in database
+    if(_old === _new){
+        // shouldnt be able to move around inside database, return
+        if(_new === PL_STATE.DB) return;
+        
+    }
+}
+
+// open a dropdown menu at the clicked position for the player
+function onMore(ev, player: Player){
+
+    // if home/ away team, send to "other" list first
+    // TODO: allow selection of individual squads
+    const dropdown: DropdownItem[] = [
+        {name: 'Move to', action(): boolean | undefined{return undefined},
+        items: [
+            {name: 'Home Team', action(): boolean | undefined{return undefined}},
+            {name: 'Away Team', action(): boolean | undefined{return undefined}},
+            {name: 'Database', action(): boolean | undefined{return undefined}},
+
+        ]}
+    ]
+    emit('moreMenu', ev, player, dropdown);
 }
 
 </script>
