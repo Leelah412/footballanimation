@@ -4,13 +4,17 @@ export default class Jersey{
 
     jerseyType: number;
     palette: string[];          // list of colors to apply to the jersey in order
+    nameColor: string;
+    numberColor: string;
 
-    constructor(name: string = "", nr: number = 0, jerseyType: number = 0, palette: string[] = []){
+    constructor(name: string = "", nr: number = 0, jerseyType: number = 0, palette: string[] = [], nameColor: string = '#000', numberColor: string = '#000'){
         this.name = name;
         this.nr = nr;
         
         this.jerseyType = jerseyType;
         this.palette = palette;
+        this.nameColor = nameColor;
+        this.numberColor = numberColor;
     }
 
 

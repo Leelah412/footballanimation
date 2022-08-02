@@ -32,7 +32,7 @@
     <div class="pm-content">
 
         <div v-if="plState === PL_STATE.HOME" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, key, idx) in home.squadList" :key="`player-list-home-${idx}`">
+            <div class="pm-list" v-for="(value, key, idx) in store.state.home.squadList" :key="`player-list-home-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
                     <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-home-player-${idx2}`">
@@ -67,7 +67,7 @@
         </div>
 
         <div v-if="plState === PL_STATE.AWAY" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, key, idx) in away.squadList" :key="`player-list-away-${idx}`">
+            <div class="pm-list" v-for="(value, key, idx) in store.state.away.squadList" :key="`player-list-away-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
                     <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-away-player-${idx2}`">
@@ -103,7 +103,7 @@
         </div>
 
         <div v-if="plState === PL_STATE.DB" class="pm-list">
-            <div class="pm-list-item" v-for="(pl, idx) in database" :key="`player-list-database-${idx}`">
+            <div class="pm-list-item" v-for="(pl, idx) in store.state.database" :key="`player-list-database-${idx}`">
                 <div class="pm-list-item-col flex-row align-center" style="font-size: var(--font-size-4)">
                     <span v-if="pl.name !== ''">{{pl.name}}</span>
                     <span v-else class="span-placeholder">Name</span>
@@ -112,7 +112,7 @@
                 <div class="player-list-crud">
                     <svg-button-selection :selection="SVG_SELECTION.EDIT" :size="20"/>
                     <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="20"
-                        @click="ev => onRemovePlayer(pl)"/>
+                        @click="ev => onRemovePlayer(pl, true)"/>
                     <svg-button-selection :selection="SVG_SELECTION.MOREV" :size="20"/>
                 </div>
             </div>
@@ -148,15 +148,15 @@ import { ref } from '@vue/reactivity';
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue';
 import { SVG_SELECTION } from '@/components/helper/enums';
 import { DropdownItem } from '@/components/misc/dropdown-menu.vue';
+import { Committer } from '@/store/modules/editor_committer';
+import store from '@/store/index';
 
 interface Props{
-    home: Team
-    away: Team
-    database: PlayerList
+    
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['movePlayer', 'removePlayer', 'moreMenu']);
+const emit = defineEmits(['movePlayer', 'moreMenu']);
 
 
 ///////////////////////
@@ -171,8 +171,15 @@ function changePlState(newState: PL_STATE){
 ///////////////////////
 
 
-function onRemovePlayer(player: Player){
-    emit('removePlayer', player);
+function onRemovePlayer(player: Player, removeFromDatabase: boolean = false){
+
+    // remove player from all teams (not just his team, in case he's in multiple teams for some reason)
+    var keys = Object.keys(store.state.home.squadList);
+    for(var i = 0; i < keys.length; i++){
+        
+    }
+
+    Committer.removePlayer(player, );
 /*     switch(plState.value){
         case PL_STATE.HOME: {
             emit('removePlayer', 'home');

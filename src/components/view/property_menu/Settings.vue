@@ -1,50 +1,49 @@
 <template>
 
 <div id="property-menu-settings" class="flex-column">
+<!--     <div class="pm-nav">
+    </div> -->
 
-    <div class="property-category flex-row">
-        <div class="property-name">Pitch Size</div>
-        <div class="property-content">
-            <div class="flex-column" style="margin-left: auto">
-                <input class="input-dark" type="number" id="pitch-width" min="90" max="120" v-model.lazy="pitch.size.x" @change="pitchSizeChange"/>
-                <label for="pitch-width" style="font-weight: 300; font-size:10px; margin-top: 8px;">
-                    Width
-                    <span style="font-size:8px; color: #cccc;">(m)</span>
-                </label>
-            </div>
-            <div class="flex-column" style="margin-left: 16px">
-                <input class="input-dark" type="number" id="pitch-height" min="60" max="90" v-model.lazy="pitch.size.y" @change="pitchSizeChange"/>
-                <label for="pitch-height" style="font-weight: 300; font-size:10px; margin-top: 8px;">
-                    Height
-                    <span style="font-size:8px; color: #cccc;">(m)</span>
-                </label>
-            </div>
+    <div class="pm-content flex-column">
+        <div style="text-align: left">
+            Show Team-... on Pitch
         </div>
-    </div>
-
-    <div class="property-category flex-row">
-        <div class="property-name">Grid</div>
-        <div class="property-content" style="justify-content: left;">
-
-            <div class="flex-row" style="margin-bottom: auto;">
-                <input type="checkbox" name="show-grid-checkbox" id="show-grid-checkbox" v-model="defaultProps.showGrid">
-                <label for="show-grid-checkbox" style="margin-left:8px">Show Grid</label>
+        <div style="padding: 8px 16px">
+            <div class="flex-row">
+                <input type="checkbox" :checked="store.state.settings.showTeamName" @change="ev => {Committer.showTeamName(ev.currentTarget.checked)}">
+                <label class="label-checkbox" for="">Name</label>
             </div>
-
-            <div v-if="defaultProps.showGrid" class="flex-column" style="margin-left: auto">
-                <input class="input-dark" type="number" id="grid-size" min="60" max="90" />
-                <label for="grid-size" style="font-weight: 300; font-size:10px; margin-top: 8px;">
-                    Size
-                    <span style="font-size:8px; color: #cccc;">(m)</span>
-                </label>
+            <div class="flex-row">
+                <input type="checkbox" :checked="store.state.settings.showTeamShort" @change="ev => {Committer.showTeamShort(ev.currentTarget.checked)}">
+                <label class="label-checkbox" for="">Short</label>
+            </div>
+            <div class="flex-row">
+                <input type="checkbox" :checked="store.state.settings.showTeamLogo" @change="ev => {Committer.showTeamLogo(ev.currentTarget.checked)}">
+                <label class="label-checkbox" for="">Logo</label>
             </div>
 
         </div>
     </div>
 
     <div class="pm-content flex-row">
-        <input type="checkbox" id="settings-show-timer">
-        <label for="settings-show-timer">Show Timer</label>
+        <input type="checkbox" :checked="store.state.settings.showJersey">
+        <label class="label-checkbox" for="">Show Jersey</label>
+    </div>
+
+    <div class="pm-content flex-row">
+        <input type="checkbox" :checked="store.state.settings.showTimer">
+        <label class="label-checkbox" for="">Show Time</label>
+    </div>
+
+    <div class="pm-content flex-row">
+        <input type="checkbox" :checked="store.state.settings.showScore">
+        <label class="label-checkbox" for="">Show Scores</label>
+    </div>
+
+    <!-- <div class="pm-content-divider-h"></div> -->
+
+    <div class="pm-content">
+        
     </div>
 
 </div>
@@ -53,14 +52,24 @@
 
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
-import Pitch from '@/components/model/Pitch';
+import store from '@/store/index';
+import { Committer } from '@/store/modules/editor_committer';
+import CanvasObject from '@/components/model/CanvasObject';
+
+// TODO: rename this file
 
 interface Props{
-    pitch: Pitch
-    pitchSizeChange: Function
+    
 }
 
 const props = defineProps<Props>();
+
+const pw = ref(store.state.pitch.size.x);
+const ph = ref(store.state.pitch.size.y);
+
+function onPitchSizeChange(ev){
+    Committer.pitchSizeChange(pw.value, ph.value);
+}
 
 interface Default{
     showGrid: boolean

@@ -2,11 +2,11 @@
 
 <g class="noselect" :id="`player-${player.id}`" :transform="`translate(${pl.position.x}, ${pl.position.y})`">
     <g class="player-circle" @mousedown="onmousedown" @contextmenu="openDropdown">
-        <circle :r="radius" :fill="teamColors[0]" :stroke="teamColors[1]" :stroke-width="strokeWidth" />
+        <circle :r="radius" :fill="getTeamColors()[0]" :stroke="getTeamColors()[1]" :stroke-width="strokeWidth" />
         <g v-if="!asTool">
             <circle v-if="selected" :r="radius+1" stroke="var(--accent)" stroke-width="0.25"  stroke-linecap="round" fill="none" />
-            <text class="player-number" v-show="pl.number > 0">{{pl.number}}</text>
-            <text class="player-name" y="4" >{{pl.name}}</text>
+            <text class="player-number" :fill="getPlayerNumberColor()" v-show="pl.number > 0">{{pl.number}}</text>
+            <text class="player-name" :fill="getPlayerNameColor()" y="4" >{{pl.name}}</text>
         </g>
     </g>
 <!--     <foreignObject @mouseup="onmouseup" :x="`-${30}`" y="0">
@@ -19,27 +19,26 @@
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+import { onUpdated, watch } from "@vue/runtime-core";
+import { extend } from "@vue/shared";
 import Global from "../helper/Global";
 import Vector2 from "../math/Vector2";
-import { DropdownItem } from "../misc/dropdown-menu.vue";
+import dropdownMenuVue, { DropdownItem } from "../misc/dropdown-menu.vue";
 import Jersey from "../model/Jersey";
 import Player from "../model/Player";
 
 interface Props{
     player: Player
-    circleColors: string[]
     selected: boolean
     asTool: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    circleColors: ['#000', '#fff', '#ff0'],
     selected: false,
     asTool: false
 })
 
-const emit = defineEmits(['playerSelected', 'startDragging', 'playerMoved', 'stopDragging', 'dropdown',
+const emit = defineEmits(['playerSelected', 'startDragging', 'playerMoved', 'stopDragging',
                           'removeFromSquad', 'removeFromTeam', 'removeCompletely']);
 
 // dropdown to show, when click
@@ -68,23 +67,45 @@ const dropdown: DropdownItem[] = [
 
 //////////////
 
-const team = ref(props.player.team);
-var teamColors: string[] = props.circleColors;
-var jersey: Jersey | null = null;
-
-if(team.value !== undefined && team.value !== null){
-    teamColors = team.value.colorPalette;
-    if(props.player.isGoalkeeper)   jersey = team.value.goalkeeperJersey;
-    else                            jersey = team.value.playerJersey;
-}
-
-//////////////
-
 const radius = ref(2);
 const strokeWidth = ref(1);
 
 const pl = ref(props.player);
 const name = ref(props.player.name);
+
+//////////////
+
+onUpdated(()=>{
+    console.log('updated prob change team');
+});
+
+var jersey: Jersey | null = null;
+
+// have to use a functions for reactivity
+function getTeamColors(){
+    if(pl.value.team !== undefined && pl.value.team !== null)
+        return pl.value.team.colorPalette;
+    return ['#000', '#fff'];
+}
+
+function getPlayerNameColor(){
+    if(pl.value.team !== undefined && pl.value.team !== null)
+        return pl.value.team.colorPlayerName;
+    return '#fff';
+}
+
+function getPlayerNumberColor(){
+    if(pl.value.team !== undefined && pl.value.team !== null)
+        return pl.value.team.colorPlayerNumber;
+    return '#fff';
+}
+
+function getJersey(){
+    if(pl.value.team === undefined || pl.value.team === null) return;
+
+    if(props.player.isGoalkeeper)   return pl.value.team.goalkeeperJersey;
+    else                            return pl.value.team.playerJersey;
+}
 
 var selectRadius = 4;
 var leftMBDown: boolean = false;
@@ -95,9 +116,9 @@ var dragStartPos: Vector2;
 var dragging: boolean = false;
 
 // player name text double clicked to make editable
-var playerNameClicked = false;
+/* var playerNameClicked = false;
 var playerNameClickTime = 0;
-var playerNameEdit = true;
+var playerNameEdit = true; */
 
 watch(name, (newName, oldName)=>{
     pl.value.name = newName;
@@ -165,8 +186,16 @@ function onmousemove(ev){
 function openDropdown(ev){
     if(ev.button == 2){
         ev.preventDefault();
+        
+        const editor = document.getElementById('editor');
+        if(editor === null || editor === undefined) return;
+
+        console.log(dropdownMenuVue);
+        console.log(extend(dropdownMenuVue));
         // open dropdown menu
-        emit('dropdown', dropdown, ev.clientX, ev.clientY);
+        var Dropdown = extend(dropdownMenuVue);
+        console.log(Dropdown);
+        
     }
 }
 

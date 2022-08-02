@@ -1,50 +1,48 @@
 <template>
 
-<div id="editor">
+<div id="editor" ref="editor">
 
     <div id="grid-navbar">
-        <Navbar :pitch="pitch" v-on:changePitchSize="pitchSizeChange"/>
+        <Navbar />
     </div>
 
     <div id="grid-left-canvas-right" class="flex-row flex-grow">
         <div id="grid-left" class="flex-row">
-            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" :homeColors="home.colorPalette" :awayColors="away.colorPalette"/>
+            <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" />
         </div>
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
-            <CanvasVue :pitch="pitch" :entityList="entityList" :width="svgWidth" :height="svgHeight" :scale="svgScale" :yAxis="getYAxis()" :xAxis="getXAxis()"
-                v-on:dropdown="openDropdown" v-on:playerSelected="onPlayerSelected"
-                v-on:deleteEntity="deleteEntity"/>
+            <!-- NEXT -->
+            <CanvasVue
+                v-on:dropdown="openDropdown" v-on:entitySelected="onEntitySelected" />
         </div>
 
         <div id="grid-right" class="flex-row">
-            <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :style="'width: var(--right-property-menu-width);'">
-                <SettingsVue v-if="menuState === menuList.settings.id" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/>
-                <PlayerListVue v-if="menuState === menuList.playerList.id"
-                    v-on:removePlayer="pl=>removePlayer(pl, true, true)"
-                    :home="home" :away="away" :database="database"/>
-                <TeamSettings v-if="menuState === menuList.teamSettings.id" :home="home" :away="away"/>
+            <PropertyMenu v-if="menuState !== ''" :id="54" :header="menuList[menuState].header" :tooltip="menuList[menuState].tooltip"
+                :style="'width: var(--right-property-menu-width);'">
+                <SettingsVue v-if="menuState === menuList.settings.id"/>
+                <Properties v-if="menuState === menuList.properties.id" :selected="selectedEntity"/>
+                <PlayerListVue v-if="menuState === menuList.playerList.id" />
+                <TeamSettings v-if="menuState === menuList.teamSettings.id" />
             </PropertyMenu>
             <Toolbar :id="1" :elements="Object.values(menuList)" :style="'width: var(--right-toolbar-width);'" v-on:menuStateChanged="onMenuStateChanged"/>
         </div>
     </div>
 
     <div id="grid-bottom" class="flex-column">
-        <EditorTools :entityList="entityList" :pitch="pitch" :snapshotList="[]" v-on:showSnapshot="showSnapshot"/>
+        <EditorTools />
         <Statusbar />
     </div>
 
-    <!-- <Properties v-if="showProperties" :propertyType="propertyType" :pitch="pitch" :pitchSizeChange="pitchSizeChange"/> -->
-    <!-- <EntityToolbar v-on:newEntity="newEntity" :selected="entityType"/> -->
-
     <svg id="drag-entity"  width="32px" height="32px" viewBox="0 0 6 6" :display="dragging ? 'inline' : 'none'">
-        <PlayerVue v-if="entityType === EntityType.PLAYERHOME" :player="entity" :circleColors="home.colorPalette" :asTool="true"/>
-        <PlayerVue v-if="entityType === EntityType.PLAYERAWAY" :player="entity" :circleColors="away.colorPalette" :asTool="true"/>
+        <!-- TODO: REFACTOR TO ADD COMPONENT BY CODE -->
+        <PlayerVue v-if="entityType === EntityType.PLAYERHOME" :player="entity" :asTool="true"/>
+        <PlayerVue v-if="entityType === EntityType.PLAYERAWAY" :player="entity" :asTool="true"/>
     </svg>
 
-    <div class="position-absolute" style="z-index: 200; top: var(--dropdown-top); left: var(--dropdown-left)">
+<!--     <div class="position-absolute" style="z-index: 200; top: var(--dropdown-top); left: var(--dropdown-left)">
         <DropdownMenu v-if="showDropdown && dropdown !== undefined" :items="dropdown" v-on:close="()=>closeDropdown(null, true)"/>
-    </div>
+    </div> -->
 
 </div>
 
@@ -61,7 +59,7 @@ import Player, { PlayerList } from "./model/Player";
 import PitchVue from "./view/Pitch.vue";
 import PlayerContainer from "./view/PlayerContainer.vue";
 import SnapshotEditor from "./view/SnapshotEditor.vue";
-import { onMounted, onUnmounted, watch } from "@vue/runtime-core";
+import { onMounted, onUnmounted} from "@vue/runtime-core";
 import Global, { EntityType} from "./helper/Global";
 import PlayerVue from "./view/Player.vue";
 import PlayerProperties from "./view/PlayerProperties.vue";
@@ -69,7 +67,6 @@ import CanvasVue from "./editor/Canvas.vue";
 import EntityToolbar from "./editor/EntityToolbar.vue";
 import EditorTools from "./editor/EditorTools.vue";
 import Snapshot from "./model/Snapshot";
-import Properties from "./editor/Properties.vue";
 import Toolbar from "./editor/Toolbar.vue";
 import PropertyMenu from "./editor/PropertyMenu.vue";
 import Navbar from "./editor/Navbar.vue";
@@ -81,7 +78,9 @@ import TeamSettings from "./view/property_menu/TeamSettings.vue";
 import Team from "./model/Team";
 import DropdownMenu, { DropdownItem } from "./misc/dropdown-menu.vue";
 import { IObject } from "./helper/enums";
-import store from "@/store";
+import store from "@/store/index";
+import { Committer } from "@/store/modules/editor_committer";
+import Properties from "./view/property_menu/Properties.vue";
 
 
 // TODO: width and height should be calculated in "App.vue" depending on viewport n stuff
@@ -96,36 +95,12 @@ const props = defineProps({
     }
 })
 
-
-// TODO: save default settings on PC of user
-/* const settings = ref<Settings>(Settings.settings); */
-
-
-//////////
-// TEAM //
-//////////
-
-const home = ref<Team>(new Team());
-const away = ref<Team>(new Team());
-const database = ref<PlayerList>({});
-
 ///////////
 // PITCH //
 ///////////
 
+// TODO: zoom should only be relevant for Canvas, not for Editor!
 const zoom = ref(1);
-const pitch = ref<Pitch>(new Pitch());
-
-function pitchSizeChange(){
-    
-    if(pitch.value.size.x < Pitch.MINSIZEX) pitch.value.size.x = Pitch.MINSIZEX;
-    if(pitch.value.size.x > Pitch.MAXSIZEX) pitch.value.size.x = Pitch.MAXSIZEX;
-    if(pitch.value.size.y < Pitch.MINSIZEY) pitch.value.size.y = Pitch.MINSIZEY;
-    if(pitch.value.size.y > Pitch.MAXSIZEY) pitch.value.size.y = Pitch.MAXSIZEY;
-    
-    // resize, when the pitch size changes, to set the Global pitch rect correctly
-    svgResize();
-};
 
 //////////////
 // DROPDOWN //
@@ -133,6 +108,9 @@ function pitchSizeChange(){
 
 const dropdown = ref<DropdownItem[] | undefined>(undefined);
 const showDropdown = ref<boolean>(false);
+
+/* TODO: try to make it so, that the dropdown menu can be called from anywhere
+    and isnt dependend on emitting signals back to Editor component */
 
 function openDropdown(_dropdown: DropdownItem[], x: number, y: number){
     if(_dropdown === undefined || _dropdown === null) return;    
@@ -220,11 +198,10 @@ function onPlayerSelected(player: Player | null){
 // ENTITY //
 ////////////
 
-const entityList = ref<EntityList>({});
 const dragging = ref<boolean>(false);
 var dragStart: Vector2;
 const entity = ref<CanvasObject | null>(null);
-const entityType = ref<EntityType | null>(null);
+const entityType = ref<EntityType>(EntityType.NONE);
 
 // select an entity type from the toolbar to drag n drop on the canvas
 function newEntity(ev, type: EntityType){
@@ -243,11 +220,11 @@ function newEntity(ev, type: EntityType){
         case EntityType.PLAYERHOME:
             console.log("playerhome");
             // Vector2(3,3) is for visual purposes and should be overwritten in the end, when dropping the entity on the canvas
-            entity.value = new Player(new Vector2(3,3));
+            entity.value = new Player(new Vector2(3,3), 0, store.state.home);
             break;
         case EntityType.PLAYERAWAY:
             console.log("away");
-            entity.value = new Player(new Vector2(3,3));
+            entity.value = new Player(new Vector2(3,3), 0, store.state.away);
             break;
         case EntityType.LINE:
             console.log("line");
@@ -302,19 +279,17 @@ function dropEntity(ev){
         // set the position correctly
         entity.value.position = Global.viewportToPitch(new Vector2(ev.clientX, ev.clientY));
         
-        entityList.value[entity.value.id] = entity.value;
+        Committer.addEntity(entity.value);
         
         // if player entity, add to home/away team first eleven list
-        if(entityType.value === EntityType.PLAYERHOME
-            ||entityType.value === EntityType.PLAYERAWAY){
+        if(entity.value instanceof Player){
             console.log("adding player to a team");
-            
-            addPlayerToTeam((entity.value as Player), entityType.value);
+            Committer.addPlayerToTeam(entity.value as Player, entityType.value);
         }
     }
 
     dragging.value = false;
-    entityType.value = null;
+    entityType.value = EntityType.NONE;
     entity.value = null;
     
     var ed = document.getElementById("editor");
@@ -324,113 +299,27 @@ function dropEntity(ev){
     ed.removeEventListener('mouseup', dropEntity);
 }
 
-// deletes given canvas object
-// can take in additional data to be processed for specific kinds of entities
-function deleteEntity(entity: CanvasObject, data: any){
-    if(!(entity.id in entityList.value)) return;
-    delete entityList.value[entity.id];
+// save the selected entity on the canvas
+const selectedEntity = ref<CanvasObject | null>(null);
 
-    // if type is Player, additionally remove from team list
-    if(entity instanceof Player){
-        // delete from team, keep player in database
-        if(data === 'removeFromTeam'){
-            removePlayer(entity as Player);
-            return;
-        }
-        // delete completely
-        if(data === 'removeCompletely'){
-            removePlayer(entity as Player, true, true);
-            return;
-        }
-        // delete from squad, keep player in team
-        removePlayer(entity as Player, false);
-    }
-
-}
-
-// deletes a canvas object with the given ID
-function deleteEntityById(id: number){
-    if(!(id in entityList.value)) return;
-    delete entityList.value[id];
-}
-
-function addPlayerToTeam(player: Player, type: EntityType){
-    switch(type){
-        case EntityType.PLAYERHOME: {
-            home.value.addPlayer(player, 'firstTeam');            
-            break;
-        }
-        case EntityType.PLAYERAWAY: {
-            away.value.addPlayer(player, 'firstTeam');
-            break;
-        }
-    }
-}
-
-// removes player from squad, team, or completely
-// default: delete from squad team, push player to 'others' squad
-// if player not supposed to be removed completely, push him to database
-// if 'removeFromTeam' false and 'removeCompletely' true, ignore 'removeCompletely'
-function removePlayer(player: Player, removeFromTeam: boolean = true, removeCompletely: boolean = false){
-    // remove player from entity list, if it still is in it for some reason
-    if(player.id in entityList.value)
-        delete entityList.value[player.id];
-
-    var team: Team | null = player.team;
-    if(team !== null)
-        team.removePlayer(player, [], removeFromTeam);
-    else{
-        // make sure, that player REALLY has no team
-
-        var lst = home.value.playerList;
-        var keys: string[] = Object.keys(lst);
-        for(var i = 0; i < keys.length; i++){
-            if(lst[keys[i]] === player){
-                home.value.removePlayer(player, [], removeFromTeam);
-                break;
-            }
-        }
-
-        lst = away.value.playerList;
-        keys = Object.keys(lst);
-        for(var i = 0; i < keys.length; i++){
-            if(lst[keys[i]] === player){
-                away.value.removePlayer(player, [], removeFromTeam);
-                break;
-            }
-        }
-    }
-
-    // dont push into db and dont delete completely
-    if(!removeFromTeam) return;
-    // remove player completely, including database
-    if(removeCompletely){
-        if(player.id in database.value)
-            delete database.value[player.id];
-        return;
-    }
+function onEntitySelected(en: CanvasObject | null){
+    selectedEntity.value = en;
+    console.log("emtoty_ ", selectedEntity.value);
     
-    database.value[player.id] = player;
 }
-
-
 
 ////////////
 // VISUAL //
 ////////////
 
-const svgWidth = ref(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0));
+/* const svgWidth = ref(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0));
 const svgHeight = ref(Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
 // NOTE: svgScale is the value of how much the elements inside the canvas are upscaled by at a zoom level of 1 and depend on the viewport width and height
-const svgScale = ref(1);
-// svgZoom is the value of how much the user zooms into the canvas
-const svgZoom = ref(1);
-// dimensions of the pitch
-const pitchOrigin = ref<Rect | undefined>(undefined);
+const svgScale = ref(1); */
 
 /* new Vector2(svgWidth/2 - (pitch.size.x * svgScale)/2, svgHeight/2 - svgHeight * 0.075 - (pitch.size.y * svgScale)/2) */
 
-onMounted(()=>{
+/* onMounted(()=>{
     document.documentElement.addEventListener('resize', svgResize);
     window.addEventListener('resize', svgResize);
     // resize again to be safe
@@ -448,27 +337,20 @@ function svgResize(){
     // calculate the scale based on the viewport
     var base: number = svgWidth.value > svgHeight.value ? svgHeight.value : svgWidth.value;
     const margin: number = 0.9;
-    svgScale.value = Math.floor((base * margin) / pitch.value.size.x);
+    svgScale.value = Math.floor((base * margin) / store.state.pitch.size.x);
     // set the global variables to the correct values
     Global.scale = svgScale.value;    
     Global.origin = new Vector2(svgWidth.value/2, svgHeight.value/2);
-    
-/*     {
-        x: getYAxis(),
-        y: getXAxis(),
-        width: pitch.value.size.x * svgScale.value,
-        height: pitch.value.size.y * svgScale.value
-    }; */
-}
+} */
 
-// gets the Y position of the X axis!!!! DO NOT CONFUSE!!!!
+/* // gets the Y position of the X axis!!!! DO NOT CONFUSE!!!!
 function getXAxis(): number{
-    return svgHeight.value/2 - (pitch.value.size.y/2)*svgScale.value;
+    return svgHeight.value/2 - (store.state.pitch.size.y/2)*svgScale.value;
 }
 // other way round DO NOT CONFUSE!!!!
 function getYAxis(): number{
-    return svgWidth.value/2 - (pitch.value.size.x/2)*svgScale.value;
-}
+    return svgWidth.value/2 - (store.state.pitch.size.x/2)*svgScale.value;
+} */
 
 interface Grid{
     navbarHeight?: string
@@ -509,35 +391,6 @@ function setGridSize(grid: Grid){
         editor.style.setProperty('--statusbar-height', grid.statusbarHeight);
 
 }
-
-// show the snapshot on screen
-function showSnapshot(snap: Snapshot){
-    console.log(snap.entities);
-    
-    // create a copy of each entity, as passing them directly as reference means actively editing the snapshot
-    var lst: EntityList = {};
-    for(var i in snap.entities){
-        if(snap.entities[i] instanceof Player){
-            var pl: Player = (snap.entities[i] as Player).copy();
-            lst[pl.id] = pl;
-        }
-    }
-
-    entityList.value = lst;
-    console.log("show snapshot editor");
-}
-
-
-// create reactive reference to all objects, such that we may access them...
-// oh wait... GODDAMN IT I COMPLETELY FORGOT ABOUT THE EXISTENCE OF THE VUE STORE
-// what a waste of time...
-Global.objects = ref({
-    home: home,
-    away: away,
-    database: database,
-    pitch: pitch,
-    entityList: entityList,
-});
 
 </script>
 

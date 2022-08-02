@@ -27,6 +27,15 @@ export default class Pitch{
     constructor(size = new Vector2(105, 68)){
         this.size = size;
     }
+
+    // return a deep copy of this instance
+    copy(): Pitch{
+        var p = new Pitch(this.size.copy());
+        p.lineColor = this.lineColor;
+        p.pitchColor = this.pitchColor;
+        
+        return p;
+    }
 }
 
 // default pitch for visualization purposes

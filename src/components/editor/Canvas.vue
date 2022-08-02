@@ -1,22 +1,38 @@
 <template>
 <div id="canvas" @mousedown="onCanvasMousedown" @contextmenu="onContextMenu">
-    <!-- TOOD: viewBox position -->
+
     <svg id="svg-canvas" xmlns="http://www.w3.org/2000/svg"
         :width="width + 'px'" :height="height + 'px'" :viewBox="x + ' ' + y + ' ' + width + ' '  + height">
         <!-- <rect :width="width" :height="height" fill="none"/> -->        
 
         <g :transform="`translate(${width/2},${height/2}), scale(${scale}) `" >
-            <PitchVue :pitch="pitch" />
+            <Pitch />
+            
+            <!-- team names/logos HOME -->
+            <g :transform="`translate(${-store.state.pitch.size.x/2 + 2},${store.state.pitch.size.y/2 - 2})`" opacity="0.5">
+                <text fill="var(--light)" font-size="4px" class="team-name">
+                    {{ store.state.settings.showTeamName ? store.state.home.name : ''}}
+                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? '(' : ''}}<!--  -->
+                    {{ store.state.settings.showTeamShort ? store.state.home.short : ''}}<!--  -->
+                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? ')' : ''}}
+                </text>
+            </g>
 
-            <!-- team names/logos -->
-<!--             <g>
-                <text v-if="" class="team-name" v-show="pl.number > 0">{{}}</text>
-            </g> -->
+            <!-- team names/logos AWAY -->
+            <g :transform="`translate(${store.state.pitch.size.x/2 - 2},${store.state.pitch.size.y/2 - 2})`" opacity="0.5">
+                <text fill="var(--light)" font-size="4px" text-anchor="end" class="team-name">
+                    {{ store.state.settings.showTeamName ? store.state.away.name : ''}}
+                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? '(' : ''}}<!--  -->
+                    {{ store.state.settings.showTeamShort ? store.state.away.short : ''}}<!--  -->
+                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? ')' : ''}}
+                </text>
+            </g>
 
-            <g v-for="(entity, key) in entityList" :key="key" :id="`player-id-${entity.id}`">
-                <PlayerVue v-if="(entity instanceof Player)" :player="entity" :selected="selectedPlayer === entity"
-                    v-on:playerSelected="playerSelected" v-on:playerMoved="pos=>playerMoved(entity)" 
-                    v-on:startDragging="onEntityStartDraggin" v-on:stopDragging="onEntityStopDraggin"
+            <g v-for="(entity, key) in store.state.entityList" :key="key" :id="`player-id-${entity.id}`">
+                <!-- NEXT -->
+                <PlayerVue v-if="(entity instanceof Player)" :player="entity" :selected="selectedEntity === entity"
+                    v-on:playerSelected="entitySelected" 
+                    v-on:startDragging="onEntityStartDragging" v-on:stopDragging="onEntityStopDragging"
                     v-on:dropdown="openDropdown"
                     v-on:remove-from-squad="s => onDeleteEntity(entity, s)" v-on:remove-from-team="s => onDeleteEntity(entity, s)" v-on:remove-completely="s => onDeleteEntity(entity, s)"/>
             </g>
@@ -40,20 +56,11 @@
 
     <!-- <PlayerProperties v-if="selectedPlayer !== null" :player="selectedPlayer" /> -->
 
-<!--     <div id="canvas-remove-entity">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M0 0h24v24H0z" fill="none"/>
-            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-        </svg>
-    </div> -->
-
     <!-- to -->
 </div>
 </template>
 
 <script lang="ts" setup>
-import Pitch from '../model/Pitch';
-import PitchVue from '../view/Pitch.vue';
 import Player from '../model/Player';
 import PlayerVue from '../view/Player.vue';
 import CanvasObject, { EntityList } from '../model/CanvasObject';
@@ -62,24 +69,20 @@ import PlayerProperties from '../view/PlayerProperties.vue';
 import Global from '../helper/Global';
 import Vector2 from '../math/Vector2';
 import Snapshot from '../model/Snapshot';
-import Settings from '../model/Settings';
+import Settings from '../model/CanvasSettings';
 import { onMounted, onUnmounted } from '@vue/runtime-core';
 import { DropdownItem } from '../misc/dropdown-menu.vue';
 import func from 'vue-temp/vue-editor-bridge';
+import store from '@/store/index';
+import Pitch from '../view/Pitch.vue';
+import { Committer } from '@/store/modules/editor_committer';
 
 interface Props{
-    pitch: Pitch
-    entityList: EntityList
-    width: number
-    height: number
-    scale: number
-    yAxis: number
-    xAxis: number
+    
 }
 
 const props = defineProps<Props>();
-
-const emit = defineEmits(['dropdown', 'playerSelected', 'deleteEntity']);
+const emit = defineEmits(['dropdown', 'entitySelected']);
 
 function openDropdown(items: DropdownItem[], x: number, y: number){
     emit('dropdown', items, x, y);
@@ -93,7 +96,7 @@ onUnmounted(()=>{
 
 onMounted(()=>{
     setCanvasPosition(new Vector2());
-    setCanvasRect();    
+    setCanvasRect();
 
     window.addEventListener('resize', setCanvasRect);
 });
@@ -110,16 +113,15 @@ function onDeleteLeave(ev){
 
 const draggedEntity = ref<CanvasObject | null>(null);
 
-function onEntityStartDraggin(entity: CanvasObject){
+function onEntityStartDragging(entity: CanvasObject){
     draggedEntity.value = entity;
 }
 
-function onEntityStopDraggin(entity: CanvasObject){
+function onEntityStopDragging(entity: CanvasObject){
     // if hovering over delete button, delete entity
     if(hoverDelete.value){
+        Committer.deleteEntity(entity);
         console.log('delete entity');
-        
-        emit('deleteEntity', entity);
     }
     
     draggedEntity.value = null;
@@ -127,38 +129,38 @@ function onEntityStopDraggin(entity: CanvasObject){
 
 // delete a canvas object and send additional data, if necessary
 function onDeleteEntity(entity: CanvasObject, data: any){
-    emit('deleteEntity', entity, data);
+    Committer.deleteEntity(entity, data);
 }
 
 // single player select TODO: extend this to CanvasObject in general
-const selectedPlayer = ref<Player | null>(null);
+const selectedEntity = ref<CanvasObject | null>(null);
 // TODO: allow multi-select of canvas objects
 const selectedCanvasObjectList = ref<CanvasObject[]>([]);
 
 // emit signal, that player has been selected to show its properties in the menu and navbar
-function playerSelected(player: Player){
+function entitySelected(entity: CanvasObject){
 
     // if selected player was already selected, deselect him
-    if(selectedPlayer.value === player){
-        selectedPlayer.value = null;
-        emit('playerSelected', null);
+    if(selectedEntity.value === entity){
+        selectedEntity.value = null;
+        emit('entitySelected', null);
         return;
     }
 
-    selectedPlayer.value = player;
-    emit('playerSelected', selectedPlayer.value);
+    selectedEntity.value = entity;
+    emit('entitySelected', selectedEntity.value);
 
 }
 
 // use this function to move the property menu, when moving the player
-function playerMoved(player: Player){
+/* function playerMoved(player: Player){
     if(selectedPlayer.value === null) return;
     // if selected player is for some reason not "player", reset selected player to null and return
     if(selectedPlayer.value !== player){
         selectedPlayer.value = null;
         return;
     }
-}
+} */
 
 const canvasDragStartRadius = 4;
 var canvasDragStartPos: Vector2;
@@ -215,6 +217,9 @@ function onContextMenu(ev){
 // VISUAL //
 ////////////
 
+const width = ref(0);
+const height = ref(0);
+const scale = ref(1);
 const x = ref(0);
 const y = ref(0);
 
@@ -241,6 +246,17 @@ function setCanvasRect(){
     if(cnv === undefined || cnv === null) return;
 
     rect.value = cnv.getBoundingClientRect();
+    // set width and height of canvas svg
+    width.value = rect.value.width;
+    height.value = rect.value.height;
+
+    // calculate the scale based on the canvas viewport
+    var base: number = width.value > height.value ? height.value : width.value;
+    const margin: number = 1;
+    scale.value = (base * margin) / store.state.pitch.size.x;
+    // set the global variables to the correct values
+    Global.scale = scale.value;
+    Global.origin = new Vector2(width.value/2, height.value/2);
 }
 
 </script>

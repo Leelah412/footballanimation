@@ -7,7 +7,7 @@
         <button class="btn-editor-tool-switch">Snapshot Editor</button>
     </div>
     <div id="et-content">
-        <SnapshotEditor v-if="selected === Tool.SNAPSHOT" :snapshot-list="snapshotList" :take-snapshot="takeSnapshot" v-on:show-snapshot="showSnapshot"/>
+        <SnapshotEditor v-if="selected === Tool.SNAPSHOT" />
         
     </div>
 </div>
@@ -23,48 +23,18 @@ import Snapshot, { EntitySnapshot } from '../model/Snapshot';
 import SnapshotEditor from '../view/SnapshotEditor.vue';
 
 interface Props{
-    entityList: EntityList
-    pitch: Pitch
-
-    snapshotList: Snapshot[]
+    
 }
 
 const props = defineProps<Props>();
-const emit = defineEmits(['showSnapshot']);
 
 enum Tool {TIMELINE, SNAPSHOT, SCENARIO};
-
 const selected = ref(Tool.SNAPSHOT);
-
-const _entityList = ref(props.entityList);
-
-
-// returns an array of snapshots, i.e. entity-position pairs (and maybe rotation, scale n stuff further on)
-function takeSnapshot(): Snapshot{
-    var lst: CanvasObject[] = [];
-    
-    // create a completely new copy instance for each entity, such that changes to the original instance dont affect changes to the snapshots
-    for(var entity in props.entityList){
-        if(props.entityList[entity] instanceof Player){
-            lst.push((props.entityList[entity] as Player).copy());
-        }
-    }
-
-    return new Snapshot(lst, props.pitch);
-}
-
-// show the snapshot on screen
-// might not work, and we might have to push it further down to Editor and change the values there
-function showSnapshot(snap: Snapshot){
-    console.log(snap);
-    
-    emit('showSnapshot', snap);
-}
 
 </script>
 
-<style lang="scss" scoped>
 
+<style lang="scss" scoped>
 
 #editor-tools{
     display: flex;
@@ -122,7 +92,5 @@ $container-width: 64px;
         }
     }
 }
-
-
 
 </style>

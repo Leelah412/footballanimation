@@ -1,41 +1,41 @@
 <template>
 
-<g id="svg-pitch" class="noselect" :transform="`translate(${-pitch.size.x/2}, ${-pitch.size.y/2})`">
+<g id="svg-pitch" class="noselect" :transform="`translate(${-store.state.pitch.size.x/2}, ${-store.state.pitch.size.y/2})`">
     <rect
        style="stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       :fill="pitch.pitchColor"
-       :stroke="pitch.lineColor"
+       :fill="store.state.pitch.pitchColor"
+       :stroke="store.state.pitch.lineColor"
        id="outer-lines"
-       :width="pitch.size.x"
-       :height="pitch.size.y"
+       :width="store.state.pitch.size.x"
+       :height="store.state.pitch.size.y"
        :x="0"
        :y="0" />
     <path
        style="fill:none;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       :stroke="pitch.lineColor" :d="`m ${pitch.size.x/2},0 v ${pitch.size.y}`"
+       :stroke="store.state.pitch.lineColor" :d="`m ${store.state.pitch.size.x/2},0 v ${store.state.pitch.size.y}`"
        id="center-line" />
     <g
-       id="center-circle" :transform="`translate(${pitch.size.x/2},${pitch.size.y/2})`">
+       id="center-circle" :transform="`translate(${store.state.pitch.size.x/2},${store.state.pitch.size.y/2})`">
       <circle
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          id="path1079"
          cx="0"
          cy="0"
          r="9.15" />
       <circle
          style="fill-opacity:1;stroke:none;"
-         :fill="pitch.lineColor"
+         :fill="store.state.pitch.lineColor"
          id="path1079-5"
          cx="0"
          cy="0"
          r="0.4" />
     </g>
     <g
-       id="penarea-left" :transform="`translate(0, ${pitch.size.y/2 - 20.15})`">
+       id="penarea-left" :transform="`translate(0, ${store.state.pitch.size.y/2 - 20.15})`">
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          id="area-left"
          width="16.5"
          height="40.3"
@@ -43,7 +43,7 @@
          y="0" />
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          id="five-m-left"
          width="5.5"
          height="18.32"
@@ -52,21 +52,21 @@
       <path
          id="half-circle-left"
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          d="m 16.5,20.15 v 8.25 a 9.15,9.15 0 0 0 4.89737,-8.1008 9.15,9.15 0 0 0 -4.89737,-8.10131 z" />
       <circle
          style="fill-opacity:1;stroke:none;stroke-width:0.0111663;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :fill="pitch.lineColor"
+         :fill="store.state.pitch.lineColor"
          id="path1079-5-8"
          cx="11"
          cy="20.15"
          r="0.4" />
     </g>
     <g
-       id="penarea-right" :transform="`translate(${pitch.size.x}, ${pitch.size.y/2 - 20.15}), scale(-1,1)`">
+       id="penarea-right" :transform="`translate(${store.state.pitch.size.x}, ${store.state.pitch.size.y/2 - 20.15}), scale(-1,1)`">
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          id="area-left"
          width="16.5"
          height="40.3"
@@ -74,7 +74,7 @@
          y="0" />
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          id="five-m-left"
          width="5.5"
          height="18.32"
@@ -83,11 +83,11 @@
       <path
          id="half-circle-left"
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="pitch.lineColor" 
+         :stroke="store.state.pitch.lineColor" 
          d="m 16.5,20.15 v 8.25 a 9.15,9.15 0 0 0 4.89737,-8.1008 9.15,9.15 0 0 0 -4.89737,-8.10131 z" />
       <circle
          style="fill-opacity:1;stroke:none;stroke-width:0.0111663;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :fill="pitch.lineColor"
+         :fill="store.state.pitch.lineColor"
          id="path1079-5-8"
          cx="11"
          cy="20.15"
@@ -142,6 +142,7 @@
 </template>
 
 <script lang="ts" setup>
+import store from '@/store/index';
 import { ref } from '@vue/reactivity';
 import Vector2 from '../math/Vector2';
 import Pitch from '../model/Pitch';
@@ -174,10 +175,6 @@ import Pitch from '../model/Pitch';
 // y = size.y/2
 
 const props = defineProps({
-    pitch: {
-        type: Pitch,
-        required: true
-    },
 /*     position: {
        type: Vector2,
        default: ()=>{return new Vector2()}
@@ -187,8 +184,6 @@ const props = defineProps({
         default: 1
     }
 })
-
-
 
 </script>
 

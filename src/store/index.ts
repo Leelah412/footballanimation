@@ -1,10 +1,8 @@
-import CanvasObject, { EntityList } from '@/components/model/CanvasObject'
 import Pitch from '@/components/model/Pitch'
-import Player, { PlayerList } from '@/components/model/Player'
+import Settings from '@/components/model/CanvasSettings'
 import Team from '@/components/model/Team'
-import Global, {EntityType} from '@/components/helper/Global'
 import { createStore } from 'vuex'
-import { mutations } from './modules/editor'
+import { mutations, State } from './modules/editor'
 
 export default createStore({
   state: {
@@ -12,9 +10,11 @@ export default createStore({
     away: new Team(),
     database: {},         // database of all players available
     pitch: new Pitch(),
-    entityList: {}
+    entityList: {},
+    snapshotList: [],
 
-  },
+    settings: new Settings(),
+  } as State,
   
   mutations: mutations,
   actions: {

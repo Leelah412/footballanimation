@@ -91,7 +91,7 @@
                 Width
                 <span style="font-size:8px; color: var(--light-4);">(m)</span>
             </label>
-            <input type="number" id="navbar-pitch-width" min="90" max="120" v-model.lazy="pitch.size.x"
+            <input type="number" id="navbar-pitch-width" min="90" max="120" v-model.lazy="x"
                 style="margin-bottom: 16px;" @change="onPitchSizeChange"/>
         </div>
 
@@ -100,7 +100,7 @@
                 Height
                 <span style="font-size:8px; color: var(--light-4);">(m)</span>
             </label>
-            <input type="number" id="navbar-pitch-height" min="60" max="90" v-model.lazy="pitch.size.y"
+            <input type="number" id="navbar-pitch-height" min="60" max="90" v-model.lazy="y"
                 style="margin-bottom: 16px;" @change="onPitchSizeChange"/>
         </div>
     </div>
@@ -111,18 +111,24 @@
 
 
 <script lang="ts" setup>
+import store from '@/store/index';
+import { Committer } from '@/store/modules/editor_committer';
 import { ref } from '@vue/reactivity';
 import {visualizationJersey} from '../model/Jersey';
 import Pitch, {visualizationPitch} from '../model/Pitch';
 import Jersey from '../view/Jersey.vue';
 
 interface Props{
-    pitch: Pitch
+    
 }
 
 const props = defineProps<Props>();
 const emit = defineEmits(['load', 'save', 'import', 'export',
-    'toggleJersey', 'changePitchSize']);
+    'toggleJersey']);
+
+const x = ref(store.state.pitch.size.x);
+const y = ref(store.state.pitch.size.y);
+
 
 const showJersey = ref(false);
 
@@ -156,9 +162,8 @@ function onShowJersey(ev){
 }
 
 function onPitchSizeChange(ev){
-    emit('changePitchSize', ev.target.value);
-    console.log("pitch size: ", ev.target.value);
-    
+    // call the pitch resize mutation from the committer
+    Committer.pitchSizeChange(x.value, y.value);   
 }
 
 </script>

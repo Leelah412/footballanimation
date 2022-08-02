@@ -1,7 +1,6 @@
 <template>
 
 <div id="editor-entity-toolbar">
-    <!-- <span class="eet-desc">Game Objects</span> -->
     <div class="eet-item" id="eet-ball">
         <svg class="eet-item-svg" width="16px" height="16px" viewBox="0 0 16 16">
             <circle r="8" cx="8" cy="8" fill="#fff"/>
@@ -9,23 +8,20 @@
     </div>
     <div class="eet-item" id="eet-home">
         <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.PLAYERHOME)">
-            <!-- <circle r="10" cx="12" cy="12" :fill="settings.entityColors.homeColors.main" :stroke="settings.entityColors.homeColors.secondary" stroke-width="4" /> -->
-            <PlayerVue :player="dummyPlayerHome" :circleColors="homeColors" :asTool="true"/>
+            <PlayerVue :player="dummyPlayerHome" :asTool="true"/>
         </svg>
     </div>
     <div class="eet-item" id="eet-away">
         <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.PLAYERAWAY)">
-            <!-- <circle r="10" cx="12" cy="12" :fill="settings.entityColors.awayColors.main" :stroke="settings.entityColors.awayColors.secondary" stroke-width="4" /> -->
-            <PlayerVue :player="dummyPlayerAway" :circleColors="awayColors" :asTool="true" />
+            <PlayerVue :player="dummyPlayerAway" :asTool="true" />
         </svg>
     </div>
-    <div class="eet-divider"></div>
-    <!-- <span class="eet-desc">Drawing Tools</span> -->
+<!--     <div class="eet-divider"></div>
     <div :class="`eet-item ${selected === EntityType.LINE ? 'selected' : ''}`" id="eet-line">
         <svg class="eet-item-svg" width="32px" height="32px" viewBox="0 0 6 6" @mousedown="ev=>newEntity(ev, EntityType.LINE)">
             <LineVue :line="dummyLine" :asTool="true"/>
         </svg>
-    </div>
+    </div> -->
 </div>
 
 </template>
@@ -36,28 +32,24 @@
 import { ref } from '@vue/reactivity';
 import Vector2 from '../math/Vector2';
 import Player from '../model/Player';
-import Settings from '../model/Settings';
+import Settings from '../model/CanvasSettings';
 import PlayerVue from '../view/Player.vue';
 import LineVue from '../view/CanvasObject/Line.vue';
 import { EntityType } from '../helper/Global';
 import Line from '../model/CanvasObject/Line';
+import store from '@/store/index';
 
 interface Props{
     selected: EntityType
-    homeColors: string[]
-    awayColors: string[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    selected: EntityType.NONE,
-    homeColors: ['#000', '#fff', '#f00'],
-    awayColors: ['#fff','#000', '#00f'],
-    
+    selected: EntityType.NONE,    
 });
 
-const dummyPlayerHome = ref(new Player(new Vector2(3,3)));
-const dummyPlayerAway = ref(new Player(new Vector2(3,3)));
-const dummyLine = ref(new Line(new Vector2(0, 0), new Vector2(32,32), new Vector2()));
+const dummyPlayerHome = ref(new Player(new Vector2(3,3), 0, store.state.home));
+const dummyPlayerAway = ref(new Player(new Vector2(3,3), 0, store.state.away));
+/* const dummyLine = ref(new Line(new Vector2(0, 0), new Vector2(32,32), new Vector2())); */
 
 const emit = defineEmits(['newEntity']);
 

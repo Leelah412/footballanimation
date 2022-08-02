@@ -1,7 +1,11 @@
 <template>
     
 <div class="editor-property-menu" :id="`property-menu-${id}`">
-    <div class="property-menu-header">{{header !== undefined ? header.toUpperCase() : ''}}</div>
+    <div class="property-menu-header" :id="`property-menu-header-${id}`">
+        <span>{{header !== undefined ? header.toUpperCase() : ''}}</span>
+        <svg-button-selection :selection="SVG_SELECTION.INFO" />
+        <!-- <tooltip id="property-menu-header-tooltip" v-if="tooltipVisible && tooltip !== undefined" :tooltip="tooltip"/> -->
+    </div>
 
     <div class="property-menu-content">
         <slot></slot>
@@ -12,16 +16,22 @@
 
 
 <script lang="ts" setup>
-import { onMounted } from "@vue/runtime-core";
+import { onMounted, ref } from "@vue/runtime-core";
+import { SVG_SELECTION } from "../helper/enums";
+import SvgButtonSelection from "../misc/svg-button-selection.vue";
+/* import Tooltip from "../misc/tooltip.vue"; */
 
 
 interface Props{
     id: number
     header?: string
     style?: string
+    tooltip?: string
 }
 
 const props = defineProps<Props>();
+
+const tooltipVisible = ref<boolean>(false);
 
 var setStyle = ()=>{
     
@@ -34,6 +44,31 @@ var setStyle = ()=>{
 }
 
 onMounted(setStyle);
+
+// show tooltip at clicking position
+/* function showTooltip(ev){
+    if(tooltipVisible.value){
+        tooltipVisible.value = false;
+        return;
+    }
+
+    const header = document.getElementById(`property-menu-header-${props.id}`);
+
+    if(header === undefined || header === null) return;
+    
+    tooltipVisible.value = true;
+
+    var rect = header.getBoundingClientRect();
+    var x = ev.clientX - rect.x;
+    var y = ev.clientY - rect.y;
+    
+    const dom = document.getElementById('property-menu-header-tooltip');
+    if(dom === undefined || dom === null) return;
+    console.log('asdsssasd');
+
+    dom.style.setProperty('--tooltip-left', `${x}px`);
+    dom.style.setProperty('--tooltip-top', `${y}px`);
+} */
 
 </script>
 
@@ -53,6 +88,15 @@ onMounted(setStyle);
 
 
 .property-menu-header{
+    position: relative;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .svg-button-selection{
+        margin-left: 8px;
+    }
+
     text-align: left;
     padding: 4px;
     padding-left: 8px;
@@ -62,6 +106,9 @@ onMounted(setStyle);
     letter-spacing: 2px;
     font-size: 12px;
     color: var(--light-5);
+
+    --tooltip-top: 0;
+    --tooltip-left: 0;
     
 }
 
@@ -70,11 +117,19 @@ onMounted(setStyle);
 
 }
 
+.tooltip{    
+    position: absolute;
+
+    top: var(--tooltip-top);
+    left: var(--tooltip-left);
+}
+
 </style>
 
 
 <style lang="scss">
 
+// NAVIGATION
 .pm-nav{
     display: flex;
     flex-direction: row;
@@ -118,6 +173,7 @@ onMounted(setStyle);
 
 }
 
+// CONTENT
 .pm-content{
     font-size: var(--font-size-4);
     font-weight: 300;
@@ -141,6 +197,8 @@ onMounted(setStyle);
     height: 1px;
     width: 100%;
     background: var(--dark-4);
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .pm-list-wrapper{

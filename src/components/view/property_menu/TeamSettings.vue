@@ -17,14 +17,14 @@
 
     <div class="pm-content">
         
-        <div class="flex-row" style="margin-bottom: 8px;">
+        <div class="flex-row">
             <div class="flex-column" style="box-sizing: border-box; width: 75%; padding-right: 8px;">
                 <div class="pm-content-header">TEAM NAME</div>
-                <input type="text" class="input-dark">
+                <input type="text" class="input-dark" v-model.lazy="currentTeam.name" >
             </div>
             <div class="flex-column" style="width: 25%">
                 <div class="pm-content-header">SHORT</div>
-                <input type="text" class="input-dark">
+                <input type="text" class="input-dark" v-model.lazy="currentTeam.short">
             </div>
         </div>
     </div>
@@ -45,11 +45,20 @@
                     </div>
                 </div>
             </div>
-            <div class="flex-column align-center">
-                <div class="pm-content-header">TEAM COLORS</div>
-                <div class="pm-team-color-container">
-                    <!-- no need to worry about picker border, if all colors are equal -->
-                    <input v-for="idx in 3" :key="`team-color-${idx-1}`" type="color" class="pm-team-color" v-model="currentTeam.colorPalette[idx-1]" :style="`background: ${currentTeam.colorPalette[idx-1]}`" />
+            <div class="flex-column" style="margin: 0 auto;">
+                <div class="flex-column" style="margin-bottom: 8px;">
+                    <div class="pm-content-header">TEAM COLORS</div>
+                    <div class="flex-row">
+                        <input v-for="(col, idx) in currentTeam.colorPalette" :key="`team-color-${idx}`" type="color" class="pm-input-color" v-model="currentTeam.colorPalette[idx]" />
+                    </div>
+                </div>
+                <div class="flex-column" style="margin-bottom: 8px;">
+                    <div class="pm-content-header">PLAYER NAME</div>
+                    <input type="color" class="pm-input-color" v-model="currentTeam.colorPlayerName" />
+                </div>
+                <div class="flex-column" style="margin-bottom: 8px;">
+                    <div class="pm-content-header">PLAYER NR</div>
+                    <input type="color" class="pm-input-color" v-model="currentTeam.colorPlayerNumber" />
                 </div>
             </div>
         </div>
@@ -78,14 +87,6 @@
     <div class="pm-content-divider-h"></div>
 
     <div class="pm-content">
-
-        <div>
-            visual:
-            show logo on pitch
-            show teamname on pitch
-            show short on pitch
-        </div>
-
         <div>
             
         </div>
@@ -101,11 +102,12 @@ import Team from "@/components/model/Team";
 import { ref } from "@vue/reactivity";
 import Jersey from "../Jersey.vue";
 import {visualizationJersey} from '@/components/model/Jersey';
+import store from "@/store/index";
+import { Committer } from "@/store/modules/editor_committer";
 
 
 interface Props{
-    home: Team
-    away: Team
+    
 }
 
 const props = defineProps<Props>();
@@ -113,13 +115,12 @@ const emit = defineEmits(['uploadLogo']);
 
 enum TAB_STATE {HOME, AWAY};
 const tabState = ref<TAB_STATE>(TAB_STATE.HOME);
-const currentTeam = ref<Team>(props.home);
+const currentTeam = ref<Team>(store.state.home);
 
 function changeTabState(newState: TAB_STATE){
     tabState.value = newState;
-    currentTeam.value = tabState.value === TAB_STATE.HOME ? props.home : props.away;
+    currentTeam.value = tabState.value === TAB_STATE.HOME ? store.state.home : store.state.away;
 }
-
 
 function uploadLogo(){
     emit('uploadLogo');
@@ -208,18 +209,13 @@ $logo-size: 128px;
 
 .pm-team-color-container{
     display: flex;
-    flex-direction: column;
-
-    .pm-team-color{
-        margin-top: 4px;
-        margin-bottom: 4px;
-    }
+    flex-direction: row;
 
 }
 
-.pm-team-color{
-    width: 32px;
-    height:32px;
+.pm-input-color{
+    width: 24px;
+    height:24px;
 }
 
 </style>

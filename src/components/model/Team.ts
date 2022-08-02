@@ -42,12 +42,14 @@ export default class Team{
 
     // visual
     logoPath: string = '';                      // path to the logo file of the club
-    // color scheme of the club; importance in descending order of the array; must have at least three colors
-    colorPalette: string[] = ['#000', '#fff', '#f00'];
     jerseys: Jersey[] = [];                     // list of available jerseys 
     playerJersey: Jersey | null = null;         // jersey the field players are wearing
     goalkeeperJersey: Jersey | null = null;     // jersey the keeper is wearing; wear player jersey, if null
-
+    // color scheme of the club; importance in descending order of the array; must have at least 2 colors
+    colorPalette: string[] = ['#000000', '#ffffff'];
+    colorPlayerName: string = '#ffffff';        // color of the player name on the canvas (when players visualized as circles)
+    colorPlayerNumber: string = '#ffffff';      // color of the player number on the canvas (when players visualized as circles)
+    
     constructor(id: string = '', name: string = '', short: string = ''){
         this.id = id;
         this.name = name;
