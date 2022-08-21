@@ -1,5 +1,6 @@
 import { EntityType } from "@/components/helper/Global";
 import CanvasObject, { EntityList } from "@/components/model/CanvasObject";
+import Match from "@/components/model/Match";
 import Player from "@/components/model/Player";
 import Snapshot from "@/components/model/Snapshot";
 import Team from "@/components/model/Team";
@@ -68,6 +69,10 @@ pitchSizeChange: (x: number, y: number) => store.commit('pitchSizeChange', {x: x
 addSnapshot: (snap: Snapshot, idx: number) => store.commit('addSnapshot', {snap: snap, idx: idx}),
 deleteSnapshot: (snap: Snapshot) => store.commit('deleteSnapshot', {snap: snap}),
 setSnapshotList: (snapshotList: Snapshot[]) => store.commit('setSnapshotList', {snapshotList: snapshotList}),
+
+// MATCH
+
+setMatch: (match: Match) => store.commit('setMatch', {match: match}),
 
 // SETTINGS
 showTeamName: (show: boolean) => store.commit('showTeamName', {show: show}),

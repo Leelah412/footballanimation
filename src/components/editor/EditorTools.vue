@@ -2,13 +2,13 @@
 <!-- should only be seen, when needed (at least for smaller screen sizes) -->
 <div id="editor-tools">
     <div id="et-switch">
-        <button class="btn-editor-tool-switch">Timeline</button>
+        <button class="btn-editor-tool-switch" @click="ev => selected = Tool.MATCH">Match Editor</button>
         <button class="btn-editor-tool-switch">Scenario Graph</button>
-        <button class="btn-editor-tool-switch">Snapshot Editor</button>
+        <button class="btn-editor-tool-switch" @click="ev => selected = Tool.SNAPSHOT">Snapshot Editor</button>
     </div>
     <div id="et-content">
         <SnapshotEditor v-if="selected === Tool.SNAPSHOT" />
-        
+        <MatchEditor v-if="selected === Tool.MATCH" />
     </div>
 </div>
 </template>
@@ -21,6 +21,7 @@ import Pitch from '../model/Pitch';
 import Player from '../model/Player';
 import Snapshot, { EntitySnapshot } from '../model/Snapshot';
 import SnapshotEditor from '../view/SnapshotEditor.vue';
+import MatchEditor from '../view/MatchEditor.vue';
 
 interface Props{
     
@@ -28,7 +29,7 @@ interface Props{
 
 const props = defineProps<Props>();
 
-enum Tool {TIMELINE, SNAPSHOT, SCENARIO};
+enum Tool {MATCH, SNAPSHOT, SCENARIO};
 const selected = ref(Tool.SNAPSHOT);
 
 </script>
@@ -52,6 +53,8 @@ const selected = ref(Tool.SNAPSHOT);
     flex-grow: 100;
     height: 100%;
     padding: 8px;
+
+    overflow: hidden;
 }
 
 $container-width: 64px;
@@ -93,4 +96,41 @@ $container-width: 64px;
     }
 }
 
+
+
+</style>
+
+<style lang="scss">
+.tool-header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 2px;
+    height: 32px;
+    h5{
+        font-weight: 300;
+        margin-left: 8px;
+        margin-right: auto;
+    }
+
+    overflow: hidden;
+}
+
+.tool-content{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    padding: 8px;
+    margin: 8px;
+    height: 100%;
+    border-radius: 2px;
+
+    background: var(--secondary);
+    box-shadow: inset 0 0 4px var(--dark);
+
+    overflow: hidden;
+}
 </style>

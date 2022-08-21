@@ -5,6 +5,7 @@ import Player, { PlayerList } from "@/components/model/Player";
 import CanvasSettings from "@/components/model/CanvasSettings";
 import Snapshot from "@/components/model/Snapshot";
 import Team from "@/components/model/Team";
+import Match from "@/components/model/Match";
 
 export interface State{
     home: Team,
@@ -13,6 +14,7 @@ export interface State{
     pitch: Pitch,
     entityList: EntityList,
     snapshotList: Snapshot[],
+    match: Match,
 
     settings: CanvasSettings,
 }
@@ -229,6 +231,14 @@ setSnapshotList(state: State, args: {snapshotList: Snapshot[]}){
     state.snapshotList = args.snapshotList;
 },
 
+///////////
+// MATCH //
+///////////
+
+setMatch(state: State, args: {match: Match}){
+    state.match = args.match;
+},
+
 ////////////////////
 // CANVASSETTINGS //
 ////////////////////
@@ -245,4 +255,22 @@ showTeamLogo(state: State, args: {show: boolean}){
     state.settings.showTeamLogo = args.show;
 },
 
+}
+
+
+export default {
+    namespaced: true,
+    state: {
+        home: new Team(),
+        away: new Team(),
+        database: {},         // database of all players available
+        pitch: new Pitch(),
+        entityList: {},
+        snapshotList: [],
+        match: new Match(),
+    
+        settings: new CanvasSettings(),
+    } as State,
+    
+    mutations: mutations,
 }

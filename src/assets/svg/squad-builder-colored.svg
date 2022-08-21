@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="34.543072"
+   height="32"
+   viewBox="0 0 9.1395209 8.4666667"
+   version="1.1"
+   id="svg2190"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="squad-builder-colored.svg">
+  <defs
+     id="defs2184" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="12.645605"
+     inkscape:cy="34.140141"
+     inkscape:document-units="mm"
+     inkscape:current-layer="g1277-6"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1294"
+     inkscape:window-height="1040"
+     inkscape:window-x="182"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata2187">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-60.962831,-82.785036)">
+    <g
+       id="g1277-6"
+       transform="matrix(0.30501598,0,0,0.30501598,71.923875,53.588347)">
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-0-6"
+         cx="-29.57494"
+         cy="106.10673"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-1-4-2"
+         cx="-20.953932"
+         cy="106.10673"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-2-2-7"
+         cx="-12.332921"
+         cy="97.772354"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-5-25-5"
+         cx="-29.57494"
+         cy="97.838501"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-3-9-4"
+         cx="-20.953932"
+         cy="97.838501"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-6-3-3"
+         cx="-12.332921"
+         cy="106.10673"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-39-3-0"
+         cx="-33.885445"
+         cy="114.2265"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-1-2-8-6"
+         cx="-25.264437"
+         cy="114.2265"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-2-7-6-2"
+         cx="-16.643427"
+         cy="114.2265"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-6-6-3-2"
+         cx="-8.0224142"
+         cy="114.2265"
+         r="2.0505209" />
+      <circle
+         style="fill:#105650;fill-opacity:1;stroke:none;stroke-width:0.433123;stroke-linecap:round"
+         id="path62-2-7-3-4-5"
+         cx="-20.953932"
+         cy="121.42942"
+         r="2.0505209" />
+    </g>
+  </g>
+</svg>

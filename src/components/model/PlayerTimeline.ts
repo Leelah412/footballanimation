@@ -4,7 +4,9 @@ import Player from "./Player";
 // the position the player stands on at the given point in time
 export interface Frame{
     time: number
-    position: Vector2   
+
+    position: Vector2                   // (x, y) position of the element relative to the center of the pitch
+    rotation: number;                   // rotation of the player in degrees
 
     prev: Frame | null
     next: Frame | null
@@ -55,7 +57,7 @@ export class PlayerPosition{
     } */
 }
 
-export default class PlayerTimeline{
+export default class ElementTimeline{
     player: Player;
     timeline: Frame | null = null;          // should be sorted by time
 

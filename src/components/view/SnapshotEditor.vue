@@ -1,7 +1,7 @@
 <template>
 
 <div id="snapshot-editor">
-    <div id="se-header">
+    <div id="se-header" class="tool-header">
         <h5 class="noselect">SNAPSHOT EDITOR</h5>
         <!-- <button class="btn-secondary" @click="editSnapshot">EDIT</button> -->
         <SvgButtonSelection :selection="SVG_SELECTION.EDIT" @click="editSnapshot"/>
@@ -12,7 +12,7 @@
         </div>
 
     </div>
-    <div id="se-content">
+    <div id="se-content" class="tool-content">
         <div v-if="isOverflow" class="sec-move" id="sec-move-left">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#ccc">
                 <path d="M11.67 3.87L9.9 2.1 0 12l9.9 9.9 1.77-1.77L3.54 12z"/>
@@ -544,17 +544,7 @@ function resetSnapshot(){
 }
 
 #se-header{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 2px;
-    height: 32px;
-    h5{
-        font-weight: 300;
-        margin-left: 8px;
-        margin-right: auto;
-    }
+
 }
 
 #snapshot-jump-to-container{
@@ -568,18 +558,7 @@ function resetSnapshot(){
 }
 
 #se-content{
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
 
-    padding: 8px;
-    margin: 8px;
-    height: 100%;
-    border-radius: 2px;
-
-    background: var(--secondary);
-    box-shadow: inset 0 0 4px var(--dark);
 }
 
 .sec-move{

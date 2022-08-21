@@ -1,11 +1,25 @@
 <template>
-  <Editor />
+
+  <Navbar v-if="route.name !== 'editor'"/>
+
+  <router-view />
+
+  <footer v-if="route.name !== 'editor'">
+
+  </footer>
+
 </template>
 
 <script lang="ts" setup>
-import Editor from './components/Editor.vue';
+import { ref } from "vue-demi";
+import { useRouter } from "vue-router";
+import Navbar from "./components/Navbar.vue";
+
+const route = useRouter().currentRoute;
 
 </script>
+
+
 
 <style lang="scss">
 
@@ -41,17 +55,25 @@ import Editor from './components/Editor.vue';
   --light-6: #888;
 
   // font sizes
-  --font-size-1: 32px;      // huge whatever
+  --font-size-0: 48px;
+  --font-size-1: 32px;      // huge
   --font-size-2: 24px;      // big header
   --font-size-3: 16px;      // header
   --font-size-4: 12px;      // standard
   --font-size-5: 10px;      // smaller
   --font-size-6: 8px;       // tiny
+
+    // global margins on the side
+  --global-margin: 0;
+
+  @media screen and (min-width: 1200px){
+    --global-margin: calc((100vw - 1200px) / 2);      
+  }
 }
 
-html, body{
+/* html, body{
   overflow: hidden;
-}
+} */
 
 button{
   @extend .noselect;
@@ -144,6 +166,16 @@ svg{
   margin-top: auto;
 }
 
+.global-margin{
+  margin-left: var(--global-margin);
+  margin-right: var(--global-margin);
+}
+
+.global-padding{
+  padding-left: var(--global-margin);
+  padding-right: var(--global-margin);
+}
+
 .label-checkbox{
   margin-left: 8px;
 }
@@ -192,6 +224,51 @@ input{
     }
 }
 
+.input-dark-2{
+  @extend .input-dark;
+
+  background: var(--dark-2);
+  border-color: var(--dark-3);
+  &:focus{
+    background: var(--dark-3);
+  }
+}
+
+.label-over{
+  text-align: left;
+  font-size: var(--font-size-5);
+  color: var(--light-5);
+  font-weight: 600;
+}
+
+.label-right{
+  @extend .label-over;
+  font-size: var(--font-size-4);
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.input-select{
+  padding: 8px;
+  background: var(--dark);
+  color: var(--light);
+  border: 1px solid var(--dark-3);
+  border-radius: 4px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  &:hover{
+      filter: brightness(1.2);
+  }
+
+  option{
+      /* padding: 8px; */
+      &:active{
+          background: var(--dark);
+      }
+  }
+}
+
+
 .btn-secondary{
   /* background: var(--secondary); */
   border-radius: 100px;
@@ -207,6 +284,48 @@ input{
     color: var(--light-3);
   }
 }
+
+.btn-bootstrap-primary{
+  border-radius: 6px;
+  padding: 12px;
+  color: var(--light);
+  font-size: var(--font-size-3);
+  box-shadow: 0 0 6px var(--dark);
+  background: var(--primary);
+  &:hover{
+    filter: brightness(1.2);
+  }
+}
+
+.btn-bootstrap-secondary{
+  @extend .btn-bootstrap-primary;
+  background: var(--secondary);
+}
+
+.btn-bootstrap-secondary-light{
+  @extend .btn-bootstrap-primary;
+  background: var(--secondary-light);
+  
+}
+
+.btn-bootstrap-accent{
+  @extend .btn-bootstrap-primary;
+  background: var(--accent);
+  
+}
+
+.btn-bootstrap-accent-light{
+  @extend .btn-bootstrap-primary;
+  background: var(--accent-light);
+  
+}
+
+.btn-bootstrap-accent-dark{
+  @extend .btn-bootstrap-primary;
+  background: var(--accent-dark);
+  
+}
+
 
 .span-placeholder{
   font-style: italic;

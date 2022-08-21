@@ -2,23 +2,25 @@ import Pitch from '@/components/model/Pitch'
 import Settings from '@/components/model/CanvasSettings'
 import Team from '@/components/model/Team'
 import { createStore } from 'vuex'
-import { mutations, State } from './modules/editor'
+import editor, { mutations, State } from './modules/editor'
+import Match from '@/components/model/Match'
+import squad_creator from './modules/squad_creator'
+
+
 
 export default createStore({
+  // only use default page-wide variables here
   state: {
-    home: new Team(),
-    away: new Team(),
-    database: {},         // database of all players available
-    pitch: new Pitch(),
-    entityList: {},
-    snapshotList: [],
-
-    settings: new Settings(),
-  } as State,
+    
+  },
   
-  mutations: mutations,
+  mutations: {
+    
+  },
   actions: {
   },
   modules: {
+    editorStore: editor,
+    squadCreatorStore: squad_creator
   }
 })

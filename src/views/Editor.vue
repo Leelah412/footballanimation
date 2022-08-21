@@ -51,56 +51,37 @@
 <script lang="ts" setup>
 
 import { ref } from "@vue/reactivity";
-import Vector2 from "./math/Vector2";
-import Rect from "./math/Rect";
-import CanvasObject, {EntityList} from "./model/CanvasObject";
-import Pitch from "./model/Pitch";
-import Player, { PlayerList } from "./model/Player";
-import PitchVue from "./view/Pitch.vue";
-import PlayerContainer from "./view/PlayerContainer.vue";
-import SnapshotEditor from "./view/SnapshotEditor.vue";
+import Vector2 from "../components/math/Vector2";
+import Rect from "../components/math/Rect";
+import CanvasObject, {EntityList} from "../components/model/CanvasObject";
+import Pitch from "../components/model/Pitch";
+import Player, { PlayerList } from "../components/model/Player";
+import PitchVue from "../components/view/Pitch.vue";
+import PlayerContainer from "../components/view/PlayerContainer.vue";
+import SnapshotEditor from "../components/view/SnapshotEditor.vue";
 import { onMounted, onUnmounted} from "@vue/runtime-core";
-import Global, { EntityType} from "./helper/Global";
-import PlayerVue from "./view/Player.vue";
-import PlayerProperties from "./view/PlayerProperties.vue";
-import CanvasVue from "./editor/Canvas.vue";
-import EntityToolbar from "./editor/EntityToolbar.vue";
-import EditorTools from "./editor/EditorTools.vue";
-import Snapshot from "./model/Snapshot";
-import Toolbar from "./editor/Toolbar.vue";
-import PropertyMenu from "./editor/PropertyMenu.vue";
-import Navbar from "./editor/Navbar.vue";
-import Statusbar from "./editor/Statusbar.vue";
+import Global, { EntityType} from "../components/helper/Global";
+import PlayerVue from "../components/view/Player.vue";
+import PlayerProperties from "../components/view/PlayerProperties.vue";
+import CanvasVue from "../components/editor/Canvas.vue";
+import EntityToolbar from "../components/editor/EntityToolbar.vue";
+import EditorTools from "../components/editor/EditorTools.vue";
+import Snapshot from "../components/model/Snapshot";
+import Toolbar from "../components/editor/Toolbar.vue";
+import PropertyMenu from "../components/editor/PropertyMenu.vue";
+import Navbar from "../components/editor/Navbar.vue";
+import Statusbar from "../components/editor/Statusbar.vue";
 import SettingsVue from "@/components/view/property_menu/Settings.vue";
-import PropertyMenuList from "./model/PropertyMenuList";
-import PlayerListVue from "./view/property_menu/PlayerList.vue";
-import TeamSettings from "./view/property_menu/TeamSettings.vue";
-import Team from "./model/Team";
-import DropdownMenu, { DropdownItem } from "./misc/dropdown-menu.vue";
-import { IObject } from "./helper/enums";
+import PropertyMenuList from "../components/model/PropertyMenuList";
+import PlayerListVue from "../components/view/property_menu/PlayerList.vue";
+import TeamSettings from "../components/view/property_menu/TeamSettings.vue";
+import Team from "../components/model/Team";
+import DropdownMenu, { DropdownItem } from "../components/misc/dropdown-menu.vue";
+import { IObject } from "../components/helper/enums";
 import store from "@/store/index";
 import { Committer } from "@/store/modules/editor_committer";
-import Properties from "./view/property_menu/Properties.vue";
+import Properties from "../components/view/property_menu/Properties.vue";
 
-
-// TODO: width and height should be calculated in "App.vue" depending on viewport n stuff
-const props = defineProps({
-    width: {
-        type: Number,
-        default: 640
-    },
-    height: {
-        type: Number,
-        default: 480
-    }
-})
-
-///////////
-// PITCH //
-///////////
-
-// TODO: zoom should only be relevant for Canvas, not for Editor!
-const zoom = ref(1);
 
 //////////////
 // DROPDOWN //
@@ -308,50 +289,6 @@ function onEntitySelected(en: CanvasObject | null){
     
 }
 
-////////////
-// VISUAL //
-////////////
-
-/* const svgWidth = ref(Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0));
-const svgHeight = ref(Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0));
-// NOTE: svgScale is the value of how much the elements inside the canvas are upscaled by at a zoom level of 1 and depend on the viewport width and height
-const svgScale = ref(1); */
-
-/* new Vector2(svgWidth/2 - (pitch.size.x * svgScale)/2, svgHeight/2 - svgHeight * 0.075 - (pitch.size.y * svgScale)/2) */
-
-/* onMounted(()=>{
-    document.documentElement.addEventListener('resize', svgResize);
-    window.addEventListener('resize', svgResize);
-    // resize again to be safe
-    svgResize();
-});
-
-onUnmounted(()=>{
-    document.documentElement.removeEventListener('resize', svgResize);
-    window.removeEventListener('resize', svgResize);
-})
-
-function svgResize(){
-    svgWidth.value = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-    svgHeight.value = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-    // calculate the scale based on the viewport
-    var base: number = svgWidth.value > svgHeight.value ? svgHeight.value : svgWidth.value;
-    const margin: number = 0.9;
-    svgScale.value = Math.floor((base * margin) / store.state.pitch.size.x);
-    // set the global variables to the correct values
-    Global.scale = svgScale.value;    
-    Global.origin = new Vector2(svgWidth.value/2, svgHeight.value/2);
-} */
-
-/* // gets the Y position of the X axis!!!! DO NOT CONFUSE!!!!
-function getXAxis(): number{
-    return svgHeight.value/2 - (store.state.pitch.size.y/2)*svgScale.value;
-}
-// other way round DO NOT CONFUSE!!!!
-function getYAxis(): number{
-    return svgWidth.value/2 - (store.state.pitch.size.x/2)*svgScale.value;
-} */
-
 interface Grid{
     navbarHeight?: string
     leftToolbarWidth?: string
@@ -403,6 +340,8 @@ function setGridSize(grid: Grid){
     display: flex;
     flex-direction: column;
     height: 100vh;
+
+    overflow: hidden;
 
     // canvas width and height dependend on following values
     --navbar-height: 48px;
