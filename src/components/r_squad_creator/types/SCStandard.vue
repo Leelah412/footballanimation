@@ -3,21 +3,50 @@
 <div id="sc-standard" class="sc-squad-type">
     
     <div id="sc-standard-squad" class="sc-squad">
-        <div id="sc-standard-squad-hud">
 
-        </div>
 
         <svg id="sc-standard-squad-svg" :width="width" :height="height" :viewBox="'0 0 ' + width + ' ' + height">
-            <g :transform="`translate(${width/2},${height/2}), scale(${scale})`">
+            <rect :width="width" :height="height" fill="var(--green)"/>
+            <g :transform="`translate(${width/2},${height/2}), scale(${scale}),
+                rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
                 <Pitch />
 
                 <!-- PLAYERS -->
 
-<!--                 <g v-for="">
-                    <circle :cx="0" :cy="0" r="4" :fill="'var(--dark)'" :stroke="'var(--light)'" :stroke-width="2"/>
-                </g> -->
+                <g v-for="(val, key) in store.state.squadCreatorStore.firstTeam" :key="'player-' + key"
+                    :transform="`translate(${val.position.x},${val.position.y}),
+                        rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
+                    <circle cx="0" cy="0" r="2" :fill="'var(--dark)'" :stroke="'var(--light)'" :stroke-width="1" />
+                    <text fill="var(--light)" font-size="2" text-anchor="middle" y="5">
+                        {{val.name}}
+                    </text>
+                </g>
+
+                <g :transform="`rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
+                    <text fill="var(--light)" font-size="3" opacity="0.5"
+                        :x="store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -store.state.editorStore.pitch.size.x/2 + 1 : -store.state.editorStore.pitch.size.y/2 + 1"
+                        :y="store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? store.state.editorStore.pitch.size.y/2 - 1 : store.state.editorStore.pitch.size.x/2 - 1"
+                    >
+                        {{FormationList[store.state.squadCreatorStore.formation].name}}
+                    </text>
+                    <text fill="var(--light)" font-size="3" opacity="0.5"
+                        :x="store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -store.state.editorStore.pitch.size.x/2 : -store.state.editorStore.pitch.size.y/2"
+                        :y="store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -store.state.editorStore.pitch.size.y/2 - 1 : -store.state.editorStore.pitch.size.x/2 - 1"
+                    >
+                        {{store.state.squadCreatorStore.squadName}}
+                    </text>
+                </g>
             </g>
+
+
+
         </svg>
+
+        <div id="sc-standard-squad-hud">
+            <div id="sc-standard-squad-hud-orientation">
+
+            </div>
+        </div>
     </div>
 
 
@@ -88,14 +117,13 @@
 
             <div class="item flex-column">
                 <label class="label-over" for="">SQUAD NAME</label>
-                <input class="input-dark-2" type="text">
+                <input class="input-dark-2" type="text" v-model.lazy="store.state.squadCreatorStore.squadName">
             </div>
 
             <div class="item flex-column">
                 <label class="label-over" for="">BASE FORMATION</label>
-                <select class="input-select" name="">
-                    <option value="442">4-4-2</option>
-                    <option value="4231">4-2-3-1</option>
+                <select class="input-select" name="" @change="formationChanged" v-model="store.state.squadCreatorStore.formation">
+                    <option v-for="(val,key) in FormationList" :key="'formation-' + key" :value="key">{{val.name}}</option>
                 </select>
             </div>
 
@@ -150,7 +178,7 @@
         <div class="content" v-else-if="tabState === TAB_STATE.PITCH">
             <div class="item flex-column">
                 <label class="label-over" for="">PITCH ORIENTATION</label>
-                <select class="input-select" name="" v-model="store.state.squadCreatorStore.settings.pitchOrientation">
+                <select class="input-select" name="" @change="resize" v-model="store.state.squadCreatorStore.settings.pitchOrientation">
                     <option value="horizontal">Horizontal</option>
                     <option value="vertical">Vertical</option>
                 </select>
@@ -168,15 +196,21 @@
 
 <script lang="ts" setup>
 import { PlayerStyle } from '@/components/helper/enums'
+import FormationList from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
 import { onMounted, onUnmounted, ref } from 'vue-demi'
 import Pitch from './standard/Pitch.vue'
 
+interface Props{
+    formationChanged: ()=>void
+}
+
+const props = defineProps<Props>();
+
 enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.GENERAL);
-
 
 const width = ref(0);
 const height = ref(0);
@@ -197,18 +231,19 @@ function resize(){
     if(content === undefined || content === null) return;
     if(sc_squad === undefined || sc_squad === null) return;
 
-    height.value = content.getBoundingClientRect().height;
+    height.value = sc_squad.getBoundingClientRect().height;
     width.value = sc_squad.getBoundingClientRect().width;
 
     const size: Vector2 = store.state.editorStore.pitch.size;
     if(store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal'){
-        scale.value = width.value / size.x;
+        scale.value = (width.value / size.x) * 0.95;
     }
     else{
-        scale.value = height.value / size.y;
+        scale.value = (height.value / size.x) * 0.95;
 
     }
 }
+
 
 
 </script>
@@ -228,6 +263,30 @@ function resize(){
 
     width: 100%;
     height: 100%;
+
+    div{
+        position: absolute;
+    }
+}
+
+#sc-standard-squad-hud-squadname{
+
+}
+
+#sc-standard-squad-hud-formation{
+    right: 16px;
+    top: 16px;
+    opacity: 0.6;
+    transition-duration: 0.2s;
+    &:hover{
+        opacity: 1;
+    }
+
+    
+}
+
+#sc-standard-squad-hud-orientation{
+
 }
 
 #sc-standard-squad-svg{

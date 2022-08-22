@@ -1,6 +1,6 @@
 <template>
     
-<g id="sc-standard-pitch" :transform="`rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
+<g id="sc-standard-pitch">
     
     <Pitch1 />
 

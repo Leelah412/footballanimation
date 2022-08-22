@@ -268,6 +268,19 @@ input{
   }
 }
 
+.input-bottom-line{
+  border: none;
+  border-bottom: 1px solid var(--dark-6);
+  border-radius: 0;
+  background: none;
+  outline: none;
+  font-size: var(--font-size-3);
+  color: var(--light);
+
+  &:focus{
+    border-bottom-color: var(--accent);
+  }
+}
 
 .btn-secondary{
   /* background: var(--secondary); */

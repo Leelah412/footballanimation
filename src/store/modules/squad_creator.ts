@@ -1,4 +1,5 @@
 import { PlayerStyle } from "@/components/helper/enums";
+import FormationList from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import { PlayerList } from "@/components/model/Player";
 import Team from "@/components/model/Team";
@@ -24,13 +25,15 @@ export interface Settings{
 
     lockPositions: boolean          // if true, only able to move players on predetermined positions (like in FM)
 
+    firstTeamCount: number          // number of players in first team (max. 11 players)
+    benchCount: number
+
     useBench: boolean               // if true, bench players are shown too
 }
 
 export interface State{
     squadName: string,
 
-    team: Team,
     firstTeam: PlayerList,
     bench: PlayerList,
     reserves: PlayerList,
@@ -51,8 +54,8 @@ export default {
     namespaced: true,
     state: {
         squadName: "New Squad",
+        formation: Object.keys(FormationList)[0],
 
-        team: new Team(),
         firstTeam: {},
         bench: {},
         reserves: {},
@@ -78,6 +81,9 @@ export default {
         
             lockPositions: true,
         
+            firstTeamCount: 11,
+            benchCount: 0,
+
             useBench: false
         }
 

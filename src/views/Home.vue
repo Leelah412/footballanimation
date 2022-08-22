@@ -11,7 +11,7 @@
                 Create complex 2D animations for your favourite football scenarios and share them online or export them as video!
             </div>
             <div class="flex-row" style="margin-top: 64px">
-                <button class="btn-bootstrap-accent" style="margin-right: 12px;">
+                <button class="btn-bootstrap-accent" style="background: var(--blue); margin-right: 12px;">
                     Create a Match!
                 </button>
                 <button class="btn-bootstrap-accent" style="background: var(--dark-6)">

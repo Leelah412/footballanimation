@@ -8,12 +8,10 @@
 
         <div id="navbar-links">
             <router-link to="/editor" class="img-button-router">
-                <img src="@/assets/svg/match-creator-full.svg">
-                <!-- <span>MATCH</span> -->
+                <img src="@/assets/svg/match-creator-full.svg" height="24">
             </router-link>
             <router-link to="/squad_creator" class="img-button-router">
-                <img src="@/assets/svg/squad-builder-full.svg">
-                <!-- <span>SQUAD</span> -->
+                <img src="@/assets/svg/squad-builder-full.svg" height="24">
             </router-link>
         </div>
 
@@ -23,12 +21,10 @@
             </div>
         </div>
     </div>
-    <div id="navbar-bottom">
+<!--     <div id="navbar-bottom">
         <a href="">MATCHES</a>
         <a href="">SQUADS</a>
-<!--         <a href="">PLAYER</a>
-        <a href="">TEAMS</a> -->
-    </div>
+    </div> -->
 
     <!-- <router-link to="/about" class="standard-router">ABOUT</router-link> -->
   </nav>

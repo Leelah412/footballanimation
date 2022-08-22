@@ -13,6 +13,13 @@
             </select>
         </div>
 
+        <div id="sc-squadname" class="flex-row" style="flex-grow: 100; margin: 0 32px;">
+            <input type="text" class="input-bottom-line m-right" style="flex-grow: 100; " placeholder="Squadname" v-model.lazy="store.state.squadCreatorStore.squadName">
+        </div>
+
+        <select class="input-select" style="margin-right: 32px;" v-model="store.state.squadCreatorStore.formation">
+            <option v-for="(val,key) in FormationList" :key="'formation-' + key" :value="key">{{val.name}}</option>
+        </select>
 
         <div id="sc-header-buttons" class="flex-row m-right">
             <svg-button-selection :selection="SVG_SELECTION.SAVE" :size="24"/>
@@ -26,7 +33,7 @@
     </div>
 
     <div id="sc-content">
-        <SCStandard />
+        <SCStandard v-if="mounted" :formation-changed="formationChanged"/>
     </div>
 
 </div>
@@ -40,17 +47,74 @@ import Pitch from "@/components/view/Pitch.vue";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
 import PlayerVue from "@/components/view/Player.vue";
-import Player from "@/components/model/Player";
+import Player, { PlayerList } from "@/components/model/Player";
 import SCStandard from "@/components/r_squad_creator/types/SCStandard.vue";
+import store from "@/store";
+import FormationList, { Formation } from "@/components/helper/FormationList";
+
+// add players to the first team, if necessary
+const squadCreatorStore = ref(store.state.squadCreatorStore);
+
+checkPlayerCount();
+
+function checkPlayerCount(){
+    var ft: PlayerList = squadCreatorStore.value.firstTeam;
+    const ft_keys = Object.keys(ft);
+    const ft_count = squadCreatorStore.value.settings.firstTeamCount;
+    const diff = ft_count - ft_keys.length;
+
+    // if expected player count smaller equal actual 'firstTeam' object count, do nothing
+    if(diff <= 0) return;
+    if(!(squadCreatorStore.value.formation in FormationList)) return;
+
+    const formation: Formation = FormationList[squadCreatorStore.value.formation];
+    if(formation.positions.length !== 11) return;
+
+    // add additional players to the first team based on current base formation
+    for(var i = 0; i < diff; i++){
+        const player = new Player();
+        player.position.x = formation.positions[11 - diff + i].vector.x * store.state.editorStore.pitch.size.x;
+        player.position.y = formation.positions[11 - diff + i].vector.y * store.state.editorStore.pitch.size.y;
+        ft[player.id] = player;
+    }
+
+
+}
+
+// reposition players
+function formationChanged(){
+    var ft: PlayerList = squadCreatorStore.value.firstTeam;
+    const ft_keys = Object.keys(ft);
+    
+    if(!(squadCreatorStore.value.formation in FormationList)) return;
+
+    const formation: Formation = FormationList[squadCreatorStore.value.formation];
+    if(formation.positions.length !== 11) return;
+
+    for(var i = 0; i < ft_keys.length && i < 11; i++){
+        ft[ft_keys[i]].position.x = formation.positions[i].vector.x * store.state.editorStore.pitch.size.x;
+        ft[ft_keys[i]].position.y = formation.positions[i].vector.y * store.state.editorStore.pitch.size.y;
+    }
+    
+}
+
+////////////
+// RENDER //
+////////////
+
+// only render 'sc-content', when mounted
+// needed to make sure the size of the content is correct
+const mounted = ref(false);
 
 onMounted(()=>{
-    window.addEventListener('resize', resize);
-    
     resize();
+    window.addEventListener('resize', resize);    
+    mounted.value = true;
 })
 
 onUnmounted(()=>{
     window.removeEventListener('resize', resize);
+    mounted.value = false;
 })
 
 function resize(){
@@ -68,9 +132,6 @@ function resize(){
 
     new_height = window.innerHeight - cnt_rect.y - 32;
     cnt.style.setProperty('height', `${new_height}px`);
-    
-
-
 }
 
 </script>
@@ -97,7 +158,9 @@ function resize(){
 
 #sc-content{
     box-shadow: 0 0 4px var(--dark);
-    border-radius: 4px;
+    /* border-radius: 4px; */
+/*     height: 100vh;
+    margin-bottom: 32px; */
     overflow: hidden;
 }
 
