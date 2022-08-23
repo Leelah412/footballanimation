@@ -17,7 +17,7 @@
             <input type="text" class="input-bottom-line m-right" style="flex-grow: 100; " placeholder="Squadname" v-model.lazy="store.state.squadCreatorStore.squadName">
         </div>
 
-        <select class="input-select" style="margin-right: 32px;" v-model="store.state.squadCreatorStore.formation">
+        <select class="input-select" style="margin-right: 32px;" @change="formationChanged" v-model="store.state.squadCreatorStore.formation">
             <option v-for="(val,key) in FormationList" :key="'formation-' + key" :value="key">{{val.name}}</option>
         </select>
 
@@ -50,7 +50,7 @@ import PlayerVue from "@/components/view/Player.vue";
 import Player, { PlayerList } from "@/components/model/Player";
 import SCStandard from "@/components/r_squad_creator/types/SCStandard.vue";
 import store from "@/store";
-import FormationList, { Formation } from "@/components/helper/FormationList";
+import FormationList, { Formation, Position } from "@/components/helper/FormationList";
 
 // add players to the first team, if necessary
 const squadCreatorStore = ref(store.state.squadCreatorStore);
@@ -73,8 +73,7 @@ function checkPlayerCount(){
     // add additional players to the first team based on current base formation
     for(var i = 0; i < diff; i++){
         const player = new Player();
-        player.position.x = formation.positions[11 - diff + i].vector.x * store.state.editorStore.pitch.size.x;
-        player.position.y = formation.positions[11 - diff + i].vector.y * store.state.editorStore.pitch.size.y;
+        assignPosition(player, formation.positions[11 - diff + i]);
         ft[player.id] = player;
     }
 
@@ -92,10 +91,16 @@ function formationChanged(){
     if(formation.positions.length !== 11) return;
 
     for(var i = 0; i < ft_keys.length && i < 11; i++){
-        ft[ft_keys[i]].position.x = formation.positions[i].vector.x * store.state.editorStore.pitch.size.x;
-        ft[ft_keys[i]].position.y = formation.positions[i].vector.y * store.state.editorStore.pitch.size.y;
+        assignPosition(ft[ft_keys[i]], formation.positions[i]);
     }
     
+}
+
+function assignPosition(player: Player, position: Position){
+    player.position.x = position.vector.x * store.state.squadCreatorStore.settings.pitchSize.x;
+    player.position.y = position.vector.y * store.state.squadCreatorStore.settings.pitchSize.y;
+    player.positionName = position.name;
+    player.positionShort = position.short;
 }
 
 ////////////

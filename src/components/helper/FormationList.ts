@@ -24,7 +24,7 @@ export const LockedPositions = {
     GK: {
         name: 'Goalkeeper',
         short: 'GK',
-        vector: new Vector2(-0.45, 0),
+        vector: new Vector2(-0.4, 0),
         isGoalkeeper: true
     },
     
@@ -57,78 +57,78 @@ export const LockedPositions = {
     LWB: {
         name: 'Left Wing-Back',
         short: 'LWB',
-        vector: new Vector2(-0.1, -0.4),
+        vector: new Vector2(-0.15, -0.4),
     },
     LDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.1, -0.15),
+        vector: new Vector2(-0.15, -0.15),
     },
     CDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.1, 0.0),
+        vector: new Vector2(-0.15, 0.0),
     },
     RDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.1, 0.15),
+        vector: new Vector2(-0.15, 0.15),
     },
     RWB: {
         name: 'Right Wing-Back',
         short: 'RWB',
-        vector: new Vector2(-0.1, 0.4),
+        vector: new Vector2(-0.15, 0.4),
     },
 
     LM: {
         name: 'Left Midfielder',
         short: 'LM',
-        vector: new Vector2(0.1, -0.4),
+        vector: new Vector2(0.0, -0.4),
     },
     LCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.1, -0.15),
+        vector: new Vector2(0.0, -0.15),
     },
     CCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.1, 0.0),
+        vector: new Vector2(0.0, 0.0),
     },
     RCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.1, 0.15),
+        vector: new Vector2(0.0, 0.15),
     },
     RM: {
         name: 'Right Midfielder',
         short: 'RM',
-        vector: new Vector2(0.1, 0.4),
+        vector: new Vector2(0.0, 0.4),
     },
 
     LW: {
         name: 'Left Winger',
-        short: 'LM',
+        short: 'LW',
         vector: new Vector2(0.3, -0.4),
     },
     LOM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.3, -0.15),
+        vector: new Vector2(0.2, -0.15),
     },
     COM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.3, 0.0),
+        vector: new Vector2(0.2, 0.0),
     },
     ROM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.3, 0.15),
+        vector: new Vector2(0.2, 0.15),
     },
     RW: {
         name: 'Right Winger',
-        short: 'RM',
+        short: 'RW',
         vector: new Vector2(0.3, 0.4),
     },
 

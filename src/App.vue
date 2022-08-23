@@ -165,6 +165,14 @@ svg{
 .m-bottom{
   margin-top: auto;
 }
+.m-center-v{
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.m-center-h{
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .global-margin{
   margin-left: var(--global-margin);
@@ -383,5 +391,64 @@ input{
   visibility: visible;
   opacity: 1;
 }
+
+
+.pull-bar-container{
+  display: flex;
+  flex-direction: row;
+
+  @extend .noselect;
+  *{
+    @extend .noselect;
+  }
+  width: 100%;
+  height: 4px;
+
+  .pull-bar{
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    height: 4px;
+    /* border: 1px solid var(--dark-3); */
+    border-radius: 100px;
+  /*         border-left: 2px solid var(--accent);
+        border-right: 2px solid var(--accent); */
+        box-sizing: border-box;
+    background: var(--secondary-light);
+    box-shadow: 0 0 2px var(--dark);
+    margin: 14px 0;
+
+    .bar{
+        cursor: pointer;
+        position: absolute;
+        top: -8px;
+        left: -4px;
+        width: 8px;
+        height: 16px;
+        background: var(--accent-light);
+        border-radius: 100px;
+        border: 2px solid var(--accent);
+        box-shadow: 0 0 4px var(--dark);
+
+        &:hover{
+            filter: brightness(1.2);
+        }
+    }
+  }
+
+  .pull-bar-arrow{
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    margin: 0 8px;
+    filter: drop-shadow(0 0 2px #000);
+
+    &:hover{
+      filter: brightness(1.2);
+    }
+  }
+}
+
+
 
 </style>

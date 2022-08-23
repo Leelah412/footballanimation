@@ -9,6 +9,8 @@ export interface PlayerList{
 export default class Player extends CanvasObject{
     number: number = -1;                // -1 meaning no back number
     name: string = "Player " + this.id;
+    positionName: string = "";
+    positionShort: string = "";
 
     team: Team | null = null;           // the team this player belongs to
     isGoalkeeper: boolean = false;      // necessary to differentiate, which jersey to use for this player
