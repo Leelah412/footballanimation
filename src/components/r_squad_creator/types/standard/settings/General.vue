@@ -33,6 +33,16 @@
         <label class="label-right" for="">Lock positions</label>
     </div>
 
+    <div class="item flex-row align-center">
+        <label class="label-over" for="">TEAM COLORS</label>
+        <div class="flex-column m-right">
+            <input type="color" name="" id="" v-model="store.state.squadCreatorStore.settings.teamColors[0]">
+        </div>
+        <div class="flex-column m-center-h">
+            <input type="color" name="" id="" v-model="store.state.squadCreatorStore.settings.teamColors[1]">
+        </div>
+    </div>
+
     <div class="item flex-column">
         <label class="label-over" for="">BENCH COUNT</label>
         <input class="input-dark-2" type="number" min="0" max="12">
@@ -65,6 +75,7 @@
 
 <script lang="ts" setup>
 import FormationList from "@/components/helper/FormationList";
+import Player from "@/components/model/Player";
 import store from "@/store";
 
 interface Props{

@@ -2,12 +2,11 @@ import { PlayerStyle } from "@/components/helper/enums";
 import FormationList, { Formation } from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import { PlayerList } from "@/components/model/Player";
-import Team from "@/components/model/Team";
 
 export interface Settings{
     playerStyle: PlayerStyle
     circleRadius: number            // in px; only relevant, if player style is circle
-    circleStyle: number             
+    circleStyle: number
 
     showNumbers: boolean
     showNames: boolean
@@ -15,7 +14,7 @@ export interface Settings{
     showLogo: boolean
     showSquadName: boolean
     showFormation: boolean          // show formation name on pitch
-    teamColors: string[]            // team colors used to determine the colors of the circle and anything else
+    teamColors: string[]            // team colors used to determine the colors of the circle and anything else; must have at least 2 colors!
     logoPosition: Vector2
 
     pitchSize: Vector2              // width, height of pitch in meters
@@ -53,6 +52,33 @@ export interface State{
 ///////////////
 
 export const mutations = {
+    setPlayerStyle(state: State, args: {style: PlayerStyle}){
+        state.settings.playerStyle = args.style;
+    },
+    setCircleStyle(state: State, args: {style: PlayerStyle}){
+        
+        if(args.style < 0){
+            state.settings.circleStyle = 0;
+            return;
+        }
+
+        state.settings.circleStyle = args.style;
+
+        const styles = document.getElementsByClassName('sc-circle-style');
+        if(styles === undefined || styles === null) return;
+        
+
+        if(styles.length === 0){
+            state.settings.circleStyle = 0;
+            return;
+        }
+
+        if(args.style >= styles.length/11){
+            state.settings.circleStyle = styles.length/11 - 1;
+            
+        } 
+    },
+
     setPitchColor(state: State, args: {pitchColor: string}){
         state.settings.pitchColor = args.pitchColor;
     },
@@ -139,12 +165,12 @@ export default {
             showLogo: true,
             showSquadName: true,
             showFormation: true,
-            teamColors: [],
+            teamColors: ['#1a1a1a', '#f7f7f7'],
             logoPosition: new Vector2(),
         
             pitchSize: new Vector2(105,68),
             pitchStyle: 0,
-            pitchColor: '#1b5e20',
+            pitchColor: '#102e12',
             lineColor: '#f7f7f7',
             pitchOrientation: 'vertical',
 

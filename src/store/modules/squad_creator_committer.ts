@@ -1,6 +1,9 @@
+import { PlayerStyle } from "@/components/helper/enums";
 import store from "..";
 
 export const Committer = {
+setPlayerStyle: (style: PlayerStyle) => store.commit('squadCreatorStore/setPlayerStyle', {style}),
+setCircleStyle: (style: number) => store.commit('squadCreatorStore/setCircleStyle', {style}),
 
 setPitchColor: (pitchColor: string) => store.commit('squadCreatorStore/setPitchColor', {pitchColor}),
 setLineColor: (lineColor: string) => store.commit('squadCreatorStore/setLineColor', {lineColor}),

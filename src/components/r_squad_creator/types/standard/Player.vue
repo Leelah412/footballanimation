@@ -2,7 +2,25 @@
     
 <g :transform="`translate(${player.position.x},${player.position.y}),
         rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
-    <circle class="player-circle" @mousedown="onMouseDown" cx="0" cy="0" r="2" :fill="'var(--dark)'" :stroke="'var(--light)'" :stroke-width="1" />
+    
+    <!-- CIRCLE STYLES -->
+
+    <!-- STYLE 0 -->
+    <g class="sc-circle-style">
+        <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 0" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
+            :fill="store.state.squadCreatorStore.settings.teamColors[0]" :stroke="store.state.squadCreatorStore.settings.teamColors[1]" :stroke-width="1" />
+    </g>
+
+    <!-- STYLE 1 -->
+    <g class="sc-circle-style">
+        <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 1" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
+            :fill="store.state.squadCreatorStore.settings.teamColors[0]" :stroke="store.state.squadCreatorStore.settings.teamColors[1]" :stroke-width="1" />
+    </g>
+    
+    <!-- SELECTED HIGHLIGHTERS -->
+    <circle v-if="selected" style="pointer-events:none;" cx="0" cy="0" r="2.5" fill="var(--light)" opacity="0.3"/>
+
+    <!-- PLAYER -->
     <text fill="var(--light)" font-size="2" text-anchor="middle" y="5">
         <tspan v-if="player.positionShort !== ''" fill="var(--accent-light)" style="font-weight: 600;">{{player.positionShort}}&ensp;</tspan>
         <tspan>{{player.name}}</tspan>
@@ -16,22 +34,17 @@
 import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
-import { ref } from "vue-demi";
 
-function TEST(){
-    console.log("enentnenred");
-    
-}
 
 interface Props{
     player: Player,
+    selected: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    
+    selected: false
 });
-
-const _player = ref<Player>(props.player);
+const emit = defineEmits(['select']);
 
 var dragStart: Vector2 = new Vector2();
 var dragStartPlayerPos: Vector2 = new Vector2();
@@ -84,22 +97,21 @@ function onMouseMove(ev){
         else if(dragNewPlayerPos.y > pitchSize.y/2) dragNewPlayerPos.y = pitchSize.y/2
     }
 
-    _player.value.position = dragNewPlayerPos;
+    props.player.position = dragNewPlayerPos;
 }
 
 function onMouseUp(ev){
+
+    if(!dragging){
+        emit('select', props.player);
+    }
 
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
 
     dragging = false;
 
-
-
 }
-
-
-
 
 
 </script>
@@ -110,8 +122,12 @@ function onMouseUp(ev){
 .player-circle{
     filter: drop-shadow(0 0 0.5px var(--dark));
     &:hover{
-        filter: drop-shadow(0 0 2px var(--accent));
+        filter: drop-shadow(0 0 2px var(--dark));
     }
+}
+
+.player-circle-active{
+    filter: drop-shadow(0 0 2px var(--dark));
 }
 
 </style>

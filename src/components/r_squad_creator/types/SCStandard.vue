@@ -11,7 +11,8 @@
                 rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
                 <Pitch />
                 <HUD />
-                <PlayerVue v-for="(val, key) in store.state.squadCreatorStore.firstTeam" :key="'player-' + key" :player="val" />
+                <PlayerVue v-for="(val, key) in store.state.squadCreatorStore.firstTeam" :key="'player-' + key" :player="val"
+                     :selected="selectedPlayer === val ? true : false" v-on:select="selectPlayer"/>
             </g>
 
         </svg>
@@ -108,7 +109,8 @@
         </div>
 
         <!-- CONTENT -->
-        <GeneralSettings v-if="tabState === TAB_STATE.GENERAL" :formationChanged="formationChanged"/>
+        <GeneralSettings v-if="tabState === TAB_STATE.GENERAL && selectedPlayer === null" :formationChanged="formationChanged" />
+        <PlayerProperties v-else-if="tabState === TAB_STATE.GENERAL && selectedPlayer !== null" :player="selectedPlayer"/>
         <PitchSettings v-else-if="tabState === TAB_STATE.PITCH" :resize="resize"/>
         <PlayersSettings v-else-if="tabState === TAB_STATE.PLAYERS" />
 
@@ -130,7 +132,9 @@ import HUD from './standard/HUD.vue'
 import { Committer } from '@/store/modules/squad_creator_committer'
 import GeneralSettings from './standard/settings/General.vue'
 import PitchSettings from './standard/settings/Pitch.vue'
-import PlayersSettings from './standard/settings/Players.vue'
+import PlayersSettings from './standard/settings/PlayerSettings.vue'
+import Player from '@/components/model/Player'
+import PlayerProperties from './standard/settings/PlayerProperties.vue'
 
 interface Props{
     formationChanged: ()=>void
@@ -142,6 +146,7 @@ enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.GENERAL);
 const showDummies = ref<boolean>(false);
+const selectedPlayer = ref<Player | null>(null);
 
 onMounted(()=>{
     resize();
@@ -172,6 +177,40 @@ function resize(){
     }
 }
 
+
+function selectPlayer(player: Player | null){
+    if(selectedPlayer.value === player){
+        selectedPlayer.value = null;
+        const squad = document.getElementById('sc-standard-squad');
+        if(squad === undefined || squad === null) return;
+        squad.removeEventListener('mouseup', deselectPlayer);
+        return;
+    }
+    console.log('select player ', player);
+    
+    selectedPlayer.value = player;
+
+    if(selectedPlayer.value === null){
+        const squad = document.getElementById('sc-standard-squad');
+        if(squad === undefined || squad === null) return;
+        squad.removeEventListener('mouseup', deselectPlayer);                
+        return;
+    }
+
+    // immediately switch to propety menu, when selecting a player!
+    tabState.value = TAB_STATE.GENERAL;
+
+    // we want to deselect a player, if we click anywhere outside it
+    const squad = document.getElementById('sc-standard-squad');
+    if(squad === undefined || squad === null) return;
+    squad.addEventListener('mouseup', deselectPlayer);
+}
+
+function deselectPlayer(ev){
+    console.log("deselect");
+    selectedPlayer.value = null;
+    
+}
 
 </script>
 

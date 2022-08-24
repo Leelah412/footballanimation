@@ -8,10 +8,18 @@
 
         <div id="navbar-links">
             <router-link to="/editor" class="img-button-router">
-                <img src="@/assets/svg/match-creator-full.svg" height="24">
+                <img src="@/assets/svg/match-creator.svg" height="24">
+                <div class="flex-column">
+                    <span style="font-family: Unispace; font-size: var(--font-size-4);">MATCH</span>
+                    <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
+                </div>
             </router-link>
             <router-link to="/squad_creator" class="img-button-router">
-                <img src="@/assets/svg/squad-builder-full.svg" height="24">
+                <img src="@/assets/svg/squad-builder.svg" height="24">
+                <div class="flex-column">
+                    <span style="font-family: Unispace; font-size: var(--font-size-4);">SQUAD</span>
+                    <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
+                </div>
             </router-link>
         </div>
 
@@ -77,7 +85,8 @@ nav{
 
 .img-button-router{
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
 
     text-decoration: none;
     color: var(--light);
@@ -88,7 +97,11 @@ nav{
     font-weight: 300;
 
     &:hover{
-        color: var(--light-2);
+        filter: brightness(0.95);
+    }
+
+    img{
+        margin-right: 8px;
     }
 }
 
