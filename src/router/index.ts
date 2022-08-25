@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Editor from '@/views/Editor.vue';
 import SquadCreator from '@/views/SquadCreator.vue';
+import UserProfile from '@/views/UserProfile.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,9 +16,14 @@ const routes: Array<RouteRecordRaw> = [
     component: Editor
   },
   {
-    path: '/squad_creator',
+    path: '/squad-creator',
     name: 'squadCreator',
     component: SquadCreator
+  },
+  {
+    path: '/user',
+    name: 'userProfile',
+    component: UserProfile
   },
 ]
 

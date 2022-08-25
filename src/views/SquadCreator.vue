@@ -3,7 +3,7 @@
 <div id="squad-creator" class="global-padding">
 
     <div id="sc-header">
-        <div style="font-family: Unispace; font-size: var(--font-size-2); padding: 32px;">
+        <div class="header-standard">
             SQUAD CREATOR
         </div>
         <div>

@@ -71,9 +71,9 @@ const route = useRouter().currentRoute;
   }
 }
 
-/* html, body{
-  overflow: hidden;
-} */
+body{
+  background: var(--dark);
+}
 
 button{
   @extend .noselect;
@@ -235,10 +235,12 @@ input{
 .input-dark-2{
   @extend .input-dark;
 
+  outline: none;
   background: var(--dark-2);
   border-color: var(--dark-3);
   &:focus{
     background: var(--dark-3);
+    border-color: var(--accent-dark);
   }
 }
 
@@ -287,6 +289,27 @@ input{
 
   &:focus{
     border-bottom-color: var(--accent);
+  }
+}
+
+.btn-standard{
+  letter-spacing: 1.2px;
+  padding: 8px;
+  font-size: var(--font-size-4);
+  color: var(--light);
+
+  &:hover{
+    border-bottom: 2px solid var(--accent);
+    background: var(--dark-2);
+  }
+}
+
+.btn-standard-active{
+  @extend .btn-standard;
+  border-bottom: 2px solid var(--accent);
+  background: var(--accent);
+  &:hover{
+    background: var(--accent);
   }
 }
 
@@ -347,6 +370,11 @@ input{
   
 }
 
+.header-standard{
+  font-family: Unispace;
+  font-size: var(--font-size-2);
+  padding: 32px;
+}
 
 .span-placeholder{
   font-style: italic;
@@ -449,6 +477,34 @@ input{
   }
 }
 
+.card{
+  cursor: pointer;
+  background: var(--dark);
+  box-shadow: 0 0 8px var(--dark);
 
+  $width: 360px;
+  width: $width;
+  height: $width * (9/16);
+  border-radius: 4px;
+  transition-duration: 0.2s;
+  
+  &:hover{
+    transform: scale(1.05);
+    box-shadow: 0 0 8px var(--dark), 0 0 2px var(--accent);
+  }
+}
+
+.card-16-9{
+  @extend .card;
+}
+
+
+.card-4-3{
+  @extend .card;
+  
+  $width: 360px;
+  width: $width;
+  height: $width * (3/4);
+}
 
 </style>

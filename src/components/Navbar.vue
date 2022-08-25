@@ -14,7 +14,7 @@
                     <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
                 </div>
             </router-link>
-            <router-link to="/squad_creator" class="img-button-router">
+            <router-link to="/squad-creator" class="img-button-router">
                 <img src="@/assets/svg/squad-builder.svg" height="24">
                 <div class="flex-column">
                     <span style="font-family: Unispace; font-size: var(--font-size-4);">SQUAD</span>
@@ -56,6 +56,7 @@ const loggedIn = ref<boolean>(false);
 nav{
     position: sticky;
     top: 0;
+    z-index: 1000000;
 
     display: flex;
     flex-direction: column;

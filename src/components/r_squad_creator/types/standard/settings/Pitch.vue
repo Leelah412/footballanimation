@@ -39,7 +39,7 @@
     </div>
 
     <div class="item flex-column">
-        <label class="label-over" for="">STYLE</label>
+        <label class="label-over" for="">PATTERN</label>
 
             <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.pitchStyle">
             <div class="pull-bar-container">
