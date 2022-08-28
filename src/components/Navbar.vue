@@ -25,7 +25,9 @@
 
         <div id="navbar-user">
             <div class="flex-row" v-if="!loggedIn">
-                <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'"/>
+                <router-link to="/login">
+                    <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'"/>
+                </router-link>
             </div>
         </div>
     </div>
@@ -51,6 +53,14 @@ const loggedIn = ref<boolean>(false);
 </script>
 
 
+<style lang="scss">
+
+:root{
+    --navbar-height: 48px;
+}
+
+</style>
+
 <style lang="scss" scoped>
 
 nav{
@@ -64,6 +74,8 @@ nav{
     justify-content: center;
 
     width: 100%;
+    height: var(--navbar-height);
+    box-sizing: border-box;
 
     box-shadow: 0 0 2px var(--dark);
 
@@ -81,8 +93,6 @@ nav{
 
 
 }
-
-
 
 .img-button-router{
     display: flex;
@@ -117,7 +127,7 @@ nav{
 
     background: var(--secondary);
     border-bottom: 1px solid var(--accent);
-    height: 48px;
+    height: 100%;
     width: 100%;
     box-sizing: border-box;
 
@@ -125,6 +135,13 @@ nav{
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    #navbar-top{
+        padding-left: 8px;
+        padding-right: 8px;
     }
 }
 

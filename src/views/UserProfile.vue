@@ -79,6 +79,8 @@ import { ref } from "vue-demi"
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
 import CardSquad from "../components/r_user_profile/CardSquad.vue";
+import router from "@/router";
+import API from "@/services/API";
 
 const AVATAR_URL = '../assets/';
 
@@ -106,6 +108,28 @@ function switchTab(newTab: TAB_STATE){
 const squadResults = ref([]);
 const matchResults = ref([]);
 const resultCount = ref(0);
+
+/* getUserData(); */
+
+async function getUserData(){
+    const username = router.currentRoute.value.params.username;
+
+    try{
+        const res = await API().get(`/user/${username}`);
+        console.log("return value: ", res);
+    }
+    catch(error){
+        console.error(error);
+    }
+}
+
+function getSquads(filter){
+
+}
+
+function getMatches(filter){
+
+}
 
 </script>
 

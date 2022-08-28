@@ -64,7 +64,7 @@ const route = useRouter().currentRoute;
   --font-size-6: 8px;       // tiny
 
     // global margins on the side
-  --global-margin: 0;
+  --global-margin: 16px;
 
   @media screen and (min-width: 1200px){
     --global-margin: calc((100vw - 1200px) / 2);      
@@ -174,6 +174,14 @@ svg{
   margin-right: auto;
 }
 
+.width-100{
+  width: 100%;
+}
+
+.height-100{
+  height: 100%;
+}
+
 .global-margin{
   margin-left: var(--global-margin);
   margin-right: var(--global-margin);
@@ -182,6 +190,81 @@ svg{
 .global-padding{
   padding-left: var(--global-margin);
   padding-right: var(--global-margin);
+}
+
+.center-container{
+  margin: auto;
+  padding: 32px;
+  width: 384px;
+/*     @media screen and (min-width: 540px) {
+      width: 384px;
+  } */
+  div{
+    margin-bottom: 16px;
+  }
+
+  background: var(--dark-2);
+  box-shadow: inset 0 0 1px #000;
+  border-radius: 4px;
+}
+
+.form-animation-container{
+    --bg-color: var(--dark-2);
+    --border-color: var(--dark-3);
+    --color: var(--light-3);
+    --size: var(--font-size-5);
+    --input-height: 24px;
+
+    position: relative;
+    height: var(--input-height);
+
+    .form-animation-label{
+        pointer-events: none;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        color: var(--light-6);
+        font-size: var(--font-size-4);
+        transition-duration: 0.25s;
+        
+        &.focused{
+            color: var(--light-5);
+            top: calc(-50% - 8px);              // -8px for a decent margin between label and input
+            left: 0;
+            /* font-size: var(--font-size-5); */
+            /* font-weight: 600; */
+        }
+    }
+
+    .form-animation-input{
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 8px;
+        box-sizing: border-box;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button{
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        -moz-appearance: textfield;
+
+        &[type=number]{
+            text-align: center;
+        }
+
+        background: var(--bg-color);
+        border-radius: 4px;
+        border-color: var(--border-color);
+        outline: none;
+        color: var(--color);
+
+        &:focus{
+            --bg-color: var(--dark-3);
+            --border-color: var(--accent-dark);
+        }
+    }
 }
 
 .label-checkbox{
@@ -234,7 +317,7 @@ input{
 
 .input-dark-2{
   @extend .input-dark;
-
+  padding: 8px;
   outline: none;
   background: var(--dark-2);
   border-color: var(--dark-3);
@@ -374,12 +457,21 @@ input{
   font-family: Unispace;
   font-size: var(--font-size-2);
   padding: 32px;
+  
+}
+
+.header-standard-p-16{
+  @extend .header-standard;
+  padding: 16px;
 }
 
 .span-placeholder{
   font-style: italic;
   opacity: 0.8;
 }
+
+
+
 .tooltip {
   position: relative;
   display: inline-block;
@@ -488,6 +580,8 @@ input{
   border-radius: 4px;
   transition-duration: 0.2s;
   
+  overflow: hidden;
+
   &:hover{
     transform: scale(1.05);
     box-shadow: 0 0 8px var(--dark), 0 0 2px var(--accent);
@@ -505,6 +599,12 @@ input{
   $width: 360px;
   width: $width;
   height: $width * (3/4);
+}
+
+.error-msg{
+  color: var(--red);
+  font-size: var(--font-size-4);
+  text-align: left;
 }
 
 </style>
