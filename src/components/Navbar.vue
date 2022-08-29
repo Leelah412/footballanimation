@@ -24,31 +24,29 @@
         </div>
 
         <div id="navbar-user">
-            <div class="flex-row" v-if="!loggedIn">
+            <div v-if="!store.state.loggedIn" class="flex-row">
                 <router-link to="/login">
                     <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'"/>
                 </router-link>
             </div>
+            <div v-else class="flex-row">
+                <svg-button-selection :selection="SVG_SELECTION.LOGOUT" :size="24" :fill="'var(--light)'" :text="'LOGOUT'" />
+            </div>
         </div>
     </div>
-<!--     <div id="navbar-bottom">
-        <a href="">MATCHES</a>
-        <a href="">SQUADS</a>
-    </div> -->
 
-    <!-- <router-link to="/about" class="standard-router">ABOUT</router-link> -->
   </nav>
 
 </template>
 
 
 <script lang="ts" setup>
+import store from "@/store";
 import { ref } from "vue-demi";
 import { SVG_SELECTION } from "./helper/enums";
 import SvgButtonSelection from "./misc/svg-button-selection.vue";
 
-// TODO: later on we will get the correct value from the store
-const loggedIn = ref<boolean>(false);
+
 
 </script>
 

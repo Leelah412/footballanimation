@@ -1,19 +1,15 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 const authenticationDomain = 'http://localhost:4000';
 const basicDomain = 'http://localhost:5000';
 
-export default (urlOnly = false)=>{
-    var domain = basicDomain;
-
-    if(urlOnly) return domain;
-    
+export default (): AxiosInstance=>{
     return axios.create({
-        baseURL: domain
+        baseURL: basicDomain
     })
 }
 
-export function authentication(){
+export function authentication(): AxiosInstance{
     var domain = authenticationDomain;
     
     return axios.create({

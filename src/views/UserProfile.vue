@@ -2,7 +2,7 @@
     
 <div id="user-profile" class="">
 
-    <div class="header global-padding">
+    <div v-if="userFound" class="header global-padding">
         <div class="avatar">
             <img :src="require('@/assets/' + TEST_USER.avatar)" alt="">
         </div>
@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div class="content">
+    <div v-if="userFound" class="content">
         <div class="tabs global-padding">
             <button :class="`btn-standard${tabState === TAB_STATE.SQUADS ? '-active': ''} tab`"
                 @click="switchTab(TAB_STATE.SQUADS)">
@@ -68,6 +68,9 @@
         </div>
     </div>
     
+    <div v-if="userNotFound" class="header-standard flex-column align-center" style="height: calc(100vh - var(--navbar-height)); font-size: var(--font-size-1); box-sizing: border-box;">
+        USER NOT FOUND
+    </div>
 
 </div>
 
@@ -81,6 +84,14 @@ import { SVG_SELECTION } from "@/components/helper/enums";
 import CardSquad from "../components/r_user_profile/CardSquad.vue";
 import router from "@/router";
 import API from "@/services/API";
+
+// set "userFound" to true, if user data is successfully fetched from server
+const userFound = ref<boolean>(false);
+// otherwise set "userNotFound" to true
+// NOTE: we can't just check, if "userFound" is false instead for obvious reasons
+const userNotFound = ref<boolean>(false);
+
+
 
 const AVATAR_URL = '../assets/';
 
@@ -109,7 +120,7 @@ const squadResults = ref([]);
 const matchResults = ref([]);
 const resultCount = ref(0);
 
-/* getUserData(); */
+getUserData();
 
 async function getUserData(){
     const username = router.currentRoute.value.params.username;
@@ -117,11 +128,16 @@ async function getUserData(){
     try{
         const res = await API().get(`/user/${username}`);
         console.log("return value: ", res);
+        userFound.value = true;
     }
     catch(error){
         console.error(error);
+        userNotFound.value = true;
     }
 }
+
+
+/////////////////////////////////
 
 function getSquads(filter){
 

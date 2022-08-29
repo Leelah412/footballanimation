@@ -8,16 +8,24 @@ import squad_creator from './modules/squad_creator'
 
 
 interface User{
-  loggedIn: false,
+  loggedIn: boolean,
 
   username: string,
   email: string,
   first_name: string,
   last_name: string,
-  birthday: Date,
-  avatarPath: string
+  birthday: Date | null,
+  avatar_path: string
 }
 
+interface UserData{
+  username: string,
+  email?: string,
+  first_name?: string,
+  last_name?: string,
+  birthday?: Date,
+  avatar?: string
+}
 
 export default createStore({
   // only use default page-wide variables here (i.e. credentials of logged in user)
@@ -28,13 +36,33 @@ export default createStore({
     email: '',
     first_name: '',
     last_name: '',
-    birthday: new Date(),
-    avatarPath: ''
+    birthday: null,
+    avatar_path: ''
     
   } as User,
   
   mutations: {
-    
+    loginUser(state, args: UserData | null){
+      if(args === null) return;
+
+      state.loggedIn = true;
+      state.username = args.username;
+      
+      if(args.email !== undefined) state.email = args.email;
+      else state.email = '';
+
+      if(args.first_name !== undefined) state.first_name = args.first_name;
+      else state.first_name = '';
+
+      if(args.last_name !== undefined) state.last_name = args.last_name;
+      else state.last_name = '';
+
+      if(args.birthday !== undefined) state.birthday = args.birthday;
+      else state.birthday = null;
+
+      if(args.avatar !== undefined) state.avatar_path = args.avatar;
+      else state.avatar_path = '';
+    }
   },
   actions: {
   },

@@ -6,6 +6,8 @@
     <div class="center-container">
         <div class="header-standard-p-16">LOGIN</div>
 
+        <span class="error-msg" style="text-align:left">{{login_error_msg}}</span>
+
         <span class="error-msg" style="text-align:left">{{username_error_msg}}</span>
         <div id="login-username" class="flex-row" style="padding-top: 8px">
             <svg-button-selection :selection="SVG_SELECTION.EMAIL" :size="24" style="margin-right:32px;"/>
@@ -54,6 +56,7 @@ import { ref } from "vue-demi";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import Authentication from "@/services/Authentication";
 import router from "@/router";
+import store from "@/store";
 
 const username = ref<string>('');
 const password = ref<string>('');
@@ -61,6 +64,8 @@ const rememberMe = ref<boolean>(false);
 
 const username_error_msg = ref<string>('');
 const password_error_msg = ref<string>('');
+
+const login_error_msg = ref<string>('');
 
 function login(){
 
@@ -81,14 +86,13 @@ function login(){
     if(return_error) return;
 
     Authentication.login(username.value, password.value, rememberMe.value)
-    .then((res)=>{
-        console.log("login successful");        
-        console.log(res);
+    .then(res=>{
+        login_error_msg.value = '';
+        store.commit('loginUser', res.toStore);
         router.push('/');
     })
     .catch(err=>{
-        console.log("login not succesaf");
-        console.log(err);
+        login_error_msg.value = err;
     })
 }
 

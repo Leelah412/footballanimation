@@ -1,4 +1,4 @@
-import { authentication } from "./API";
+import API, { authentication } from "./API";
 
 export default {
 
@@ -9,28 +9,32 @@ export default {
             username,
             password
         })
-        .then(res => {
+        .then(async res => {
             if(!("accessToken" in res.data)) return Promise.reject("Internal Server Error");
             if(!("refreshToken" in res.data)) return Promise.reject("Internal Server Error");
 
             localStorage.setItem("accessToken", res.data.accessToken);
             localStorage.setItem("refreshToken", res.data.refreshToken);
 
-            // to let vue know, that someone is in fact logged in, we need to change some variables inside the store
-            // but for that, we need access to the store, and doing it from some *.js file would be a pain in the ass
-            // thats why we will have to do it inside "Login.vue"
-            return Promise.resolve(res.data);
-/*             return {
-                isError: false,
-                data: res.data                  // expecting to get access and refresh jwt tokens in "res.data"
-            }; */
+            var data = {
+                token: res.data,
+                toStore: {username}
+            }
+
+            // get user information from server and store it in vuex
+            await API().get(`/user/:${username}`)
+            .then(res2 => {
+                console.log("successfully got user data");
+                data.toStore = res2.data;
+            })
+            .catch(err => {
+                console.log("couldnt find user data, which should NOT happen at all, since user DOES exist!");
+            });
+            
+            return data;
         })
         .catch(err => {
             return Promise.reject(err);
-/*             return {
-                isError: true,
-                data: err.response.data
-            }; */
         });
     },
 

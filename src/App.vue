@@ -17,6 +17,9 @@ import Navbar from "./components/Navbar.vue";
 
 const route = useRouter().currentRoute;
 
+// TODO: login on startup with access token
+
+
 </script>
 
 
