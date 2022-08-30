@@ -1,6 +1,6 @@
 <template>
     
-<div class="card-squad">
+<div class="card-squad noselect">
 <!--   -->
     <div class="card" ref="card" @mouseenter="hovering = true" @mouseleave="hovering = false">
 

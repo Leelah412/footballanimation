@@ -4,11 +4,11 @@
 
     <div v-if="userFound" class="header global-padding">
         <div class="avatar">
-            <img :src="require('@/assets/' + TEST_USER.avatar)" alt="">
+            <img :src="store.getters.getAvatarURL()" alt="">
         </div>
-        <div class="info">
-            <div class="username">{{TEST_USER.username}}</div>
-            <div class="joined">joined {{TEST_USER.joined}}</div>
+        <div class="info flex-grow">
+            <div class="username">{{user ? user.username : ''}}</div>
+            <div class="joined">joined {{user ? user.joined : ''}}</div>
         </div>
     </div>
 
@@ -51,7 +51,7 @@
 
             </div>
             <div v-if="tabState === TAB_STATE.ABOUT" class="results-about">
-                {{TEST_USER.about}}
+                {{user ? user.about : ''}}
             </div>
 
             <div v-else class="results-content">
@@ -78,12 +78,15 @@
 
 
 <script lang="ts" setup>
-import { ref } from "vue-demi"
+import { ref, watch } from "vue-demi"
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
 import CardSquad from "../components/r_user_profile/CardSquad.vue";
 import router from "@/router";
-import API from "@/services/API";
+import API, { domain } from "@/services/API";
+import store from "@/store";
+
+
 
 // set "userFound" to true, if user data is successfully fetched from server
 const userFound = ref<boolean>(false);
@@ -91,26 +94,24 @@ const userFound = ref<boolean>(false);
 // NOTE: we can't just check, if "userFound" is false instead for obvious reasons
 const userNotFound = ref<boolean>(false);
 
+const userOwnsPage = ref<boolean>(false);
 
-
-const AVATAR_URL = '../assets/';
-
-const TEST_USER = {
-    username: 'LoremIpsum96',
-    firstname: 'Lorem',
-    lastname: 'Ipsum',
-    email: 'lorem@ipsum.sic',
-    birthday: '04 Dec 1996',
-    avatar: 'logo.png',
-    about: 'Lorem Ipsum Dolorum Sic Est Quintus Flavia Placet',
-    joined: '01 Dec 1999',
-
+interface User{
+    username: string
+    email: string
+    first_name: string
+    last_name: string
+    birthday: Date
+    avatar: string
+    joined: Date
+    about: string
 }
+
+const user = ref<User | undefined>();
 
 enum TAB_STATE {SQUADS, MATCHES, ABOUT, SEARCH};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.SQUADS);
-
 
 function switchTab(newTab: TAB_STATE){
     tabState.value = newTab;
@@ -118,16 +119,65 @@ function switchTab(newTab: TAB_STATE){
 
 const squadResults = ref([]);
 const matchResults = ref([]);
+
+const resultFilter = ref({});
 const resultCount = ref(0);
 
 getUserData();
+
+watch(router.currentRoute.value.params, (to, prev)=>{    
+    reset();
+    getUserData();
+
+    // TODO: set filters
+    switch(tabState.value){
+        case TAB_STATE.SQUADS: getSquads({}); break;
+        case TAB_STATE.MATCHES: getMatches({}); break;
+        default: break;
+    }
+})
+
+function reset(){
+    userFound.value = false;
+    userNotFound.value = false;
+    user.value = undefined;
+
+    squadResults.value = [];
+    matchResults.value = [];
+    resultCount.value = 0;
+}
 
 async function getUserData(){
     const username = router.currentRoute.value.params.username;
 
     try{
-        const res = await API().get(`/user/${username}`);
+        // if logged in user calls its own profile, try to get additional information per post
+        var res;
+        const token = localStorage.getItem('accessToken');
+        if(username === store.state.username && token !== null){            
+            res = await API().post(`/user/${username}`, {accessToken: token});
+            userOwnsPage.value = true;
+        }
+        else{
+            res = await API().get(`/user/${username}`);
+            userOwnsPage.value = false;
+        }
+
         console.log("return value: ", res);
+
+        var _user: User = {
+            username: res.data.username !== undefined && res.data.username || '',
+            email: res.data.email !== undefined && res.data.email || '',
+            first_name: res.data.first_name !== undefined && res.data.first_name || '',
+            last_name: res.data.last_name !== undefined && res.data.last_name || '',
+            birthday: res.data.birthday !== undefined && res.data.birthday || '',
+            avatar: res.data.avatar !== undefined && res.data.avatar || 'default.png',
+            joined: res.data.joined !== undefined && res.data.joined || '',
+            about: res.data.about !== undefined && res.data.about || '',
+        };
+
+        user.value = _user;
+
         userFound.value = true;
     }
     catch(error){
@@ -136,6 +186,13 @@ async function getUserData(){
     }
 }
 
+function getURL(){
+    
+    var url = domain + '/files/avatar/' + (user.value && user.value.avatar !== '' ? user.value.avatar : 'default.png');
+    console.log("img url: ", url);
+    
+    return url;
+}
 
 /////////////////////////////////
 
@@ -243,21 +300,15 @@ function getMatches(filter){
 
             margin-left: auto;
             margin-right: auto;
-        }
 
-        @media screen and (min-width: 900px) {
-            .results-content{
-                display: grid;
+            @media screen and (min-width: 900px) {
                 grid-template-columns: repeat(2, 31fr);
-            }
-        }
-
-        @media screen and (min-width: 1200px){
-            .results-content{
-                display: grid;
+            }        
+            @media screen and (min-width: 1200px){
                 grid-template-columns: repeat(3, 31fr);
             }
         }
+
     }
 }
 

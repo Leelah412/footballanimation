@@ -16,16 +16,13 @@ export default {
             localStorage.setItem("accessToken", res.data.accessToken);
             localStorage.setItem("refreshToken", res.data.refreshToken);
 
-            var data = {
-                token: res.data,
-                toStore: {username}
-            }
+            var data = {}
 
             // get user information from server and store it in vuex
-            await API().get(`/user/:${username}`)
+            await API().post(`/user/${username}`, {accessToken: res.data.accessToken, refreshToken: res.data.refreshToken})
             .then(res2 => {
                 console.log("successfully got user data");
-                data.toStore = res2.data;
+                data = res2.data;
             })
             .catch(err => {
                 console.log("couldnt find user data, which should NOT happen at all, since user DOES exist!");
@@ -38,6 +35,17 @@ export default {
         });
     },
 
+    // basically you just have to delete the tokens
+    // TODO: maybe also send a logout request to the server, if we ever do session logs
+    logout(){
+        const refreshToken = localStorage.getItem('refreshToken');
+        if(refreshToken !== null)
+            authentication().delete('logout', {data: {refreshToken}});
+
+        localStorage.setItem('accessToken', '');
+        localStorage.setItem('refreshToken', '');
+    },
+
     registration(username: string, email: string, password: string){
         
         return authentication().post('registration', {
@@ -48,8 +56,44 @@ export default {
     },
 
     requestReset(email: string){
-        return authentication().post('requestReset', {email});
+        return authentication().post('request-reset', {email});
     },
+
+    // call this to continue a previous session after a reload, if possible
+    async restoreSession(){
+        const refreshToken: string | null = localStorage.getItem('refreshToken');
+        if(refreshToken === null) return;
+
+        return await authentication().post('restore-session', {refreshToken: refreshToken})
+        .then(async res => {
+
+            if(typeof res.data.username !== 'string')
+                return Promise.reject('Internal Server Error');
+            if(typeof res.data.accessToken !== 'string')
+                return Promise.reject('Internal Server Error');
+            
+            var data = {}
+            console.log("username: ", res.data.username);
+            // save new access token in storage
+            localStorage.setItem('accessToken', res.data.accessToken);
+
+            // get user information from server and store it in vuex
+            await API().post(`/user/${res.data.username}`, {accessToken: res.data.accessToken})
+            .then(res2 => {
+                console.log("successfully got user data");
+                data = res2.data;
+            })
+            .catch(err => {
+                console.log("couldnt find user data");
+            });
+            
+            return data;
+        })
+        .catch(err => {
+            return Promise.reject(err);
+        })
+    },
+
 
     // supposed to be called in App.vue in the "beforeMount" method to check, if a user was already logged in, so they dont have to do it again
     // returns a dictionary with boolean "loggedIn" and dictionary object "account" containing all necessary data for the "account" state in the store

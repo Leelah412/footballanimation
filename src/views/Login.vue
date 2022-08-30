@@ -88,7 +88,7 @@ function login(){
     Authentication.login(username.value, password.value, rememberMe.value)
     .then(res=>{
         login_error_msg.value = '';
-        store.commit('loginUser', res.toStore);
+        store.commit('login', res);
         router.push('/');
     })
     .catch(err=>{
@@ -117,6 +117,9 @@ const focused_input = ref<string>('');
 a{
     color: var(--accent);
     text-decoration: none;
+    &:hover{
+        text-decoration: underline;
+    }
 }
 
 </style>

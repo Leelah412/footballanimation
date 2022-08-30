@@ -29,8 +29,28 @@
                     <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'"/>
                 </router-link>
             </div>
-            <div v-else class="flex-row">
-                <svg-button-selection :selection="SVG_SELECTION.LOGOUT" :size="24" :fill="'var(--light)'" :text="'LOGOUT'" />
+
+            <div v-else class="flex-column position-relative">
+
+                <button id="navbar-user-avatar-button" @click="openUserMenu = !openUserMenu">
+                    <img :src="store.getters.getAvatarURL()" alt="">
+                </button>
+
+                <div id="navbar-user-menu" :class="openUserMenu ? 'open' : ''">
+
+                    <div class="navbar-user-menu-item noselect" style="background:var(--dark); border-bottom: 1px solid var(--accent);">
+                        <img :src="store.getters.getAvatarURL()" alt="">
+                        <span style="font-size: var(--font-size-3);">{{store.state.username}}</span>
+                    </div>
+<!--                     <div class="navbar-user-menu-item noselect"></div>
+                    <div class="navbar-user-menu-item noselect"></div> -->
+
+                    <div class="navbar-user-menu-item noselect" @click="logout">
+                        <svg-button-selection :selection="SVG_SELECTION.LOGOUT" :size="24" :fill="'var(--light)'" />
+                        <span>Logout</span>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -41,12 +61,26 @@
 
 
 <script lang="ts" setup>
+import API from "@/services/API";
+import Authentication from "@/services/Authentication";
 import store from "@/store";
-import { ref } from "vue-demi";
+import { onUpdated, ref } from "vue-demi";
 import { SVG_SELECTION } from "./helper/enums";
 import SvgButtonSelection from "./misc/svg-button-selection.vue";
 
+const openUserMenu = ref<boolean>(false);
 
+onUpdated(()=>{
+    // make sure that if we log out, we don't keep the menu open;
+    // this might seem irrelevant at first, but if we log in again,
+    // and "openUserMenu" is true, the menu might be shown immediately
+    if(!store.state.loggedIn && openUserMenu) openUserMenu.value = false;
+});
+
+function logout(){
+    Authentication.logout();
+    store.commit('logout');
+}
 
 </script>
 
@@ -75,7 +109,7 @@ nav{
     height: var(--navbar-height);
     box-sizing: border-box;
 
-    box-shadow: 0 0 2px var(--dark);
+    box-shadow: 0 0 4px var(--dark);
 
     a{
         text-decoration: none;
@@ -123,7 +157,7 @@ nav{
     padding-left: var(--global-margin);
     padding-right: var(--global-margin);
 
-    background: var(--secondary);
+    background: var(--secondary-dark);
     border-bottom: 1px solid var(--accent);
     height: 100%;
     width: 100%;
@@ -168,6 +202,82 @@ nav{
 #navbar-user{
     display: flex;
     flex-direction: row;
+    --avatar-button-size: 36px;
+
+    #navbar-user-avatar-button{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: var(--avatar-button-size);
+        height: var(--avatar-button-size);
+        background: var(--secondary-dark);
+        border: 2px solid var(--accent);
+        border-radius: 1000px;
+        box-shadow: 0 0 4px var(--dark);
+        overflow: hidden;
+
+        img{
+            width: 100%;
+            height: 100%;
+        }
+
+        &:hover{
+            filter: brightness(1.2);
+        }
+
+        &:active{
+            filter: brightness(0.8);
+        }
+    }
+
+    #navbar-user-menu{
+        position: absolute;
+        top: calc(var(--avatar-button-size) + 8px);
+        right: 0;
+
+        box-shadow: 0 0 4px var(--dark);
+        background: var(--dark-2);
+        min-width: 128px;
+
+        z-index: -1000;
+        transform: translateY(-196px);
+        transition-duration: 0.3s;
+        
+        &.open{
+            z-index: 0;
+            transform: translateY(0px);
+        }
+
+        .navbar-user-menu-item{
+            cursor: pointer;
+            display: grid;
+            grid-template-columns: 32px auto;
+            padding: 8px;
+            height: 24px;
+
+            .svg-button-selection{
+                padding-right: 8px;
+            }
+            img{
+                height: 24px;
+                width: 24px;
+                padding-right: 8px;
+            }
+
+            span{
+                margin: auto;
+                margin-left: 0;
+                font-size: var(--font-size-4);
+                color: var(--light);
+            }
+
+            &:hover{
+                background: var(--dark-3);
+            }
+        }
+
+    }
 
 /*     button{
         margin: auto 8px;

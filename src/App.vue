@@ -2,7 +2,7 @@
 
   <Navbar v-if="route.name !== 'editor'"/>
 
-  <router-view />
+  <router-view v-if="restorationAttemptExecuted" />
 
   <footer v-if="route.name !== 'editor'">
 
@@ -14,11 +14,26 @@
 import { ref } from "vue-demi";
 import { useRouter } from "vue-router";
 import Navbar from "./components/Navbar.vue";
+import Authentication from "./services/Authentication";
+import store from "./store";
 
+restoreSession();
 const route = useRouter().currentRoute;
 
-// TODO: login on startup with access token
+// only load view AFTER session restoration attempt done 
+const restorationAttemptExecuted = ref<boolean>(false);
 
+function restoreSession(){
+  Authentication.restoreSession()
+  .then(user => {
+    store.commit('login', user);
+    restorationAttemptExecuted.value = true;
+  })
+  .catch(err => {
+    console.error(err);
+    restorationAttemptExecuted.value = true;
+  });
+}
 
 </script>
 
@@ -30,11 +45,23 @@ const route = useRouter().currentRoute;
   margin: 0;
   padding: 0;
 
-  --primary: #0b530b;
-  --primary-dark: #021a02;
-  --secondary-light: #167e75;
+  --cl-1:#6594C0;
+  --cl-2:#3562A6;
+  --cl-3:#0E1E5B;
+  --cl-4:#091442;
+  --cl-5:#0B0B0B;
+
+/*   --primary: #0b530b;
+  --primary-dark: #021a02; */
+  --primary-light: #cc172f;
+  --primary: #b4152a;
+  --primary-dark: #9e1225;
+  --secondary-light: var(--cl-2);
+  --secondary: var(--cl-3);
+  --secondary-dark: var(--cl-4);
+/*   --secondary-light: #167e75;
   --secondary: #105650;
-  --secondary-dark: #0a3633;
+  --secondary-dark: #0a3633; */
   --accent-light: #ac6e29;
   --accent: #9c5e17;
   --accent-dark: #643907;
@@ -110,6 +137,7 @@ button{
   text-align: center;
   color: #ccc;
   min-height: 100vh;
+  overflow: hidden;
 }
 
 .noselect {
@@ -602,6 +630,23 @@ input{
   $width: 360px;
   width: $width;
   height: $width * (3/4);
+}
+
+.card-grid{
+  display: grid;
+  grid-template-columns: repeat(1, 31fr);
+  row-gap: 32px;
+  column-gap: 32px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  @media screen and (min-width: 900px) {
+      grid-template-columns: repeat(2, 31fr);
+  }        
+  @media screen and (min-width: 1200px){
+      grid-template-columns: repeat(3, 31fr);
+  }
 }
 
 .error-msg{
