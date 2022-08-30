@@ -115,11 +115,11 @@ const emit = defineEmits(['uploadLogo']);
 
 enum TAB_STATE {HOME, AWAY};
 const tabState = ref<TAB_STATE>(TAB_STATE.HOME);
-const currentTeam = ref<Team>(store.state.home);
+const currentTeam = ref<Team>(store.state.editorStore.home);
 
 function changeTabState(newState: TAB_STATE){
     tabState.value = newState;
-    currentTeam.value = tabState.value === TAB_STATE.HOME ? store.state.home : store.state.away;
+    currentTeam.value = tabState.value === TAB_STATE.HOME ? store.state.editorStore.home : store.state.editorStore.away;
 }
 
 function uploadLogo(){

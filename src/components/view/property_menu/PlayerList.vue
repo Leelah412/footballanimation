@@ -32,7 +32,7 @@
     <div class="pm-content">
 
         <div v-if="plState === PL_STATE.HOME" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, key, idx) in store.state.home.squadList" :key="`player-list-home-${idx}`">
+            <div class="pm-list" v-for="(value, key, idx) in store.state.editorStore.home.squadList" :key="`player-list-home-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
                     <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-home-player-${idx2}`">
@@ -67,7 +67,7 @@
         </div>
 
         <div v-if="plState === PL_STATE.AWAY" class="pm-list-wrapper">
-            <div class="pm-list" v-for="(value, key, idx) in store.state.away.squadList" :key="`player-list-away-${idx}`">
+            <div class="pm-list" v-for="(value, key, idx) in store.state.editorStore.away.squadList" :key="`player-list-away-${idx}`">
                 <div class="pm-list-header">{{value.name}}</div>
                 <div class="pm-list-content">
                     <div class="pm-list-item" v-for="(pl, idx2) in value.players" :key="`player-list-away-player-${idx2}`">
@@ -103,7 +103,7 @@
         </div>
 
         <div v-if="plState === PL_STATE.DB" class="pm-list">
-            <div class="pm-list-item" v-for="(pl, idx) in store.state.database" :key="`player-list-database-${idx}`">
+            <div class="pm-list-item" v-for="(pl, idx) in store.state.editorStore.database" :key="`player-list-database-${idx}`">
                 <div class="pm-list-item-col flex-row align-center" style="font-size: var(--font-size-4)">
                     <span v-if="pl.name !== ''">{{pl.name}}</span>
                     <span v-else class="span-placeholder">Name</span>
@@ -174,7 +174,7 @@ function changePlState(newState: PL_STATE){
 function onRemovePlayer(player: Player, removeFromDatabase: boolean = false){
 
     // remove player from all teams (not just his team, in case he's in multiple teams for some reason)
-    var keys = Object.keys(store.state.home.squadList);
+    var keys = Object.keys(store.state.editorStore.home.squadList);
     for(var i = 0; i < keys.length; i++){
         
     }

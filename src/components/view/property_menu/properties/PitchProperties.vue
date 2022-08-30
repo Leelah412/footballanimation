@@ -59,8 +59,8 @@ interface Props{
 
 const props = defineProps<Props>();
 
-const pw = ref(store.state.pitch.size.x);
-const ph = ref(store.state.pitch.size.y);
+const pw = ref(store.state.editorStore.pitch.size.x);
+const ph = ref(store.state.editorStore.pitch.size.y);
 
 function onPitchSizeChange(ev){
     Committer.pitchSizeChange(pw.value, ph.value);

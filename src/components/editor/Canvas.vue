@@ -9,27 +9,26 @@
             <Pitch />
             
             <!-- team names/logos HOME -->
-            <g :transform="`translate(${-store.state.pitch.size.x/2 + 2},${store.state.pitch.size.y/2 - 2})`" opacity="0.5">
+            <g :transform="`translate(${-store.state.editorStore.pitch.size.x/2 + 2},${store.state.editorStore.pitch.size.y/2 - 2})`" opacity="0.5">
                 <text fill="var(--light)" font-size="4px" class="team-name">
-                    {{ store.state.settings.showTeamName ? store.state.home.name : ''}}
-                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? '(' : ''}}<!--  -->
-                    {{ store.state.settings.showTeamShort ? store.state.home.short : ''}}<!--  -->
-                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? ')' : ''}}
+                    {{ store.state.editorStore.settings.showTeamName ? store.state.editorStore.home.name : ''}}
+                    {{(store.state.editorStore.settings.showTeamName && store.state.editorStore.settings.showTeamShort) ? '(' : ''}}<!--  -->
+                    {{ store.state.editorStore.settings.showTeamShort ? store.state.editorStore.home.short : ''}}<!--  -->
+                    {{(store.state.editorStore.settings.showTeamName && store.state.editorStore.settings.showTeamShort) ? ')' : ''}}
                 </text>
             </g>
 
             <!-- team names/logos AWAY -->
-            <g :transform="`translate(${store.state.pitch.size.x/2 - 2},${store.state.pitch.size.y/2 - 2})`" opacity="0.5">
+            <g :transform="`translate(${store.state.editorStore.pitch.size.x/2 - 2},${store.state.editorStore.pitch.size.y/2 - 2})`" opacity="0.5">
                 <text fill="var(--light)" font-size="4px" text-anchor="end" class="team-name">
-                    {{ store.state.settings.showTeamName ? store.state.away.name : ''}}
-                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? '(' : ''}}<!--  -->
-                    {{ store.state.settings.showTeamShort ? store.state.away.short : ''}}<!--  -->
-                    {{(store.state.settings.showTeamName && store.state.settings.showTeamShort) ? ')' : ''}}
+                    {{ store.state.editorStore.settings.showTeamName ? store.state.editorStore.away.name : ''}}
+                    {{(store.state.editorStore.settings.showTeamName && store.state.editorStore.settings.showTeamShort) ? '(' : ''}}<!--  -->
+                    {{ store.state.editorStore.settings.showTeamShort ? store.state.editorStore.away.short : ''}}<!--  -->
+                    {{(store.state.editorStore.settings.showTeamName && store.state.editorStore.settings.showTeamShort) ? ')' : ''}}
                 </text>
             </g>
 
-            <g v-for="(entity, key) in store.state.entityList" :key="key" :id="`player-id-${entity.id}`">
-                <!-- NEXT -->
+            <g v-for="(entity, key) in store.state.editorStore.entityList" :key="key" :id="`player-id-${entity.id}`">
                 <PlayerVue v-if="(entity instanceof Player)" :player="entity" :selected="selectedEntity === entity"
                     v-on:playerSelected="entitySelected" 
                     v-on:startDragging="onEntityStartDragging" v-on:stopDragging="onEntityStopDragging"
@@ -253,7 +252,7 @@ function setCanvasRect(){
     // calculate the scale based on the canvas viewport
     var base: number = width.value > height.value ? height.value : width.value;
     const margin: number = 1;
-    scale.value = (base * margin) / store.state.pitch.size.x;
+    scale.value = (base * margin) / store.state.editorStore.pitch.size.x;
     // set the global variables to the correct values
     Global.scale = scale.value;
     Global.origin = new Vector2(width.value/2, height.value/2);

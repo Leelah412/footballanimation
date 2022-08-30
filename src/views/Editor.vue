@@ -12,7 +12,6 @@
         </div>
 
         <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
-            <!-- NEXT -->
             <CanvasVue
                 v-on:dropdown="openDropdown" v-on:entitySelected="onEntitySelected" />
         </div>
@@ -34,8 +33,7 @@
         <Statusbar />
     </div>
 
-    <svg id="drag-entity"  width="32px" height="32px" viewBox="0 0 6 6" :display="dragging ? 'inline' : 'none'">
-        <!-- TODO: REFACTOR TO ADD COMPONENT BY CODE -->
+    <svg id="drag-entity" width="32px" height="32px" viewBox="0 0 6 6" :display="dragging ? 'inline' : 'none'">
         <PlayerVue v-if="entityType === EntityType.PLAYERHOME" :player="entity" :asTool="true"/>
         <PlayerVue v-if="entityType === EntityType.PLAYERAWAY" :player="entity" :asTool="true"/>
     </svg>
@@ -201,11 +199,11 @@ function newEntity(ev, type: EntityType){
         case EntityType.PLAYERHOME:
             console.log("playerhome");
             // Vector2(3,3) is for visual purposes and should be overwritten in the end, when dropping the entity on the canvas
-            entity.value = new Player(new Vector2(3,3), 0, store.state.home);
+            entity.value = new Player(new Vector2(3,3), 0, store.state.editorStore.home);
             break;
         case EntityType.PLAYERAWAY:
             console.log("away");
-            entity.value = new Player(new Vector2(3,3), 0, store.state.away);
+            entity.value = new Player(new Vector2(3,3), 0, store.state.editorStore.away);
             break;
         case EntityType.LINE:
             console.log("line");

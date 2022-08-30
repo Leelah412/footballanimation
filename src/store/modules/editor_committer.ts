@@ -14,13 +14,13 @@ export const Committer = {
 
 // CANVASOBJECT
 
-addEntity: (entity: CanvasObject) => store.commit('addEntity', {entity: entity}),
+addEntity: (entity: CanvasObject) => store.commit('editorStore/addEntity', {entity: entity}),
 
-setEntityList: (entityList: EntityList) => store.commit('setEntityList', {entityList: entityList}),
+setEntityList: (entityList: EntityList) => store.commit('editorStore/setEntityList', {entityList: entityList}),
 
 deleteEntity(entity: CanvasObject, data: any = undefined){
     // delete the entity
-    store.commit('deleteEntity', {entity: entity})
+    store.commit('editorStore/deleteEntity', {entity: entity})
 
     // TODO: remove this completely, as we essentially only want to
     //       delete an entity from the list of elements to show on the canvas
@@ -47,36 +47,36 @@ deleteEntity(entity: CanvasObject, data: any = undefined){
 // PLAYER
 
 addPlayerToTeam: (player: Player, entityType: EntityType) =>
-    store.commit('addPlayerToTeam', {player: player, entityType: entityType}),
+    store.commit('editorStore/addPlayerToTeam', {player: player, entityType: entityType}),
 
 movePlayer: (player: Player, team: Team | null, squadKey: string = 'firstTeam') => 
-    store.commit('movePlayer', {player: player, team: team, squadKey: squadKey}),
+    store.commit('editorStore/movePlayer', {player: player, team: team, squadKey: squadKey}),
 
 removePlayer: (player: Player, removeFromTeam: boolean = true, removeCompletely: boolean = false)=>
-    store.commit('removePlayer', {player: player, removeFromTeam: removeFromTeam, removeCompletely: removeCompletely}),
+    store.commit('editorStore/removePlayer', {player: player, removeFromTeam: removeFromTeam, removeCompletely: removeCompletely}),
 
 // TEAM
 
 changeTeamVariables: (team: Team, args: {[key: string]: any})=>
-  store.commit('changeTeamVariables', {team: team, args: args}),
+  store.commit('editorStore/changeTeamVariables', {team: team, args: args}),
 
 // PITCH
 
-pitchSizeChange: (x: number, y: number) => store.commit('pitchSizeChange', {x: x, y: y}),
+pitchSizeChange: (x: number, y: number) => store.commit('editorStore/pitchSizeChange', {x: x, y: y}),
 
 // SNAPSHOT
 
-addSnapshot: (snap: Snapshot, idx: number) => store.commit('addSnapshot', {snap: snap, idx: idx}),
-deleteSnapshot: (snap: Snapshot) => store.commit('deleteSnapshot', {snap: snap}),
-setSnapshotList: (snapshotList: Snapshot[]) => store.commit('setSnapshotList', {snapshotList: snapshotList}),
+addSnapshot: (snap: Snapshot, idx: number) => store.commit('editorStore/addSnapshot', {snap: snap, idx: idx}),
+deleteSnapshot: (snap: Snapshot) => store.commit('editorStore/deleteSnapshot', {snap: snap}),
+setSnapshotList: (snapshotList: Snapshot[]) => store.commit('editorStore/setSnapshotList', {snapshotList: snapshotList}),
 
 // MATCH
 
-setMatch: (match: Match) => store.commit('setMatch', {match: match}),
+setMatch: (match: Match) => store.commit('editorStore/setMatch', {match: match}),
 
 // SETTINGS
-showTeamName: (show: boolean) => store.commit('showTeamName', {show: show}),
-showTeamShort: (show: boolean) => store.commit('showTeamShort', {show: show}),
-showTeamLogo: (show: boolean) => store.commit('showTeamLogo', {show: show}),
+showTeamName: (show: boolean) => store.commit('editorStore/showTeamName', {show: show}),
+showTeamShort: (show: boolean) => store.commit('editorStore/showTeamShort', {show: show}),
+showTeamLogo: (show: boolean) => store.commit('editorStore/showTeamLogo', {show: show}),
 
 }

@@ -10,15 +10,15 @@
         </div>
         <div style="padding: 8px 16px">
             <div class="flex-row">
-                <input type="checkbox" :checked="store.state.settings.showTeamName" @change="ev => {Committer.showTeamName(ev.currentTarget.checked)}">
+                <input type="checkbox" :checked="store.state.editorStore.settings.showTeamName" @change="ev => {Committer.showTeamName(ev.currentTarget.checked)}">
                 <label class="label-checkbox" for="">Name</label>
             </div>
             <div class="flex-row">
-                <input type="checkbox" :checked="store.state.settings.showTeamShort" @change="ev => {Committer.showTeamShort(ev.currentTarget.checked)}">
+                <input type="checkbox" :checked="store.state.editorStore.settings.showTeamShort" @change="ev => {Committer.showTeamShort(ev.currentTarget.checked)}">
                 <label class="label-checkbox" for="">Short</label>
             </div>
             <div class="flex-row">
-                <input type="checkbox" :checked="store.state.settings.showTeamLogo" @change="ev => {Committer.showTeamLogo(ev.currentTarget.checked)}">
+                <input type="checkbox" :checked="store.state.editorStore.settings.showTeamLogo" @change="ev => {Committer.showTeamLogo(ev.currentTarget.checked)}">
                 <label class="label-checkbox" for="">Logo</label>
             </div>
 
@@ -26,17 +26,17 @@
     </div>
 
     <div class="pm-content flex-row">
-        <input type="checkbox" :checked="store.state.settings.showJersey">
+        <input type="checkbox" :checked="store.state.editorStore.settings.showJersey">
         <label class="label-checkbox" for="">Show Jersey</label>
     </div>
 
     <div class="pm-content flex-row">
-        <input type="checkbox" :checked="store.state.settings.showTimer">
+        <input type="checkbox" :checked="store.state.editorStore.settings.showTimer">
         <label class="label-checkbox" for="">Show Time</label>
     </div>
 
     <div class="pm-content flex-row">
-        <input type="checkbox" :checked="store.state.settings.showScore">
+        <input type="checkbox" :checked="store.state.editorStore.settings.showScore">
         <label class="label-checkbox" for="">Show Scores</label>
     </div>
 
@@ -64,8 +64,8 @@ interface Props{
 
 const props = defineProps<Props>();
 
-const pw = ref(store.state.pitch.size.x);
-const ph = ref(store.state.pitch.size.y);
+const pw = ref(store.state.editorStore.pitch.size.x);
+const ph = ref(store.state.editorStore.pitch.size.y);
 
 function onPitchSizeChange(ev){
     Committer.pitchSizeChange(pw.value, ph.value);

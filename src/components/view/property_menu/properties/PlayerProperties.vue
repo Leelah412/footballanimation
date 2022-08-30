@@ -11,7 +11,7 @@
                 {{_player.name}}
             </span>
             <span v-if="_player.team !== null" style="text-align: left; font-size: var(--font-size-5); font-style: italic; opacity: 0.8;">
-                {{(_player.team.name !== '' ? _player.team.name : (_player.team === store.state.home ? 'Home' : 'Away'))}}
+                {{(_player.team.name !== '' ? _player.team.name : (_player.team === store.state.editorStore.home ? 'Home' : 'Away'))}}
             </span>
         </div>
 
@@ -34,11 +34,11 @@
             <div class="pm-content-header">TEAM</div>
             <div class="flex-row" style="margin-bottom: 4px">
                 <input type="radio" name="playerTeam" value="playerTeamHome" v-model="playerTeam">
-                <label style="margin-left: 4px" for="playerTeamHome">{{(store.state.home.name !== '' ? `${store.state.home.name} (Home)` : 'Home')}}</label>
+                <label style="margin-left: 4px" for="playerTeamHome">{{(store.state.editorStore.home.name !== '' ? `${store.state.editorStore.home.name} (Home)` : 'Home')}}</label>
             </div>
             <div class="flex-row">
                 <input type="radio" name="playerTeam" value="playerTeamAway" v-model="playerTeam">
-                <label style="margin-left: 4px" for="playerTeamAway">{{(store.state.away.name !== '' ? `${store.state.away.name} (Away)` : 'Away')}}</label>
+                <label style="margin-left: 4px" for="playerTeamAway">{{(store.state.editorStore.away.name !== '' ? `${store.state.editorStore.away.name} (Away)` : 'Away')}}</label>
             </div>
         </div>
 
@@ -67,15 +67,15 @@ const props = defineProps<Props>();
 
 onUpdated(()=>{
     _player.value = props.player;
-    if(props.player.team === store.state.home) playerTeam.value = 'playerTeamHome';
-    else if(props.player.team === store.state.away) playerTeam.value = 'playerTeamAway';
+    if(props.player.team === store.state.editorStore.home) playerTeam.value = 'playerTeamHome';
+    else if(props.player.team === store.state.editorStore.away) playerTeam.value = 'playerTeamAway';
 });
 
 const _player = ref<Player>(props.player);
 const playerTeam = ref<string>('');
 
-if(props.player.team === store.state.home) playerTeam.value = 'playerTeamHome';
-else if(props.player.team === store.state.away) playerTeam.value = 'playerTeamAway';
+if(props.player.team === store.state.editorStore.home) playerTeam.value = 'playerTeamHome';
+else if(props.player.team === store.state.editorStore.away) playerTeam.value = 'playerTeamAway';
 
 // TODO: switch player team
 watch(playerTeam, (newTeam, oldTeam)=>{
@@ -83,10 +83,10 @@ watch(playerTeam, (newTeam, oldTeam)=>{
     
     switch(newTeam){
         case 'playerTeamHome':
-            Committer.movePlayer(_player.value, store.state.home);
+            Committer.movePlayer(_player.value, store.state.editorStore.home);
             break;
         case 'playerTeamAway':
-            Committer.movePlayer(_player.value, store.state.away);
+            Committer.movePlayer(_player.value, store.state.editorStore.away);
             break;
         default: break;
     }

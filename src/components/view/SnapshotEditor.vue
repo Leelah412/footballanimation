@@ -6,9 +6,9 @@
         <!-- <button class="btn-secondary" @click="editSnapshot">EDIT</button> -->
         <SvgButtonSelection :selection="SVG_SELECTION.EDIT" @click="editSnapshot"/>
         <SvgButtonSelection :selection="SVG_SELECTION.DELETE" @click="deleteSnapshot"/>
-        <div v-if="store.state.snapshotList.length > 0" id="snapshot-jump-to-container">
+        <div v-if="store.state.editorStore.snapshotList.length > 0" id="snapshot-jump-to-container">
             <label for="snapshot-jump-to" class="noselect">JUMP TO</label>
-            <input type="number" class="input-number-dark" id="snapshot-jump-to" min="0" :max="store.state.snapshotList.length-1"/>
+            <input type="number" class="input-number-dark" id="snapshot-jump-to" min="0" :max="store.state.editorStore.snapshotList.length-1"/>
         </div>
 
     </div>
@@ -19,7 +19,7 @@
             </svg>
         </div>
         <div id="sec-snapshots">
-            <div v-for="(snap, idx) in store.state.snapshotList" :key="`snap-id-${snap.id}`" class="secs-snapshot" :id="`snap-idx-${snap.id}`">
+            <div v-for="(snap, idx) in store.state.editorStore.snapshotList" :key="`snap-id-${snap.id}`" class="secs-snapshot" :id="`snap-idx-${snap.id}`">
 <!--                 <div class="secss-filler" @mouseover="ev => mouseOverFiller(idx)" @mouseleave="mouseLeftFiller">
                     <div v-if="fillerPosition === idx" class="se-add-frame" @click="ev => addSnapshot(idx)">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#fff">
@@ -43,9 +43,9 @@
             <div id="multiselect-container" style="display: none"></div>
 
         </div>
-        <div class="se-add-frame" :style="`width: ${store.state.pitch.size.x}px; height: ${store.state.pitch.size.y}px`"
-            @click="ev => addSnapshot(store.state.snapshotList.length)">
-<!--                 <div class="flex-column align-center" v-if="store.state.snapshotList.length === 0" >
+        <div class="se-add-frame" :style="`width: ${store.state.editorStore.pitch.size.x}px; height: ${store.state.editorStore.pitch.size.y}px`"
+            @click="ev => addSnapshot(store.state.editorStore.snapshotList.length)">
+<!--                 <div class="flex-column align-center" v-if="store.state.editorStore.snapshotList.length === 0" >
                 <span class="noselect">SNAP</span>
                 <svg v-if="fillerPosition === -1" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#fff">
                     <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
@@ -156,7 +156,7 @@ function onSnapMouseMove(ev, snap: Snapshot){
     // check, if user is holding shift (& not ctrl) => interpret it as user wanting to select multiple snaps
 /*     if(ev.shiftKey && !ev.ctrlKey){
         // assign all snaps inbetween the starting and current snap index to multiselect list
-        multiselect.value = store.state.snapshotList.splice(multiselectStartIndex, idx + 1);
+        multiselect.value = store.state.editorStore.snapshotList.splice(multiselectStartIndex, idx + 1);
         return;
     } */
     
@@ -186,7 +186,7 @@ function onSnapMouseUp(ev, snap: Snapshot){
         // add 'snap' in the correct position, such that the elements in 'multiselect'
         // are ordered ascendingly by their index in the store's snapshot list
         // TODO: find a more efficient search algorithm
-        const lst = store.state.snapshotList;
+        const lst = store.state.editorStore.snapshotList;
         const idx = lst.findIndex(sn => sn === snap);
         var pos: number = 0;
         while(pos < multiselect.value.length){
@@ -237,7 +237,7 @@ function startDrag(x: number, snap: Snapshot){
         // meaning all preceding selected snaps come right before and
         // all succeeding selected snaps come right after the pivot
 
-        const idx = store.state.snapshotList.findIndex(s => s === snap);
+        const idx = store.state.editorStore.snapshotList.findIndex(s => s === snap);
         const ms_idx = multiselect.value.findIndex(s => s === snap);
 
         if(idx === -1){
@@ -250,7 +250,7 @@ function startDrag(x: number, snap: Snapshot){
         }     
 
         // copy current snapshot list (to make sure we dont directly mutate it)
-        dragList = store.state.snapshotList.slice(0);
+        dragList = store.state.editorStore.snapshotList.slice(0);
         
         var nghbrs: Snapshot[] = [];
         // delete preceding snaps from snapshot list
@@ -472,7 +472,7 @@ function stopDrag(){
 /////////////////////////////////////////////
 
 function takeSnapshot(): Snapshot{
-    return new Snapshot(Object.values(store.state.entityList), store.state.pitch);
+    return new Snapshot(Object.values(store.state.editorStore.entityList), store.state.editorStore.pitch);
 }
 
 
@@ -507,7 +507,7 @@ function editSnapshot(){
     // save the current snapshot state to reset to, if necessary
     snapshotBeforeEdit.value = currentSnapshot.value;
     // save the current entity list to reset to, if necessary
-    entityListBeforeEdit.value = store.state.entityList;
+    entityListBeforeEdit.value = store.state.editorStore.entityList;
 
     var lst: EntityList = {};
     for(var i = 0; i < currentSnapshot.value.entities.length; i++){

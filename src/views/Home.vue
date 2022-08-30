@@ -10,7 +10,7 @@
 
         </div>
 
-        <div class="position-absolute" id="hero-left">
+        <div class="position-absolute flex-column">
             <div class="home-header">
                 RECREATE YOUR FAVOURITE MATCHES!
                 <!-- Recreate your favourite football matches! -->
@@ -19,10 +19,10 @@
                 Create complex 2D animations for your favourite football scenarios and share them online or export them as video!
             </div>
             <div class="flex-row" style="margin-top: 64px">
-                <button style="color: var(--cl-1); padding: 16px; border: 4px solid var(--cl-1); font-size: var(--font-size-3); margin-right: 16px; font-weight: 600;">
+                <button class="btn-square-secondary-light" style="margin-right:16px;">
                     Create a Match!
                 </button>
-                <button style="color: var(--light); padding: 16px; font-size: var(--font-size-3); font-weight: 600;">
+                <button class="btn-simple-light">
                     View Matches
                 </button>
             </div>
@@ -34,37 +34,12 @@
 
     </div>
 
-<!--     <div id="home-hero" class="global-padding">
-        
-        <div id="hero-left">
-            <div class="home-header">
-                Recreate your favourite football matches!
-            </div>
-            <div class="home-description">
-                Create complex 2D animations for your favourite football scenarios and share them online or export them as video!
-            </div>
-            <div class="flex-row" style="margin-top: 64px">
-                <button class="btn-bootstrap-accent" style="background: var(--blue); margin-right: 12px;">
-                    Create a Match!
-                </button>
-                <button class="btn-bootstrap-accent" style="background: var(--dark-6)">
-                    View Matches
-                </button>
-            </div>
-        </div>
-
-        <div id="hero-right">
-
-        </div>
-
-    </div> -->
-
     <div id="home-content" class="flex-column global-padding">
 
         <div id="home-top-squads" class="flex-column" style="margin-bottom:64px;">
             <div class="flex-row align-center">
                 <div class="header-standard m-left" style="padding-left:0">TOP SQUADS</div>
-                <a href="" style="text-decoration: none; color:var(--secondary-light); padding: 8px; border: 1px solid var(--secondary-light);">More Squads</a>
+                <button class="btn-square-secondary-light thin p-8" >More Squads</button>
             </div>
             <div id="home-top-squad-list" class="card-grid">
                 <CardSquad />
@@ -76,7 +51,7 @@
         <div id="home-top-squads" class="flex-column">
             <div class="flex-row align-center">
                 <div class="header-standard m-left" style="padding-left:0">TOP MATCHES</div>
-                <a href="" style="text-decoration: none; color:var(--secondary-light); padding: 8px; border: 1px solid var(--secondary-light);">More Matches</a>
+                <button class="btn-square-secondary-light thin p-8" >More Matches</button>
             </div>
             <div id="home-top-squad-list" class="card-grid">
                 <CardSquad />
@@ -128,6 +103,59 @@ function scroll(ev){
 
 </script>
 
+
+<style lang="scss">
+
+.btn-square-secondary{
+    color: var(--secondary);
+    padding: 16px;
+    border: 4px solid var(--secondary);
+    font-size: var(--font-size-3);
+    font-weight: 600;
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+    &.thin{
+        border-width: 1px;
+        font-weight: 300;
+    }
+    &.p-8{
+        padding:8px;
+    }
+}
+
+.btn-square-secondary-light{
+    @extend .btn-square-secondary;    
+    color: var(--secondary-light);
+    border-color: var(--secondary-light);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-square-secondary-dark{
+    @extend .btn-square-secondary;    
+    color: var(--secondary-dark);
+    border-color: var(--secondary-dark);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-simple-light{
+    color: var(--light);
+    padding: 16px;
+    font-size: var(--font-size-3);
+    font-weight: 600;
+    &:hover{
+        color: var(--accent);
+    }
+}
+
+</style>
 
 
 <style lang="scss" scoped>

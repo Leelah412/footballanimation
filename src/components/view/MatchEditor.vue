@@ -180,8 +180,8 @@ import Rect from '../math/Rect';
 const props = defineProps({
 })
 
-const match = ref<Match>(store.state.match);
-const entities = ref<EntityList>(store.state.entityList);
+const match = ref<Match>(store.state.editorStore.match);
+const entities = ref<EntityList>(store.state.editorStore.entityList);
 // current time in MILLISECONDS(!) keep that in mind!!!
 const currentTime = ref<number>(0);
 const startTime = ref<number>(0);
@@ -268,7 +268,7 @@ function getEntitiesAndTimelines(): CanvasObject[]{
 function setTimelines(){
     // IMPORTANT: ONLY create a timeline object for an entity, 
     // first assign all objects in the entitylist in order to the list of timeline objects
-    Object.values(store.state.entityList).forEach(obj => { if(!(obj.id in timelines.value)) timelines.value[obj.id] = obj });
+    Object.values(store.state.editorStore.entityList).forEach(obj => { if(!(obj.id in timelines.value)) timelines.value[obj.id] = obj });
     // overwrite each entitylist object with the corresponding timeline object, if it exists
     match.value.timelines.forEach(tl => timelines.value[tl.object.id] = tl);
 } */

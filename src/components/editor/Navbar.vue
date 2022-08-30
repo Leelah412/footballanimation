@@ -126,8 +126,8 @@ const props = defineProps<Props>();
 const emit = defineEmits(['load', 'save', 'import', 'export',
     'toggleJersey']);
 
-const x = ref(store.state.pitch.size.x);
-const y = ref(store.state.pitch.size.y);
+const x = ref(store.state.editorStore.pitch.size.x);
+const y = ref(store.state.editorStore.pitch.size.y);
 
 
 const showJersey = ref(false);
@@ -175,7 +175,7 @@ function onPitchSizeChange(ev){
     display: flex;
     flex-direction: row;
     height: var(--navbar-height);
-    background: var(--secondary);
+    background: var(--secondary-dark);
     box-shadow: 0 0 4px var(--dark);
     div, button{
         margin-left: 8px;

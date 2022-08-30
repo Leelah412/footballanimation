@@ -47,8 +47,8 @@ const props = withDefaults(defineProps<Props>(), {
     selected: EntityType.NONE,    
 });
 
-const dummyPlayerHome = ref(new Player(new Vector2(3,3), 0, store.state.home));
-const dummyPlayerAway = ref(new Player(new Vector2(3,3), 0, store.state.away));
+const dummyPlayerHome = ref(new Player(new Vector2(3,3), 0, store.state.editorStore.home));
+const dummyPlayerAway = ref(new Player(new Vector2(3,3), 0, store.state.editorStore.away));
 /* const dummyLine = ref(new Line(new Vector2(0, 0), new Vector2(32,32), new Vector2())); */
 
 const emit = defineEmits(['newEntity']);
