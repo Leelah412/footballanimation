@@ -324,7 +324,9 @@ $properties-width: 256px;
     }
 
     .content{
+        background: var(--dark-2);
         padding: 16px;
+        min-height: 100%;
         .item{
             margin-bottom: 16px;
         }

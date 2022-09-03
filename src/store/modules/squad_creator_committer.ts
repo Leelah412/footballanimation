@@ -1,19 +1,36 @@
 import { PlayerStyle } from "@/components/helper/enums";
 import store from "..";
 
+const storePath = 'squadCreatorStore/';
+
 export const Committer = {
-setPlayerStyle: (style: PlayerStyle) => store.commit('squadCreatorStore/setPlayerStyle', {style}),
-setCircleStyle: (style: number) => store.commit('squadCreatorStore/setCircleStyle', {style}),
 
-setPitchColor: (pitchColor: string) => store.commit('squadCreatorStore/setPitchColor', {pitchColor}),
-setLineColor: (lineColor: string) => store.commit('squadCreatorStore/setLineColor', {lineColor}),
+saveSquad: (toFile: boolean = false, path: string = '') => store.commit(storePath + 'saveSquad', {toFile, path}),
+loadSquad: (data: string | null = null) => store.commit(storePath + 'loadSquad', {data}),
 
-setPitchWidth: (width: number) => store.commit('squadCreatorStore/setPitchWidth', {width}),
-setPitchHeight: (height: number) => store.commit('squadCreatorStore/setPitchHeight', {height}),
+setDefault: () => store.commit(storePath + 'setDefault', {}),
 
-setCanvasWidth: (width: number) => store.commit('squadCreatorStore/setCanvasWidth', {width}),
-setCanvasHeight: (height: number) => store.commit('squadCreatorStore/setCanvasHeight', {height}),
-setCanvasScale: (scale: number) => store.commit('squadCreatorStore/setCanvasScale', {scale}),
+undo: () => store.commit(storePath + 'undo', {}),
+redo: () => store.commit(storePath + 'redo', {}),
 
-setPitchStyle: (style: number) => store.commit('squadCreatorStore/setPitchStyle', {style}),
+pushToUndoList: (ref: any, primitive: string | null, value: any) => store.commit(storePath + 'pushToUndoList', {ref, primitive, value}),
+
+setPlayerStyle: (style: PlayerStyle) => store.commit(storePath + 'setPlayerStyle', {style}),
+setCircleStyle: (style: number) => store.commit(storePath + 'setCircleStyle', {style}),
+
+setPitchColor: (pitchColor: string) => store.commit(storePath + 'setPitchColor', {pitchColor}),
+setLineColor: (lineColor: string) => store.commit(storePath + 'setLineColor', {lineColor}),
+
+setPitchWidth: (width: number) => store.commit(storePath + 'setPitchWidth', {width}),
+setPitchHeight: (height: number) => store.commit(storePath + 'setPitchHeight', {height}),
+
+setCanvasWidth: (width: number) => store.commit(storePath + 'setCanvasWidth', {width}),
+setCanvasHeight: (height: number) => store.commit(storePath + 'setCanvasHeight', {height}),
+setCanvasScale: (scale: number) => store.commit(storePath + 'setCanvasScale', {scale}),
+
+setPitchStyle: (style: number) => store.commit(storePath + 'setPitchStyle', {style}),
+
+}
+
+export const Getter = {
 }

@@ -31,6 +31,10 @@ export default {
             return data;
         })
         .catch(err => {
+            console.log("ERROR:");
+            
+            console.log(err);
+            
             return Promise.reject(err);
         });
     },
@@ -62,7 +66,7 @@ export default {
     // call this to continue a previous session after a reload, if possible
     async restoreSession(){
         const refreshToken: string | null = localStorage.getItem('refreshToken');
-        if(refreshToken === null) return;
+        if(refreshToken === null || refreshToken === '') return Promise.reject("Nothing, there just isn't a user logged in");
 
         return await authentication().post('restore-session', {refreshToken: refreshToken})
         .then(async res => {
@@ -93,29 +97,5 @@ export default {
             return Promise.reject(err);
         })
     },
-
-
-    // supposed to be called in App.vue in the "beforeMount" method to check, if a user was already logged in, so they dont have to do it again
-    // returns a dictionary with boolean "loggedIn" and dictionary object "account" containing all necessary data for the "account" state in the store
-    isLoggedIn(){
-        // check, if user is connected
-        var accessToken = localStorage.getItem("accessToken");
-        if(accessToken == null) return;
-        // check, if token is valid
-        // if yes, apply user information inside "accessToken" to the stores "account" entry and set "loggedIn" to true
-
-        // if not, check, whether its because the token is expired or because it's invalid
-
-        // if invalid, inform user, that he should scan his PC for viruses, as "accessToken exists, but it has been tampered with"
-
-        // if expired, get the refresh token
-
-        // if refresh token is valid, get new access token, apply user information inside "accessToken" to the stores "loginState" entry and set "loggedIn" to true
-
-        // if none of the above apply, it means no one is logged in
-        return {
-            loggedIn: false,
-            account: {}
-        }
-    }
+    
 }

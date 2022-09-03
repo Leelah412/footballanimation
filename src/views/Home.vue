@@ -19,7 +19,7 @@
                 Create complex 2D animations for your favourite football scenarios and share them online or export them as video!
             </div>
             <div class="flex-row" style="margin-top: 64px">
-                <button class="btn-square-secondary-light" style="margin-right:16px;">
+                <button class="btn-square-cl-1" style="margin-right:16px;">
                     Create a Match!
                 </button>
                 <button class="btn-simple-light">
@@ -104,60 +104,6 @@ function scroll(ev){
 </script>
 
 
-<style lang="scss">
-
-.btn-square-secondary{
-    color: var(--secondary);
-    padding: 16px;
-    border: 4px solid var(--secondary);
-    font-size: var(--font-size-3);
-    font-weight: 600;
-    &:hover{
-        color: var(--accent);
-        border-color: var(--accent);
-    }
-    &.thin{
-        border-width: 1px;
-        font-weight: 300;
-    }
-    &.p-8{
-        padding:8px;
-    }
-}
-
-.btn-square-secondary-light{
-    @extend .btn-square-secondary;    
-    color: var(--secondary-light);
-    border-color: var(--secondary-light);
-    &:hover{
-        color: var(--accent);
-        border-color: var(--accent);
-    }
-}
-
-.btn-square-secondary-dark{
-    @extend .btn-square-secondary;    
-    color: var(--secondary-dark);
-    border-color: var(--secondary-dark);
-    &:hover{
-        color: var(--accent);
-        border-color: var(--accent);
-    }
-}
-
-.btn-simple-light{
-    color: var(--light);
-    padding: 16px;
-    font-size: var(--font-size-3);
-    font-weight: 600;
-    &:hover{
-        color: var(--accent);
-    }
-}
-
-</style>
-
-
 <style lang="scss" scoped>
 /* 
 #home-register{
@@ -170,7 +116,7 @@ function scroll(ev){
     min-height: calc(100vh - var(--navbar-height));
     overflow: hidden;
     color: var(--light);
-    background: var(--dark);
+    /* background: var(--dark); */
         
 /*     background: url("../assets/hero.jpg");
     background-repeat: no-repeat;

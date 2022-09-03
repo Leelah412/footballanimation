@@ -92,6 +92,10 @@ function login(){
         router.push('/');
     })
     .catch(err=>{
+        if(err.response){
+            login_error_msg.value = err.response.data;
+            return;
+        }
         login_error_msg.value = err;
     })
 }

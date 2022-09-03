@@ -17,19 +17,42 @@
             <input type="text" class="input-bottom-line m-right" style="flex-grow: 100; " placeholder="Squadname" v-model.lazy="store.state.squadCreatorStore.squadName">
         </div>
 
-        <select class="input-select" style="margin-right: 32px;" @change="formationChanged" v-model="store.state.squadCreatorStore.formation">
+        <select class="input-select" style="margin-right: 32px;" @change="formationChanged" v-model="store.state.squadCreatorStore.formationKey">
             <option v-for="(val,key) in FormationList" :key="'formation-' + key" :value="key">{{val.name}}</option>
         </select>
 
-        <div id="sc-header-buttons" class="flex-row m-right">
-            <svg-button-selection :selection="SVG_SELECTION.SAVE" :size="24"/>
-            <svg-button-selection :selection="SVG_SELECTION.LOAD" :size="24"/>
-            <svg-button-selection :selection="SVG_SELECTION.IMPORT" :size="24"/>
-            <svg-button-selection :selection="SVG_SELECTION.EXPORT" :size="24"/>
-            <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="24"/>
-            <svg-button-selection :selection="SVG_SELECTION.SETTINGS" :size="24"/>
+        <div class="sc-buttons">
+            <!-- SAVE ON SERVER -->
+            <svg-button-selection style="margin-right:16px;" :selection="SVG_SELECTION.SAVE" :size="32"
+                :text="'SAVE'" :text-size="'var(--font-size-5)'" :text-color="'var(--green)'" :text-weight="900" :fill="'var(--green)'"/>
+            <!-- LOAD EXISTING SQUAD FROM SERVER -->
+            <svg-button-selection style="margin-right:16px;" :selection="SVG_SELECTION.LOAD" :size="32"
+                :text="'LOAD'" :text-size="'var(--font-size-5)'" :text-color="'var(--light)'" :text-weight="900" :fill="'var(--light)'"/>
+            <!-- CREATE NEW SQUAD -->
+            <svg-button-selection :selection="SVG_SELECTION.ADD" :size="32"
+                :text="'NEW'" :text-size="'var(--font-size-5)'" :text-color="'var(--blue)'" :text-weight="900" :fill="'var(--blue)'"/>
         </div>
 
+    </div>
+
+    <div id="sc-edit" class="flex-row" style="padding: 8px 0; border-top: 1px solid var(--accent-dark);">
+        <div class="sc-buttons" style="margin-right:32px">
+            <!-- EXPORT TO LOCAL SYSTEM -->
+            <svg-button-selection :selection="SVG_SELECTION.IMPORT" :size="24" @click="ev=>Committer.saveSquad(true)"/>
+            <!-- IMPORT FROM LOCAL SYSTEM -->
+            <svg-button-selection :selection="SVG_SELECTION.EXPORT" :size="24" @click="openFileDialog"/>
+        </div>
+        <div class="sc-buttons m-left">
+            <svg-button-selection :selection="SVG_SELECTION.UNDO" :size="24" @click="undo"
+                :fill="squadCreatorStore.undoList.length !== 0 ? 'var(--light)' : 'var(--light-6)'"/>
+            <svg-button-selection :selection="SVG_SELECTION.REDO" :size="24" @click="redo"
+                :fill="squadCreatorStore.redoList.length !== 0 ? 'var(--light)' : 'var(--light-6)'"/>
+        </div>
+        <div class="sc-buttons m-right">
+            <input type="file" id="load-file" style="display:none" @change="loadFile">
+            <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="24" @click="eraseSquad"/>
+            <svg-button-selection :selection="SVG_SELECTION.SETTINGS" :size="24"/>
+        </div>
     </div>
 
     <div id="sc-content">
@@ -51,11 +74,49 @@ import Player, { PlayerList } from "@/components/model/Player";
 import SCStandard from "@/components/r_squad_creator/types/SCStandard.vue";
 import store from "@/store";
 import FormationList, { Formation, Position } from "@/components/helper/FormationList";
+import Vector2 from "@/components/math/Vector2";
+import { Committer } from "@/store/modules/squad_creator_committer";
 
-// add players to the first team, if necessary
+const STORAGE = 'squadCreator';
+
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
-checkPlayerCount();
+function undo(){
+    Committer.undo();
+}
+
+function redo(){
+    Committer.redo();
+}
+
+function change(state){
+
+}
+
+
+var filePath: string = '';
+function openFileDialog(ev){
+    const input = document.getElementById('load-file');
+    if(input === null || input === undefined) return;
+    input.click();
+}
+function loadFile(ev){
+
+    var fr=new FileReader();
+    fr.onload = ev2=>{
+        // load the squad from the json
+        if(ev2.target === null || ev2.target.result === null) return;
+        
+        Committer.loadSquad(ev2.target.result.toString());
+        ev.target.value = '';
+    };
+    fr.onprogress = ev=>{
+
+    };
+        
+    fr.readAsText(ev.target.files[0]);
+}
+
 
 function checkPlayerCount(){
     var ft: PlayerList = squadCreatorStore.value.firstTeam;
@@ -65,9 +126,9 @@ function checkPlayerCount(){
 
     // if expected player count smaller equal actual 'firstTeam' object count, do nothing
     if(diff <= 0) return;
-    if(!(squadCreatorStore.value.formation in FormationList)) return;
+    if(!(squadCreatorStore.value.formationKey in FormationList)) return;
 
-    const formation: Formation = FormationList[squadCreatorStore.value.formation];
+    const formation: Formation = FormationList[squadCreatorStore.value.formationKey];
     if(formation.positions.length !== 11) return;
 
     // add additional players to the first team based on current base formation
@@ -85,15 +146,14 @@ function formationChanged(){
     var ft: PlayerList = squadCreatorStore.value.firstTeam;
     const ft_keys = Object.keys(ft);
     
-    if(!(squadCreatorStore.value.formation in FormationList)) return;
+    if(!(squadCreatorStore.value.formationKey in FormationList)) return;
 
-    const formation: Formation = FormationList[squadCreatorStore.value.formation];
+    const formation: Formation = FormationList[squadCreatorStore.value.formationKey];
     if(formation.positions.length !== 11) return;
 
     for(var i = 0; i < ft_keys.length && i < 11; i++){
         assignPosition(ft[ft_keys[i]], formation.positions[i]);
     }
-    
 }
 
 function assignPosition(player: Player, position: Position){
@@ -101,6 +161,12 @@ function assignPosition(player: Player, position: Position){
     player.position.y = position.vector.y * store.state.squadCreatorStore.settings.pitchSize.y;
     player.positionName = position.name;
     player.positionShort = position.short;
+}
+
+// deletes the entire squad from screen and local storage
+function eraseSquad(){
+    localStorage.setItem(STORAGE, '');
+    Committer.setDefault();
 }
 
 ////////////
@@ -112,12 +178,25 @@ function assignPosition(player: Player, position: Position){
 const mounted = ref(false);
 
 onMounted(()=>{
+
     resize();
-    window.addEventListener('resize', resize);    
+    window.addEventListener('resize', resize);
+
+    // first load squad from localstorage, if it exists
+    Committer.loadSquad();
+    // add players to the first team, if necessary
+    checkPlayerCount();
+
     mounted.value = true;
 })
 
+window.onbeforeunload = ev=>{
+    Committer.saveSquad();
+}
+
 onUnmounted(()=>{
+    Committer.saveSquad();
+    
     window.removeEventListener('resize', resize);
     mounted.value = false;
 })
@@ -148,7 +227,7 @@ function resize(){
 #squad-creator{
     display: flex;
     flex-direction: column;
-    background: var(--dark-2);
+    /* background: var(--dark-2); */
 }
 
 #sc-header{
@@ -157,12 +236,24 @@ function resize(){
     align-items: center;
     
     border-radius: 4px;
+
 }
+
+.sc-buttons{
+    display: flex;
+    flex-direction: row;
+    
+    button{
+        margin-left: 2px;
+        margin-right: 2px;
+    }
+}
+
 
 //////////////////////
 
 #sc-content{
-    box-shadow: 0 0 4px var(--dark);
+    box-shadow: 0 0 2px #000;
     /* border-radius: 4px; */
 /*     height: 100vh;
     margin-bottom: 32px; */

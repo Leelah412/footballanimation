@@ -1,6 +1,6 @@
 <template>
 
-  <Navbar v-if="route.name !== 'editor'"/>
+  <Navbar v-if="!(route.name !== undefined && route.name !== null && hideNavbarForRoutes.includes(route.name.toString()))"/>
 
   <router-view v-if="restorationAttemptExecuted" />
 
@@ -16,6 +16,10 @@ import { useRouter } from "vue-router";
 import Navbar from "./components/Navbar.vue";
 import Authentication from "./services/Authentication";
 import store from "./store";
+import Background from "./components/misc/background.vue";
+
+// hide the navbar for the given routes
+const hideNavbarForRoutes = ['editor', 'login', 'registration'];
 
 restoreSession();
 const route = useRouter().currentRoute;
@@ -70,11 +74,12 @@ function restoreSession(){
   --blue: #0d47a1;
   --green: #1b5e20;
 
-  --dark: #111;
+  --dark: #111111;
+  --dark-1: #191919;
   --dark-2: #1a1a1a;
-  --dark-3: #222;
-  --dark-4: #333;
-  --dark-5: #444;
+  --dark-3: #222222;
+  --dark-4: #333333;
+  --dark-5: #444444;
   --dark-6: #515151;
 
   --light: #f7f7f7;
@@ -102,7 +107,17 @@ function restoreSession(){
 }
 
 body{
-  background: var(--dark);
+  background: var(--cl-5);
+  background-image: url("./assets/svg/logo-watermark.svg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 75vw;
+  @media screen and (min-width:1200px) {
+    background-size: 900px;
+    
+  }
+  background-position-x: 50%;
+  background-position-y: calc(50%);
 }
 
 button{
@@ -405,6 +420,66 @@ input{
     border-bottom-color: var(--accent);
   }
 }
+
+.btn-square-secondary{
+    color: var(--secondary);
+    padding: 16px;
+    border: 4px solid var(--secondary);
+    font-size: var(--font-size-3);
+    font-weight: 600;
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+    &.thin{
+        border-width: 1px;
+        font-weight: 300;
+    }
+    &.p-8{
+        padding:8px;
+    }
+}
+
+.btn-square-secondary-light{
+    @extend .btn-square-secondary;    
+    color: var(--secondary-light);
+    border-color: var(--secondary-light);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-square-secondary-dark{
+    @extend .btn-square-secondary;    
+    color: var(--secondary-dark);
+    border-color: var(--secondary-dark);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-square-cl-1{
+    @extend .btn-square-secondary;    
+    color: var(--cl-1);
+    border-color: var(--cl-1);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-simple-light{
+    color: var(--light);
+    padding: 16px;
+    font-size: var(--font-size-3);
+    font-weight: 600;
+    &:hover{
+        color: var(--accent);
+    }
+}
+
 
 .btn-standard{
   letter-spacing: 1.2px;

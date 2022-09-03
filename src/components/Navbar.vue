@@ -6,23 +6,52 @@
             <img src="@/assets/svg/logo-full.svg" alt="" id="navbar-logo-img">
         </router-link>
 
-        <div id="navbar-links">
-            <router-link to="/editor" class="img-button-router">
-                <img src="@/assets/svg/match-creator.svg" height="24">
-                <div class="flex-column">
-                    <span style="font-family: Unispace; font-size: var(--font-size-4);">MATCH</span>
-                    <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
-                </div>
-            </router-link>
-            <router-link to="/squad-creator" class="img-button-router">
-                <img src="@/assets/svg/squad-builder.svg" height="24">
-                <div class="flex-column">
-                    <span style="font-family: Unispace; font-size: var(--font-size-4);">SQUAD</span>
-                    <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
-                </div>
-            </router-link>
+        <div id="navbar-search" class="flex-row" style="margin-left:32px">
+            <input type="text" id="navbar-search-input" class="input-bottom-line" placeholder="Search..." style="font-size:var(--font-size-4);">
+            <button id="navbar-search-button" class="flex-row align-center" style="">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="var(--light)">
+                    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
+            </button>
         </div>
 
+        <div id="navbar-wide">
+
+            <div id="navbar-links">
+                <router-link to="/editor" class="img-button-router">
+                    <img src="@/assets/svg/match-creator.svg" height="24">
+                    <div class="flex-column">
+                        <span style="font-family: Unispace; font-size: var(--font-size-4);">MATCH</span>
+                        <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
+                    </div>
+                </router-link>
+                <router-link to="/squad-creator" class="img-button-router">
+                    <img src="@/assets/svg/squad-builder.svg" height="24">
+                    <div class="flex-column">
+                        <span style="font-family: Unispace; font-size: var(--font-size-4);">SQUAD</span>
+                        <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
+                    </div>
+                </router-link>
+            </div>
+
+            <div class="flex-row" style="font-size:var(--font-size-4);">
+                <router-link to="" style="color:var(--light-2)">
+                    SQUADS
+                </router-link>
+                <router-link to="" style="color:var(--light-2)">
+                    MATCHES
+                </router-link>
+
+                <div style="width:1px; height:16px; background:var(--secondary-light); margin-left: 8px; margin-right: 8px;"></div>
+                
+                <router-link to="" style="color:var(--light-2);">
+                    BROWSE
+                </router-link>
+            </div>
+
+        </div>
+
+        
         <div id="navbar-user">
             <div v-if="!store.state.loggedIn" class="flex-row">
                 <router-link to="/login">
@@ -42,7 +71,7 @@
                         <img :src="store.getters.getAvatarURL()" alt="">
                         <span style="font-size: var(--font-size-3);">{{store.state.username}}</span>
                     </div>
-<!--                     <div class="navbar-user-menu-item noselect"></div>
+                    <!-- <div class="navbar-user-menu-item noselect"></div>
                     <div class="navbar-user-menu-item noselect"></div> -->
 
                     <div class="navbar-user-menu-item noselect" @click="logout">
@@ -53,6 +82,18 @@
                 </div>
             </div>
         </div>
+
+        <div id="navbar-menu">
+            <div id="navbar-menu-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="var(--light)">
+                    <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+                </svg>
+            </div>
+            <div id="navbar-menu-display">
+
+            </div>
+        </div>
+
     </div>
 
   </nav>
@@ -177,6 +218,49 @@ nav{
     }
 }
 
+#navbar-wide{
+    display: none;
+    
+    @media screen and (min-width:900px) {
+        display: flex;
+        flex-direction: row;
+        
+    }
+}
+
+#navbar-search{
+    margin-left: auto;
+    margin-right: auto;
+    #navbar-search-input{
+        display: none;
+        @media screen and (min-width:900px) {
+            display: inline;
+        }
+    }
+
+}
+
+#navbar-menu{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    
+    @media screen and (min-width: 900px) {
+        display: none;
+    }
+
+    #navbar-menu-button{
+        width: 24px;
+        height: 24px;
+    }
+    #navbar-menu-display{
+        position: absolute;
+        right: 0;
+        width: 64px;
+    }
+}
+
 #navbar-bottom{
     display: flex;
     flex-direction: row;
@@ -196,13 +280,18 @@ nav{
     display: flex;
     flex-direction: row;
     margin-left: auto;
-    margin-right: auto;
+    margin-right: 32px;
 }
 
 #navbar-user{
     display: flex;
     flex-direction: row;
+    margin-left: auto;
     --avatar-button-size: 36px;
+
+    @media screen and (max-width:900px) {
+        display: none;
+    }
 
     #navbar-user-avatar-button{
         display: flex;

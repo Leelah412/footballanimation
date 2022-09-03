@@ -11,7 +11,8 @@
             <EntityToolbar v-on:newEntity="newEntity" :selected="entityType" />
         </div>
 
-        <div id="grid-canvas" class="flex-row flex-grow" style="background: #002255;">
+        <!-- TODO: background should be main pitch color -->
+        <div id="grid-canvas" class="flex-row flex-grow" style="background: var(--green);">
             <CanvasVue
                 v-on:dropdown="openDropdown" v-on:entitySelected="onEntitySelected" />
         </div>
