@@ -6,22 +6,25 @@
 
         <svg id="sc-standard-squad-svg" :width="store.state.squadCreatorStore.settings.canvasWidth" :height="store.state.squadCreatorStore.settings.canvasHeight"
             :viewBox="'0 0 ' + store.state.squadCreatorStore.settings.canvasWidth + ' ' + store.state.squadCreatorStore.settings.canvasHeight">
-            <rect :width="store.state.squadCreatorStore.settings.canvasWidth" :height="store.state.squadCreatorStore.settings.canvasHeight" :fill="store.state.squadCreatorStore.settings.pitchColor"/>
+            <!-- <rect :width="store.state.squadCreatorStore.settings.canvasWidth" :height="store.state.squadCreatorStore.settings.canvasHeight" fill="#000" opacity="0.5"/> -->
             <g :transform="`translate(${store.state.squadCreatorStore.settings.canvasWidth/2},${store.state.squadCreatorStore.settings.canvasHeight/2}), scale(${store.state.squadCreatorStore.settings.canvasScale}),
                 rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
                 <Pitch />
                 <HUD />
                 <PlayerVue v-for="(val, key) in store.state.squadCreatorStore.firstTeam" :key="'player-' + key" :player="val"
-                     :selected="selectedPlayer === val ? true : false" v-on:select="selectPlayer"/>
+                     :selected="selectedPlayer === val ? true : false" v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD"/>
             </g>
 
         </svg>
 
-<!--         <div id="sc-standard-squad-hud">
-            <div id="sc-standard-squad-hud-orientation">
+        <div v-if="showHUD" id="sc-standard-squad-hud">
 
+            <div id="sc-standard-squad-hud-change-player" class="flex-row">
+                <input class="input-dark-2" type="text" placeholder="Enter name of player..." v-model="addPlayerName">
+                <svg-button-selection :selection="SVG_SELECTION.SEND" :size="24" @click="changePlayer"/>
             </div>
-        </div> -->
+
+        </div>
     </div>
 
 
@@ -121,7 +124,7 @@
 </template>
 
 <script lang="ts" setup>
-import { PlayerStyle } from '@/components/helper/enums'
+import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
 import FormationList from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
@@ -135,6 +138,8 @@ import PitchSettings from './standard/settings/Pitch.vue'
 import PlayersSettings from './standard/settings/PlayerSettings.vue'
 import Player from '@/components/model/Player'
 import PlayerProperties from './standard/settings/PlayerProperties.vue'
+import SvgButtonSelection from '@/components/misc/svg-button-selection.vue'
+
 
 interface Props{
     formationChanged: ()=>void
@@ -145,7 +150,7 @@ const props = defineProps<Props>();
 enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.GENERAL);
-const showDummies = ref<boolean>(false);
+const showHUD = ref<boolean>(false);
 const selectedPlayer = ref<Player | null>(null);
 
 onMounted(()=>{
@@ -169,10 +174,10 @@ function resize(){
     const size: Vector2 = store.state.squadCreatorStore.settings.pitchSize;
     if(store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal'){
         
-        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasWidth / size.x) * 0.95);
+        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasWidth / size.x) * 0.8);
     }
     else{
-        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasHeight / size.x) * 0.95);
+        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasHeight / size.x) * 0.8);
 
     }
 }
@@ -212,6 +217,26 @@ function deselectPlayer(ev){
     
 }
 
+const playerToChange = ref<Player | null>(null);
+const addPlayerName = ref<string>('');
+
+function activatePlayerChangeHUD(player: Player){
+    showHUD.value = true;
+    playerToChange.value = player;
+
+}
+
+function changePlayer(ev){
+    showHUD.value = false;
+
+    if(playerToChange.value === null) return;
+
+    playerToChange.value.name = addPlayerName.value;
+    playerToChange.value.isDummy = false;    
+
+    playerToChange.value = null;
+}
+
 </script>
 
 
@@ -224,12 +249,29 @@ function deselectPlayer(ev){
     position: absolute;
     left: 0;
     top: 0;
+    
+    display: flex;
+    flex-direction: row;
 
     width: 100%;
     height: 100%;
+    background: #0009;
 
     div{
         position: absolute;
+    }
+}
+
+#sc-standard-squad-hud-change-player{
+
+    margin-top: 32px;
+    margin-left: 32px;
+    margin-right: 32px;
+    height:24px;
+    
+    input{
+        margin-right: 16px;
+        padding: 16px;
     }
 }
 
@@ -287,8 +329,8 @@ $properties-width: 256px;
 .sc-properties{
     display: flex;
     flex-direction: column;
-    background: var(--dark);
-    box-shadow: -2px 0 2px var(--dark);
+    /* background: var(--dark); */
+    /* box-shadow: -2px 0 2px var(--dark); */
 
     width: $properties-width;
     height: 100%;
@@ -324,7 +366,7 @@ $properties-width: 256px;
     }
 
     .content{
-        background: var(--dark-2);
+        /* background: var(--dark-2); */
         padding: 16px;
         min-height: 100%;
         .item{

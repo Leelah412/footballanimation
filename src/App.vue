@@ -619,7 +619,7 @@ input{
 }
 
 
-.pull-bar-container{
+.slider-container{
   display: flex;
   flex-direction: row;
 
@@ -630,7 +630,7 @@ input{
   width: 100%;
   height: 4px;
 
-  .pull-bar{
+  .slider-pull{
     cursor: pointer;
     position: relative;
     width: 100%;
@@ -644,7 +644,7 @@ input{
     box-shadow: 0 0 2px var(--dark);
     margin: 14px 0;
 
-    .bar{
+    .pull{
         cursor: pointer;
         position: absolute;
         top: -8px;
@@ -662,7 +662,7 @@ input{
     }
   }
 
-  .pull-bar-arrow{
+  .slider-arrow{
     cursor: pointer;
     width: 32px;
     height: 32px;

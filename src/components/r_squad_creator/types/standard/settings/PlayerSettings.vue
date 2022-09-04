@@ -16,17 +16,17 @@
         <label class="label-over" for="">CIRCLE STYLE</label>
 
             <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.circleStyle">
-            <div class="pull-bar-container">
-                <svg class="pull-bar-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle - 1)"
+            <div class="slider-container">
+                <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle - 1)"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">
                     <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
                 </svg>
 
-                <div class="pull-bar" id="pull-bar-circle-style" @mousedown="ev => onPullBarDown(ev, 'circle-style')">
-                    <div class="bar" id="bar-circle-style" @mousedown="ev => onPullBarDown(ev, 'circle-style')"></div>
+                <div class="slider-pull" id="slider-pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')">
+                    <div class="pull" id="pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')"></div>
                 </div>
 
-                <svg class="pull-bar-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle + 1)"
+                <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle + 1)"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
                 </svg>
@@ -79,75 +79,75 @@ onMounted(()=>{
 
 var dragStart: number = 0;
 var dragging: boolean = false;
-var pullBarElementID: string = '';
-var pullBarStart: number = 0;
+var sliderElementID: string = '';
+var sliderStart: number = 0;
 
-function onPullBarDown(ev, elementID: string){
+function onPullDown(ev, elementID: string){
     dragStart = ev.clientX;
-    pullBarElementID = elementID;
+    sliderElementID = elementID;
 
-    const bar = document.getElementById('bar-' + pullBarElementID);
-    const pullBar = document.getElementById('pull-bar-' + pullBarElementID);
-    if(bar === undefined || bar === null) return;
-    if(pullBar === undefined || pullBar === null) return;
+    const pull = document.getElementById('pull-' + sliderElementID);
+    const sliderPull = document.getElementById('slider-pull-' + sliderElementID);
+    if(pull === undefined || pull === null) return;
+    if(sliderPull === undefined || sliderPull === null) return;
 
-    pullBarStart = bar.getBoundingClientRect().left - pullBar.getBoundingClientRect().left; 
+    sliderStart = pull.getBoundingClientRect().left - sliderPull.getBoundingClientRect().left; 
     
-    // if clicked significantly far outside bar, push bar to the clicked position
-    if(Math.abs(dragStart - bar.getBoundingClientRect().left - 4) > 8){
-        // dragStart must be the bar's left offset for this to work
-        dragStart = bar.getBoundingClientRect().left;
-        moveBar(ev);
+    // if clicked significantly far outside pull, push pull to the clicked position
+    if(Math.abs(dragStart - pull.getBoundingClientRect().left - 4) > 8){
+        // dragStart must be the pull's left offset for this to work
+        dragStart = pull.getBoundingClientRect().left;
+        movePull(ev);
     }
 
-    document.addEventListener('mousemove', onPullBarMove);
-    document.addEventListener('mouseup', onPullBarUp);
+    document.addEventListener('mousemove', onPullMove);
+    document.addEventListener('mouseup', onPullUp);
 }
 
-function onPullBarMove(ev){
+function onPullMove(ev){
     if(!dragging){
         if(Math.abs(ev.clientX - dragStart) < 4) return;
         dragging = true;
     }
 
-    moveBar(ev);
+    movePull(ev);
 }
 
-function moveBar(ev){
-    const bar = document.getElementById('bar-' + pullBarElementID);
-    const pullBar = document.getElementById('pull-bar-' + pullBarElementID);
-    if(bar === undefined || bar === null) return;
-    if(pullBar === undefined || pullBar === null) return;
+function movePull(ev){
+    const pull = document.getElementById('pull-' + sliderElementID);
+    const sliderPull = document.getElementById('slider-pull-' + sliderElementID);
+    if(pull === undefined || pull === null) return;
+    if(sliderPull === undefined || sliderPull === null) return;
 
 
-    var newPos = pullBarStart + (ev.clientX - dragStart);
+    var newPos = sliderStart + (ev.clientX - dragStart);
     if(newPos < 0){
         newPos = 0;
     }
-    else if(newPos > pullBar.getBoundingClientRect().width){
-        newPos = pullBar.getBoundingClientRect().width;
+    else if(newPos > sliderPull.getBoundingClientRect().width){
+        newPos = sliderPull.getBoundingClientRect().width;
     }
 
-    bar.style.setProperty('left', `${newPos - 4}px`);       // subtract 4 to center bar horizontally
+    pull.style.setProperty('left', `${newPos - 4}px`);       // subtract 4 to center pull horizontally
 }
 
-function onPullBarUp(ev){
-    document.removeEventListener('mousemove', onPullBarMove);
-    document.removeEventListener('mouseup', onPullBarUp);
+function onPullUp(ev){
+    document.removeEventListener('mousemove', onPullMove);
+    document.removeEventListener('mouseup', onPullUp);
     dragging = false;
 
-    const bar = document.getElementById('bar-' + pullBarElementID);
-    const pullBar = document.getElementById('pull-bar-' + pullBarElementID);
-    if(bar === undefined || bar === null) return;
-    if(pullBar === undefined || pullBar === null) return;
+    const pull = document.getElementById('pull-' + sliderElementID);
+    const sliderPull = document.getElementById('slider-pull-' + sliderElementID);
+    if(pull === undefined || pull === null) return;
+    if(sliderPull === undefined || sliderPull === null) return;
 
-    // set the correct style based on the drop position relative to the complete pull bar
-    // NOTE: don't to forget add half the width of 'bar', as we actually want to get its center position, and not the left one
-    const ratio = ((bar.getBoundingClientRect().left + 4) - pullBar.getBoundingClientRect().left) / pullBar.getBoundingClientRect().width;
+    // set the correct style based on the drop position relative to the complete pull pull
+    // NOTE: don't to forget add half the width of 'pull', as we actually want to get its center position, and not the left one
+    const ratio = ((pull.getBoundingClientRect().left + 4) - sliderPull.getBoundingClientRect().left) / sliderPull.getBoundingClientRect().width;
     
-    // if at most one pitch style available, always keep bar at the start
+    // if at most one pitch style available, always keep pull at the start
     if(!(circleStyleAmount.value > 1)){
-        pullBar.style.setProperty('left', '-4px');
+        sliderPull.style.setProperty('left', '-4px');
         return;
     }
 

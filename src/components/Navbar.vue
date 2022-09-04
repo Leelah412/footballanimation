@@ -42,7 +42,7 @@
                     MATCHES
                 </router-link>
 
-                <div style="width:1px; height:16px; background:var(--secondary-light); margin-left: 8px; margin-right: 8px;"></div>
+                <div class="m-center-v" style="width:1px; height:16px; background:var(--secondary-light); margin-left: 8px; margin-right: 8px;"></div>
                 
                 <router-link to="" style="color:var(--light-2);">
                     BROWSE

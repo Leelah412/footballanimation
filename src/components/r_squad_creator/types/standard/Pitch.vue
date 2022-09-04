@@ -2,6 +2,19 @@
     
 <g id="sc-standard-pitch" class="noselect" :transform="`translate(${-store.state.squadCreatorStore.settings.pitchSize.x/2}, ${-store.state.squadCreatorStore.settings.pitchSize.y/2})`">
     
+   <!-- BACKGROUND -->
+   <rect
+       style="stroke-width:0.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       :fill="store.state.squadCreatorStore.settings.pitchColor"
+       stroke="#0006"
+       :width="store.state.squadCreatorStore.settings.pitchSize.x + 16 + (store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 4 : 0)"
+       :height="store.state.squadCreatorStore.settings.pitchSize.y + 16 + (store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)"
+       :x="-8"
+       :y="-8 - (store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)" 
+       :rx="2"
+       :ry="2"/>
+
+
     <!-- STYLES -->
 
    <!-- NOTE:  To get the number of possible pitch styles, we want to get the number of "sc-pitch-style" elements.
@@ -28,7 +41,7 @@
 
 
     <!-- PITCH -->
-    
+
     <rect
        style="stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        fill="#0000"

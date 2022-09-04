@@ -15,20 +15,30 @@ redo: () => store.commit(storePath + 'redo', {}),
 
 pushToUndoList: (ref: any, primitive: string | null, value: any) => store.commit(storePath + 'pushToUndoList', {ref, primitive, value}),
 
+//////////////////
+// NON-SETTINGS //
+//////////////////
+
+setSquadName: (squadName: string) => store.commit(storePath + 'setSquadName', {squadName}),
+changeSquadLogo: (squadLogo: Blob | MediaSource |null) => store.commit(storePath + 'changeSquadLogo', {squadLogo}),
+
+//////////////
+// SETTINGS //
+//////////////
+
 setPlayerStyle: (style: PlayerStyle) => store.commit(storePath + 'setPlayerStyle', {style}),
 setCircleStyle: (style: number) => store.commit(storePath + 'setCircleStyle', {style}),
 
-setPitchColor: (pitchColor: string) => store.commit(storePath + 'setPitchColor', {pitchColor}),
-setLineColor: (lineColor: string) => store.commit(storePath + 'setLineColor', {lineColor}),
-
 setPitchWidth: (width: number) => store.commit(storePath + 'setPitchWidth', {width}),
 setPitchHeight: (height: number) => store.commit(storePath + 'setPitchHeight', {height}),
+setPitchStyle: (style: number) => store.commit(storePath + 'setPitchStyle', {style}),
+setPitchColor: (pitchColor: string) => store.commit(storePath + 'setPitchColor', {pitchColor}),
+setLineColor: (lineColor: string) => store.commit(storePath + 'setLineColor', {lineColor}),
 
 setCanvasWidth: (width: number) => store.commit(storePath + 'setCanvasWidth', {width}),
 setCanvasHeight: (height: number) => store.commit(storePath + 'setCanvasHeight', {height}),
 setCanvasScale: (scale: number) => store.commit(storePath + 'setCanvasScale', {scale}),
 
-setPitchStyle: (style: number) => store.commit(storePath + 'setPitchStyle', {style}),
 
 }
 

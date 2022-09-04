@@ -47,12 +47,14 @@ export interface State{
     version: string,
 
     squadName: string
-    formationKey: string               // TODO: move to settings; key of the selected formation
-    formationName: string              // TODO: move to settings; name of the formation
+    squadLogo: string               // path to the used logo (local/online doesn't matter)
+    formationKey: string            // TODO: move to settings; key of the selected formation
+    formationName: string           // TODO: move to settings; name of the formation
 
     firstTeam: PlayerList
     bench: PlayerList
     reserves: PlayerList
+
 
     settings: Settings
 
@@ -65,6 +67,7 @@ const defaultState = (): State => {
         version: '1.0.0',
 
         squadName: "New Squad",
+        squadLogo: '',
         formationKey: Object.keys(FormationList)[0],
         formationName: '',
 
@@ -119,6 +122,10 @@ const STORAGE_PATH = 'squadCreator';
 
 export const mutations = {
 
+    ////////////////
+    // FUNCTIONAL //
+    ////////////////
+
     // save state in local storage or file
     saveSquad(state: State, args: {toFile: boolean, path: string} = {toFile: false, path: ''}){
 
@@ -131,6 +138,8 @@ export const mutations = {
                 positionY: pl.position.y,
                 positionName: pl.positionName,
                 positionShort: pl.positionShort,
+                isGoalkeeper: pl.isGoalkeeper,
+                isDummy: pl.isDummy
             })
         });
     
@@ -138,6 +147,7 @@ export const mutations = {
             version: '1.0.0',
     
             squadName: state.squadName,
+            squadLogo: state.squadLogo,
             formationKey: state.formationKey,
             formationName: state.formationName,
             firstTeam,
@@ -224,6 +234,7 @@ export const mutations = {
         if(!Array.isArray(dec.firstTeam)) return;
     
         state.squadName = dec.squadName;
+        state.squadLogo = dec.squadLogo;
         state.formationKey = dec.formationKey;
         state.formationName = dec.formationName;
     
@@ -236,6 +247,8 @@ export const mutations = {
             player.number = pl.number;
             player.positionName = pl.positionName;
             player.positionShort = pl.positionShort;
+            player.isGoalkeeper = pl.isGoalkeeper;
+            player.isDummy = pl.isDummy;
     
             state.firstTeam[player.id] = player;
         })
@@ -278,13 +291,23 @@ export const mutations = {
 
     // reset everything back to default
     setDefault(state: State, args: {}){
-        console.log("state before: ");
-        console.log(state);
-        
-        state = defaultState();
+        const ds = defaultState();
 
-        console.log("state after: ");
-        console.log(state);
+        state.version = ds.version;
+
+        state.squadName = ds.squadName;
+        state.squadLogo = ds.squadLogo;
+        state.formationKey = ds.formationKey;
+        state.formationName = ds.formationName;
+    
+        state.firstTeam = ds.firstTeam;
+        state.bench = ds.bench;
+        state.reserves = ds.reserves;
+    
+        state.settings = ds.settings;
+
+        state.undoList = [];
+        state.redoList = [];
         
     },
 
@@ -370,7 +393,38 @@ export const mutations = {
         state.redoList = [];
     },
 
+    //////////////////
+    // NON-SETTINGS //
+    //////////////////
+
+
+    setSquadName(state: State, args: {squadName: string}){
+        if(state.squadName === args.squadName) return;
+
+        Committer.pushToUndoList(state, 'squadName', state.squadName);
+        state.squadName = args.squadName;
+    },
+
+    // changes the squad logo based on the Blob taken from the value of an input element
+    // passing 'null' resets the logo
+    changeSquadLogo(state: State, args: {squadLogo: Blob | MediaSource | null}){
+        // release old picture from memory
+        URL.revokeObjectURL(state.squadLogo);
+        if(args.squadLogo === null){
+            state.squadLogo = '';
+            return;
+        }
+        state.squadLogo = URL.createObjectURL(args.squadLogo);
+    },
+
+
+    //////////////
+    // SETTINGS //
+    //////////////
+
     setPlayerStyle(state: State, args: {style: PlayerStyle}){
+        if(args.style === state.settings.pitchStyle) return;
+
         Committer.pushToUndoList(state.settings, 'playerStyle', state.settings.playerStyle);
         state.settings.playerStyle = args.style;
     },
@@ -386,11 +440,9 @@ export const mutations = {
         }
 
         const prev = state.settings.circleStyle;
-        state.settings.circleStyle = args.style;
 
         const styles = document.getElementsByClassName('sc-circle-style');
         if(styles === undefined || styles === null) return;
-        
 
         if(styles.length === 0){
             if(state.settings.circleStyle === 0) return;
@@ -405,9 +457,11 @@ export const mutations = {
 
             Committer.pushToUndoList(state.settings, 'circleStyle', state.settings.circleStyle);
             state.settings.circleStyle = styles.length/11 - 1;
+            return;
         }
         
         Committer.pushToUndoList(state.settings, 'circleStyle', prev);
+        state.settings.circleStyle = args.style;
     },
 
     setPitchColor(state: State, args: {pitchColor: string}){
@@ -478,34 +532,37 @@ export const mutations = {
 
 
     setPitchStyle(state: State, args: {style: number}){
+        
         if(args.style < 0){
-            if(state.settings.pitchStyle === 0) return;
-
+            if(state.settings.pitchStyle === 0) return;            
             Committer.pushToUndoList(state.settings, 'pitchStyle', state.settings.pitchStyle);
             state.settings.pitchStyle = 0;
             return;
         }
-
+        
         const prev = state.settings.pitchStyle;
-        state.settings.pitchStyle = args.style;
-
+        
         const styles = document.getElementsByClassName('sc-pitch-style');
         if(styles === undefined || styles === null) return;
-
+        
         if(styles.length === 0){
             if(state.settings.pitchStyle === 0) return;
             Committer.pushToUndoList(state.settings, 'pitchStyle', state.settings.pitchStyle);
             state.settings.pitchStyle = 0;
             return;
         }
-
+        
         if(args.style >= styles.length){
             if(state.settings.pitchStyle === styles.length - 1) return;
             Committer.pushToUndoList(state.settings, 'pitchStyle', state.settings.pitchStyle);
             state.settings.pitchStyle = styles.length - 1;
-        }
+            return;
+        }        
 
         Committer.pushToUndoList(state.settings, 'pitchStyle', prev);
+        state.settings.pitchStyle = args.style;
+        console.log(state.settings.pitchStyle);
+        
     },
 }
 

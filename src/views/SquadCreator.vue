@@ -14,7 +14,8 @@
         </div>
 
         <div id="sc-squadname" class="flex-row" style="flex-grow: 100; margin: 0 32px;">
-            <input type="text" class="input-bottom-line m-right" style="flex-grow: 100; " placeholder="Squadname" v-model.lazy="store.state.squadCreatorStore.squadName">
+            <input type="text" class="input-bottom-line m-right" style="flex-grow: 100; " placeholder="Squadname"
+                @change="ev => Committer.setSquadName(ev.target.value)" :value="store.state.squadCreatorStore.squadName" >
         </div>
 
         <select class="input-select" style="margin-right: 32px;" @change="formationChanged" v-model="store.state.squadCreatorStore.formationKey">
@@ -35,12 +36,13 @@
 
     </div>
 
-    <div id="sc-edit" class="flex-row" style="padding: 8px 0; border-top: 1px solid var(--accent-dark);">
+    <div id="sc-edit" class="flex-row" style="padding: 8px 0; border-top: 1px solid var(--accent-dark); border-bottom: 1px solid var(--accent-dark);">
         <div class="sc-buttons" style="margin-right:32px">
             <!-- EXPORT TO LOCAL SYSTEM -->
             <svg-button-selection :selection="SVG_SELECTION.IMPORT" :size="24" @click="ev=>Committer.saveSquad(true)"/>
             <!-- IMPORT FROM LOCAL SYSTEM -->
             <svg-button-selection :selection="SVG_SELECTION.EXPORT" :size="24" @click="openFileDialog"/>
+            <input type="file" id="load-file" style="display:none" @change="loadFile">
         </div>
         <div class="sc-buttons m-left">
             <svg-button-selection :selection="SVG_SELECTION.UNDO" :size="24" @click="undo"
@@ -49,7 +51,6 @@
                 :fill="squadCreatorStore.redoList.length !== 0 ? 'var(--light)' : 'var(--light-6)'"/>
         </div>
         <div class="sc-buttons m-right">
-            <input type="file" id="load-file" style="display:none" @change="loadFile">
             <svg-button-selection :selection="SVG_SELECTION.DELETE" :size="24" @click="eraseSquad"/>
             <svg-button-selection :selection="SVG_SELECTION.SETTINGS" :size="24"/>
         </div>
@@ -90,11 +91,10 @@ function redo(){
 }
 
 function change(state){
-
+    
 }
 
 
-var filePath: string = '';
 function openFileDialog(ev){
     const input = document.getElementById('load-file');
     if(input === null || input === undefined) return;
@@ -117,7 +117,6 @@ function loadFile(ev){
     fr.readAsText(ev.target.files[0]);
 }
 
-
 function checkPlayerCount(){
     var ft: PlayerList = squadCreatorStore.value.firstTeam;
     const ft_keys = Object.keys(ft);
@@ -131,10 +130,12 @@ function checkPlayerCount(){
     const formation: Formation = FormationList[squadCreatorStore.value.formationKey];
     if(formation.positions.length !== 11) return;
 
-    // add additional players to the first team based on current base formation
+    // add dummy players to the first team based on current base formation
     for(var i = 0; i < diff; i++){
         const player = new Player();
         assignPosition(player, formation.positions[11 - diff + i]);
+        player.isDummy = true;
+        player.name = '';
         ft[player.id] = player;
     }
 
@@ -253,7 +254,7 @@ function resize(){
 //////////////////////
 
 #sc-content{
-    box-shadow: 0 0 2px #000;
+    /* box-shadow: 0 0 2px #000; */
     /* border-radius: 4px; */
 /*     height: 100vh;
     margin-bottom: 32px; */
