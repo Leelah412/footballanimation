@@ -165,6 +165,17 @@ button{
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.hide-scrollbar{
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 svg{
   @extend .noselect;
   *{
@@ -640,18 +651,18 @@ input{
   /*         border-left: 2px solid var(--accent);
         border-right: 2px solid var(--accent); */
         box-sizing: border-box;
-    background: var(--secondary-light);
+    background: var(--secondary-dark);
     box-shadow: 0 0 2px var(--dark);
     margin: 14px 0;
 
     .pull{
         cursor: pointer;
         position: absolute;
-        top: -8px;
+        top: -4px;
         left: -4px;
         width: 8px;
-        height: 16px;
-        background: var(--accent-light);
+        height: 8px;
+        background: var(--accent-dark);
         border-radius: 100px;
         border: 2px solid var(--accent);
         box-shadow: 0 0 4px var(--dark);

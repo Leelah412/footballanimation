@@ -9,6 +9,7 @@ export interface PlayerList{
 export default class Player extends CanvasObject{
     number: number = -1;                // -1 meaning no back number
     name: string = "Player " + this.id;
+    avatar: Blob | string | null = null;
     positionName: string = "";
     positionShort: string = "";
 

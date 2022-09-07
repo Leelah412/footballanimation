@@ -1,6 +1,7 @@
 <template>
     
 <div class="content">
+
     <div class="item flex-column">
         <label class="label-over" for="">SQUAD NAME</label>
         <input class="input-dark-2" type="text" v-model.lazy="squadCreatorStore.squadName">
@@ -9,6 +10,25 @@
     <div class="item flex-row">
         <input type="checkbox" v-model="squadCreatorStore.settings.showSquadName">
         <label class="label-right" for="">Show squad name on pitch</label>
+    </div>
+
+    <div class="item flex-row">
+        <input type="checkbox" v-model="squadCreatorStore.settings.showLogo">
+        <label class="label-right" for="">Show Logo</label>
+    </div>
+
+    <div v-show="squadCreatorStore.settings.showLogo" class="item flex-column">
+        <div class="upload-image-container" @click="ev => openFileDialogue('upload-squad-logo')">
+            <div v-if="squadCreatorStore.squadName === ''" class="flex-column m-center-v">
+                <img class="upload-image-icon" />
+                <div class="upload-image-header">
+                    LOGO
+                </div>
+            </div>
+            <img v-else :src="squadCreatorStore.squadLogo" style="width:100%; height:100%" />
+
+            <input id="upload-squad-logo" type="file" @change="changeSquadLogo" accept=".svg, image/jpeg, image/png">
+        </div>
     </div>
 
     <div class="item flex-column">
@@ -43,15 +63,10 @@
         </div>
     </div>
 
-    <div class="item flex-column">
+<!--     <div class="item flex-column">
         <label class="label-over" for="">BENCH COUNT</label>
         <input class="input-dark-2" type="number" min="0" max="12">
-    </div>
-
-    <div class="item flex-row">
-        <input type="checkbox" v-model="squadCreatorStore.settings.showLogo">
-        <label class="label-right" for="">Show Logo</label>
-    </div>
+    </div> -->
 
     <div class="item flex-column">
         <label class="label-over" for="">LOGO POSITION</label>
@@ -61,23 +76,9 @@
         </select>
     </div>
 
-    <div class="item flex-column">
+<!--     <div class="item flex-column">
         Jersey
-    </div>
-
-    <div class="item flex-column">
-        <div class="upload-image-container" @click="ev => openFileDialogue('upload-squad-logo')">
-            <div v-if="squadCreatorStore.squadName === ''" class="flex-column m-center-v">
-                <img class="upload-image-icon" />
-                <div class="upload-image-header">
-                    LOGO
-                </div>
-            </div>
-            <img v-else :src="squadCreatorStore.squadLogo" style="width:100%; height:100%" />
-
-            <input id="upload-squad-logo" type="file" @change="changeSquadLogo" accept=".svg, image/jpeg, image/png">
-        </div>
-    </div>
+    </div> -->
 </div>
 
 </template>

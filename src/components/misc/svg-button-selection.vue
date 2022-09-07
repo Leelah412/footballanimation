@@ -101,6 +101,12 @@
     <svg v-else-if="selection === SVG_SELECTION.REDO" xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" viewBox="0 0 24 24" :fill="getFill()">
         <path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/>
     </svg>
+    
+    <svg v-else-if="selection === SVG_SELECTION.CLOSE" xmlns="http://www.w3.org/2000/svg" :width="size" :height="size" viewBox="0 0 24 24" :fill="getFill()">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+    </svg>
+
+
 
     <span v-if="text !== ''" :style="`font-size:${textSize}; margin-top:${textMargin}; color:${textColor}; font-weight:${textWeight}; letter-spacing:1px;`">{{text}}</span>
 

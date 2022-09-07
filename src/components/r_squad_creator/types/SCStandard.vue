@@ -4,14 +4,14 @@
     
     <div id="sc-standard-squad" class="sc-squad">
 
-        <svg id="sc-standard-squad-svg" :width="store.state.squadCreatorStore.settings.canvasWidth" :height="store.state.squadCreatorStore.settings.canvasHeight"
-            :viewBox="'0 0 ' + store.state.squadCreatorStore.settings.canvasWidth + ' ' + store.state.squadCreatorStore.settings.canvasHeight">
-            <!-- <rect :width="store.state.squadCreatorStore.settings.canvasWidth" :height="store.state.squadCreatorStore.settings.canvasHeight" fill="#000" opacity="0.5"/> -->
-            <g :transform="`translate(${store.state.squadCreatorStore.settings.canvasWidth/2},${store.state.squadCreatorStore.settings.canvasHeight/2}), scale(${store.state.squadCreatorStore.settings.canvasScale}),
-                rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
+        <svg id="sc-standard-squad-svg" :width="squadCreatorStore.settings.canvasWidth" :height="squadCreatorStore.settings.canvasHeight"
+            :viewBox="'0 0 ' + squadCreatorStore.settings.canvasWidth + ' ' + squadCreatorStore.settings.canvasHeight">
+            <!-- <rect :width="squadCreatorStore.settings.canvasWidth" :height="squadCreatorStore.settings.canvasHeight" fill="#000" opacity="0.5"/> -->
+            <g :transform="`translate(${squadCreatorStore.settings.canvasWidth/2},${squadCreatorStore.settings.canvasHeight/2}), scale(${squadCreatorStore.settings.canvasScale}),
+                rotate(${squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
                 <Pitch />
                 <HUD />
-                <PlayerVue v-for="(val, key) in store.state.squadCreatorStore.firstTeam" :key="'player-' + key" :player="val"
+                <PlayerVue v-for="(val, key) in squadCreatorStore.firstTeam" :key="'player-' + key" :player="val"
                      :selected="selectedPlayer === val ? true : false" v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD"/>
             </g>
 
@@ -21,8 +21,9 @@
 
             <div id="sc-standard-squad-hud-change-player" class="flex-row">
                 <input class="input-dark-2" type="text" placeholder="Enter name of player..." v-model="addPlayerName">
-                <svg-button-selection :selection="SVG_SELECTION.SEND" :size="24" @click="changePlayer"/>
+                <svg-button-selection :selection="SVG_SELECTION.CLOSE"  :size="24" @click="showHUD = false"/>
             </div>
+            <svg-button-selection :selection="SVG_SELECTION.SEND" :size="24" @click="changePlayer"/>
 
         </div>
     </div>
@@ -30,19 +31,19 @@
 
     <div id="sc-standard-properties" class="sc-properties">
 
-        <div class="header">
+        <div id="sc-standard-properties-header" class="header">
             <div class="toggle">
 
             </div>
             <div class="tabs">
 
-                <button :class="`pm-nav-button${tabState === TAB_STATE.GENERAL ? '-active' : ''}`" @click="tabState = TAB_STATE.GENERAL">
+                <button :class="`pm-nav-button${tabState === TAB_STATE.GENERAL ? '-active' : ''}`" @click="changeTabState(TAB_STATE.GENERAL)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="var(--light)">
                         <path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/>
                     </svg>
                 </button>
 
-                <button :class="`pm-nav-button${tabState === TAB_STATE.PITCH ? '-active' : ''}`" @click="tabState = TAB_STATE.PITCH">
+                <button :class="`pm-nav-button${tabState === TAB_STATE.PITCH ? '-active' : ''}`" @click="changeTabState(TAB_STATE.PITCH)">
                     <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -83,7 +84,7 @@
                     </svg>
                 </button>
 
-                <button :class="`pm-nav-button${tabState === TAB_STATE.PLAYERS ? '-active' : ''}`" @click="tabState = TAB_STATE.PLAYERS">
+                <button :class="`pm-nav-button${tabState === TAB_STATE.PLAYERS ? '-active' : ''}`" @click="changeTabState(TAB_STATE.PLAYERS)">
                     <svg xmlns="http://www.w3.org/2000/svg"
                         x="0px"
                         y="0px"
@@ -111,11 +112,20 @@
             </div>
         </div>
 
-        <!-- CONTENT -->
-        <GeneralSettings v-if="tabState === TAB_STATE.GENERAL && selectedPlayer === null" :formationChanged="formationChanged" />
-        <PlayerProperties v-else-if="tabState === TAB_STATE.GENERAL && selectedPlayer !== null" :player="selectedPlayer"/>
-        <PitchSettings v-else-if="tabState === TAB_STATE.PITCH" :resize="resize"/>
-        <PlayersSettings v-else-if="tabState === TAB_STATE.PLAYERS" />
+        <div id="sc-standard-properties-content">
+            <scrollarea v-if="tabState === TAB_STATE.GENERAL && selectedPlayer === null" :width="'100%'" :height="'100%'">
+                <GeneralSettings :formationChanged="formationChanged" />
+            </scrollarea>
+            <scrollarea v-else-if="tabState === TAB_STATE.GENERAL && selectedPlayer !== null" :width="'100%'" :height="'100%'">
+                <PlayerProperties :player="selectedPlayer"/>
+            </scrollarea>
+            <scrollarea v-else-if="tabState === TAB_STATE.PITCH" :width="'100%'" :height="'100%'">
+                <PitchSettings :resize="resize"/>
+            </scrollarea>
+            <scrollarea v-else-if="tabState === TAB_STATE.PLAYERS" :width="'100%'" :height="'100%'">
+                <PlayersSettings />
+            </scrollarea>
+        </div>
 
     </div>
 
@@ -139,6 +149,7 @@ import PlayersSettings from './standard/settings/PlayerSettings.vue'
 import Player from '@/components/model/Player'
 import PlayerProperties from './standard/settings/PlayerProperties.vue'
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue'
+import Scrollarea from '@/components/misc/scrollarea.vue'
 
 
 interface Props{
@@ -146,10 +157,13 @@ interface Props{
 }
 
 const props = defineProps<Props>();
+const squadCreatorStore = store.state.squadCreatorStore;
 
 enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.GENERAL);
+const showScrollbar = ref<boolean>(false);
+const scrollOffset = ref<number>(0);
 const showHUD = ref<boolean>(false);
 const selectedPlayer = ref<Player | null>(null);
 
@@ -171,17 +185,18 @@ function resize(){
     Committer.setCanvasWidth(sc_squad.getBoundingClientRect().width);
     Committer.setCanvasHeight(sc_squad.getBoundingClientRect().height);
 
-    const size: Vector2 = store.state.squadCreatorStore.settings.pitchSize;
-    if(store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal'){
-        
-        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasWidth / size.x) * 0.8);
+    const size: Vector2 = squadCreatorStore.settings.pitchSize;
+    if(squadCreatorStore.settings.pitchOrientation === 'horizontal'){
+        Committer.setCanvasScale((squadCreatorStore.settings.canvasWidth / size.x) * 0.8);
     }
     else{
-        Committer.setCanvasScale((store.state.squadCreatorStore.settings.canvasHeight / size.x) * 0.8);
-
+        Committer.setCanvasScale((squadCreatorStore.settings.canvasHeight / size.x) * 0.8);
     }
 }
 
+function changeTabState(newTab: TAB_STATE){
+    tabState.value = newTab;
+}
 
 function selectPlayer(player: Player | null){
     if(selectedPlayer.value === player){
@@ -231,8 +246,7 @@ function changePlayer(ev){
 
     if(playerToChange.value === null) return;
 
-    playerToChange.value.name = addPlayerName.value;
-    playerToChange.value.isDummy = false;    
+    Committer.replaceDummyWithPlayer(playerToChange.value, addPlayerName.value, -1, null);
 
     playerToChange.value = null;
 }
@@ -309,6 +323,45 @@ function changePlayer(ev){
 
 <style lang="scss">
 
+.scroll-container{
+
+    .scroll-viewport{
+
+    }
+
+    .scroll-scrollbar-container-v, .scroll-scrollbar-container-h{
+        display: flex;
+        flex-direction: column;
+
+        width: 8px;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        background: var(--dark);
+        opacity: 0.5;
+        /* filter: opacity(0.5); */
+
+        .scroll-scrollbar{
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 2;
+
+            width: 4px;
+            height: 36px;
+            background: var(--light-4);
+            border-radius: 4px;
+            
+            &:hover{
+                background: var(--light-2);
+                /* filter: brightness(2); */
+            }
+        }
+    }
+}
+
+
+
+
+
 $properties-width: 256px;
 
 .sc-squad-type{
@@ -333,7 +386,7 @@ $properties-width: 256px;
     /* box-shadow: -2px 0 2px var(--dark); */
 
     width: $properties-width;
-    height: 100%;
+    /* height: 100%; */
     
     box-sizing: border-box;
 
@@ -366,13 +419,24 @@ $properties-width: 256px;
     }
 
     .content{
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+
         /* background: var(--dark-2); */
         padding: 16px;
-        min-height: 100%;
+        /* min-height: 100%; */
+        /* width: $properties-width; */
         .item{
             margin-bottom: 16px;
         }
     }
+    /* overflow-y: scroll; */
+}
+
+#sc-standard-properties-content{
+    overflow: hidden;
+    width: $properties-width;
 }
 
 

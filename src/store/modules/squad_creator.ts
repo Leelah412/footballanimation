@@ -1,14 +1,14 @@
 import { PlayerStyle } from "@/components/helper/enums";
-import FormationList, { Formation } from "@/components/helper/FormationList";
+import FormationList, { Formation, Position } from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import Player, { PlayerList } from "@/components/model/Player";
 import { Committer } from "./squad_creator_committer";
 
 
 export interface UndoRedo{
-    ref: any                    // reference to the object holding the value
-    primitive: string | null    // value belongs to primitive => additionally access primitive variable belonging to reference object
-    value: any                  // prev. value of object
+    ref: any                            // reference to the object holding the value
+    primitive: string | number | null   // value belongs to primitive => additionally access primitive variable belonging to referenced object
+    value: any                          // prev. value of object
 }
 
 export interface Settings{
@@ -55,11 +55,10 @@ export interface State{
     bench: PlayerList
     reserves: PlayerList
 
-
     settings: Settings
 
-    undoList: UndoRedo[]
-    redoList: UndoRedo[]
+    undoList: (UndoRedo | UndoRedo[])[]
+    redoList: (UndoRedo | UndoRedo[])[]
 }
 
 const defaultState = (): State => {
@@ -286,7 +285,9 @@ export const mutations = {
         if(typeof dec.settings.benchCount === 'number') state.settings.benchCount = dec.settings.benchCount;
         if(typeof dec.settings.useBench === 'boolean') state.settings.useBench = dec.settings.useBench;
 
-
+        // make sure to reset the undo redos
+        Committer.resetUndoList();
+        Committer.resetRedoList();
     },
 
     // reset everything back to default
@@ -306,81 +307,153 @@ export const mutations = {
     
         state.settings = ds.settings;
 
-        state.undoList = [];
-        state.redoList = [];
+        Committer.resetUndoList();
+        Committer.resetRedoList();
         
     },
 
     // undo an action
-    undo(state: State, args: {}){
-
-        console.log("undoing");        
+    undo(state: State, args: {}){     
 
         if(state.undoList.length === 0) return;
-        const u: UndoRedo | undefined = state.undoList.pop();
+        const u: UndoRedo | UndoRedo[] | undefined = state.undoList.pop();
         if(u === undefined) return;
 
-        var rf: any = u.ref;
-        if(u.primitive !== null){
+        console.log("undoing");
+
+        // SINGLE UNDO
+        if(!Array.isArray(u)){
+            var ref: any = u.ref;
+            if(u.primitive !== null){
+                // push current value into redo list
+                const curVal = ref[u.primitive];
+                state.redoList.push({
+                    ref: ref,
+                    primitive: u.primitive,
+                    value: curVal
+                })
+                // finish undo
+                ref[u.primitive] = u.value;
+                return;
+            }
+            
             // push current value into redo list
-            const curVal = rf[u.primitive];
+            const curVal = ref;
             state.redoList.push({
-                ref: rf,
-                primitive: u.primitive,
+                ref: ref,
+                primitive: null,
                 value: curVal
             })
             // finish undo
-            rf[u.primitive] = u.value;
+            ref = u.value;
             return;
         }
-        
-        // push current value into redo list
-        const curVal = rf;
-        state.redoList.push({
-            ref: rf,
-            primitive: null,
-            value: curVal
-        })
-        // finish undo
-        rf = u.value;
+
+        // MULTI UNDO
+        var ref: any;
+        var redo: UndoRedo[] = [];
+        for(var i = 0; i < u.length; i++){
+            ref = u[i].ref;
+            if(u[i].primitive !== null){
+                // push current value into redo list
+                const curVal = ref[u[i].primitive!];
+                redo.push({
+                    ref: ref,
+                    primitive: u[i].primitive,
+                    value: curVal
+                })
+                // finish undo
+                ref[u[i].primitive!] = u[i].value;
+            }
+            else{
+                // push current value into redo list
+                const curVal = ref;
+                redo.push({
+                    ref: ref,
+                    primitive: null,
+                    value: curVal
+                })
+                // finish undo
+                ref = u[i].value;
+            }
+        }
+
+        // push redo array into redo list
+        state.redoList.push(redo);
     },
     
     // redo an action
     redo(state: State, args: {}){
-
-        console.log("redoing");
         
-
         if(state.redoList.length === 0) return;
-        const u: UndoRedo | undefined = state.redoList.pop();
+        const u: UndoRedo | UndoRedo[] | undefined = state.redoList.pop();
         if(u === undefined) return;
 
-        var rf: any = u.ref;
-        if(u.primitive !== null){
+        console.log("redoing");
+
+        // SINGLE REDO
+        if(!Array.isArray(u)){
+            var ref: any = u.ref;
+            if(u.primitive !== null){
+                // push current value into redo list
+                const curVal = ref[u.primitive];
+                state.undoList.push({
+                    ref: ref,
+                    primitive: u.primitive,
+                    value: curVal
+                })
+                // finish redo
+                ref[u.primitive] = u.value;
+                return;
+            }
+            
             // push current value into redo list
-            const curVal = rf[u.primitive];
+            const curVal = ref;
             state.undoList.push({
-                ref: rf,
-                primitive: u.primitive,
+                ref: ref,
+                primitive: null,
                 value: curVal
             })
-            // finish undo
-            rf[u.primitive] = u.value;
+            // finish redo
+            ref = u.value;
             return;
         }
         
-        // push current value into redo list
-        const curVal = rf;
-        state.undoList.push({
-            ref: rf,
-            primitive: null,
-            value: curVal
-        })
-        // finish undo
-        rf = u.value;
+
+        // MULTI REDO
+        var ref: any;
+        var undo: UndoRedo[] = [];
+        for(var i = 0; i < u.length; i++){
+            ref = u[i].ref;
+            if(u[i].primitive !== null){
+                // push current value into undo list
+                const curVal = ref[u[i].primitive!];
+                undo.push({
+                    ref: ref,
+                    primitive: u[i].primitive,
+                    value: curVal
+                })
+                // finish undo
+                ref[u[i].primitive!] = u[i].value;
+            }
+            else{
+                // push current value into undo list
+                const curVal = ref;
+                undo.push({
+                    ref: ref,
+                    primitive: null,
+                    value: curVal
+                })
+                // finish undo
+                ref = u[i].value;
+            }
+        }
+
+        // push undo array into undo list
+        state.undoList.push(undo);
     },
     
-    pushToUndoList(state: State, args: {ref: any, primitive: string | null, value: any}){
+    pushToUndoList(state: State, args: {ref: any, primitive: string | number | null, value: any}){
         
         console.log("pushing to undo list");
         
@@ -389,6 +462,81 @@ export const mutations = {
             primitive: args.primitive,
             value: args.value
         })
+
+        Committer.resetRedoList();
+    },
+
+    pushMultipleToUndoList(state: State, args: {list: UndoRedo[]}){
+        
+        console.log("pushing multiple elements as single undo list instance");
+
+        var undoList: UndoRedo[] = [];
+        for(var i = 0; i < args.list.length; i++){
+            undoList.push({
+                ref: args.list[i].ref,
+                primitive: args.list[i].primitive,
+                value: args.list[i].value
+
+            });
+        }
+        state.undoList.push(undoList);
+
+        Committer.resetRedoList();
+    },
+
+    // call this to safely reset the undo list
+    // clear all non-primitive data, or those, that point to non-primitive data from memory, if necessary
+    resetUndoList(state: State, args: {}){
+        
+        function releaseMemory(ur: UndoRedo){
+            // clear logo from memory, if possible
+            // make sure we don't accidentally clear the current logo
+            if(ur.ref === state && ur.primitive === 'squadLogo' && ur.value !== state.squadLogo)
+                URL.revokeObjectURL(ur.value);
+        }
+
+        const ul = state.undoList;
+        for(var i = 0; i < ul.length; i++){
+
+            // single element
+            const ul_el = ul[i];
+            if(!Array.isArray(ul_el)){
+                releaseMemory(ul_el);
+                continue;
+            }
+
+            // multi element
+            for(var j = 0; j < ul_el.length; j++){
+                releaseMemory(ul_el[j]);
+            }
+        }
+
+        state.undoList = [];
+    },
+
+    // call this to safely reset the redo list
+    resetRedoList(state: State, args: {}){
+        function releaseMemory(ur: UndoRedo){
+            // clear logo from memory, if possible
+            // make sure we don't accidentally clear the current logo
+            if(ur.ref === state && ur.primitive === 'squadLogo' && ur.value !== state.squadLogo)
+                URL.revokeObjectURL(ur.value);
+        }
+
+        const ul = state.redoList;
+        for(var i = 0; i < ul.length; i++){
+            // single element
+            const ul_el = ul[i];
+            if(!Array.isArray(ul_el)){
+                releaseMemory(ul_el);
+                continue;
+            }
+
+            // multi element
+            for(var j = 0; j < ul_el.length; j++){
+                releaseMemory(ul_el[j]);
+            }
+        }
 
         state.redoList = [];
     },
@@ -405,6 +553,45 @@ export const mutations = {
         state.squadName = args.squadName;
     },
 
+    // change formation based on given formation key
+    changeFormation(state: State, args: {formationKey: string}){
+        // NOTE: no checking, whether formationKeys are equivalent, since user could've switched a players position
+        // -- instead check, if new positions of all players would be equal to their current ones
+        const ft = state.firstTeam;
+        const ft_keys = Object.keys(ft);
+        const formation = FormationList[args.formationKey];
+        const positions = formation.positions;
+        if(positions.length !== 11) return;                 // must be 11 players!
+
+        var undos: UndoRedo[] = [];
+        var eq_count: number = 0;
+        for(var i = 0; i < positions.length; i++){
+            // count the number of players, whose positions haven't changed
+            if( positions[i].vector.x * state.settings.pitchSize.x) eq_count++;
+        }
+
+        // no need to 
+        if(eq_count === 11) return;
+
+        Committer.pushMultipleToUndoList(undos);
+
+        function assignPosition(player: Player, position: Position){
+            player.position.x = position.vector.x * state.settings.pitchSize.x;
+            player.position.y = position.vector.y * state.settings.pitchSize.y;
+            player.positionName = position.name;
+            player.positionShort = position.short;
+        }
+
+        
+    },
+
+    setFormationName(state: State, args: {name: string}){
+        if(state.formationName === args.name) return;
+
+        Committer.pushToUndoList(state, 'formationName', state.formationName);
+        state.formationName = args.name;
+    },
+
     // changes the squad logo based on the Blob taken from the value of an input element
     // passing 'null' resets the logo
     changeSquadLogo(state: State, args: {squadLogo: Blob | MediaSource | null}){
@@ -417,6 +604,63 @@ export const mutations = {
         state.squadLogo = URL.createObjectURL(args.squadLogo);
     },
 
+    // PLAYER
+
+    // turn given dummy player into a real one with the given information
+    replaceDummyWithPlayer(state: State, args: {player: Player, name: string, number: number, avatar: Blob | string | null}){
+        // makes no sense replacing a dummy, that isn't one, oder?
+        if(!args.player.isDummy) return;
+
+        Committer.pushMultipleToUndoList([
+            {ref: args.player, primitive: 'isDummy', value: args.player.isDummy},
+            {ref: args.player, primitive: 'name', value: args.player.name},
+            {ref: args.player, primitive: 'number', value: args.player.number},
+            {ref: args.player, primitive: 'avatar', value: args.player.avatar},
+        ]);
+        
+        args.player.isDummy = false;
+        args.player.name = args.name;
+        args.player.number = args.number;
+        args.player.avatar = args.avatar;
+    },
+
+    // remove given player from first team and turn him into a dummy
+    removePlayerFromFirstTeam(state: State, args: {player: Player}){
+        if(args.player.isDummy) return;
+
+        Committer.pushMultipleToUndoList([
+            {ref: args.player, primitive: 'isDummy', value: args.player.isDummy},
+            {ref: args.player, primitive: 'name', value: args.player.name},
+            {ref: args.player, primitive: 'number', value: args.player.number},
+            {ref: args.player, primitive: 'avatar', value: args.player.avatar},
+        ]);
+        
+        args.player.isDummy = false;
+        args.player.name = '';
+        args.player.number = -1;
+        args.player.avatar = null;
+    },
+
+    setPlayerName(state: State, args: {player: Player, name: string}){
+        if(args.player.name === args.name) return;
+
+        Committer.pushToUndoList(args.player, 'name', args.player.name);
+        args.player.name = args.name;
+    },
+
+    setPlayerNumber(state: State, args: {player: Player, number: number}){
+        if(args.player.number === args.number) return;
+
+        Committer.pushToUndoList(args.player, 'number', args.player.number);
+        args.player.number = args.number;
+    },
+
+    setPlayerAvatar(state: State, args: {player: Player, avatar: Blob | string | null}){
+        if(args.player.avatar === args.avatar) return;
+
+        Committer.pushToUndoList(args.player, 'avatar', args.player.avatar);
+        args.player.avatar = args.avatar;
+    },
 
     //////////////
     // SETTINGS //
@@ -463,6 +707,68 @@ export const mutations = {
         Committer.pushToUndoList(state.settings, 'circleStyle', prev);
         state.settings.circleStyle = args.style;
     },
+
+    // VISUALS
+
+    setShowNumbers(state: State, args: {showNumbers: boolean}){
+        if(state.settings.showNumbers === args.showNumbers) return;
+
+        Committer.pushToUndoList(state.settings, 'showNumbers', state.settings.showNumbers);
+        state.settings.showNumbers = args.showNumbers;        
+    },
+
+    setShowNames(state: State, args: {showNames: boolean}){
+        if(state.settings.showNames === args.showNames) return;
+
+        Committer.pushToUndoList(state.settings, 'showNames', state.settings.showNames);
+        state.settings.showNames = args.showNames;    
+
+    },
+
+    setShowLogo(state: State, args: {showLogo: boolean}){
+        if(state.settings.showLogo === args.showLogo) return;
+
+        Committer.pushToUndoList(state.settings, 'showLogo', state.settings.showLogo);
+        state.settings.showLogo = args.showLogo;    
+
+    },
+
+    setShowSquadName(state: State, args: {showSquadName: boolean}){
+        if(state.settings.showSquadName === args.showSquadName) return;
+
+        Committer.pushToUndoList(state.settings, 'showSquadName', state.settings.showSquadName);
+        state.settings.showSquadName = args.showSquadName;    
+
+    },
+
+    setShowFormation(state: State, args: {showFormation: boolean}){
+        if(state.settings.showFormation === args.showFormation) return;
+
+        Committer.pushToUndoList(state.settings, 'showFormation', state.settings.showFormation);
+        state.settings.showFormation = args.showFormation;    
+
+    },
+
+    // set ONE team color with the given index
+    setTeamColor(state: State, args: {index: number, color: string}){
+        if(!Number.isInteger(args.index)) return;
+        if(args.index < 0 || args.index >= state.settings.teamColors.length) return;
+        if(state.settings.teamColors[args.index] === args.color) return;
+
+        Committer.pushToUndoList(state.settings.teamColors, args.index, state.settings.teamColors[args.index])
+        state.settings.teamColors[args.index] = args.color;
+    },
+
+    setLogoPosition(state: State, args: {logoPosition: Vector2}){
+        if(state.settings.logoPosition.x === args.logoPosition.x
+            && state.settings.logoPosition.y === args.logoPosition.y) return;
+
+        Committer.pushToUndoList(state.settings, 'logoPosition', state.settings.logoPosition.copy());
+        state.settings.logoPosition.x = args.logoPosition.x;
+        state.settings.logoPosition.y = args.logoPosition.y;
+    },
+
+    // PITCH
 
     setPitchColor(state: State, args: {pitchColor: string}){
         if(state.settings.pitchColor === args.pitchColor) return;
@@ -519,18 +825,6 @@ export const mutations = {
         
     },
 
-    // TODO: canvas stuff doesnt belong to settings
-    setCanvasWidth(state: State, args: {width: number}){
-        state.settings.canvasWidth = args.width;
-    },
-    setCanvasHeight(state: State, args: {height: number}){
-        state.settings.canvasHeight = args.height;
-    },
-    setCanvasScale(state: State, args: {scale: number}){
-        state.settings.canvasScale = args.scale;
-    },
-
-
     setPitchStyle(state: State, args: {style: number}){
         
         if(args.style < 0){
@@ -564,6 +858,21 @@ export const mutations = {
         console.log(state.settings.pitchStyle);
         
     },
+
+    // CANVAS
+
+    // TODO: canvas stuff doesnt belong to settings
+    setCanvasWidth(state: State, args: {width: number}){
+        state.settings.canvasWidth = args.width;
+    },
+    setCanvasHeight(state: State, args: {height: number}){
+        state.settings.canvasHeight = args.height;
+    },
+    setCanvasScale(state: State, args: {scale: number}){
+        state.settings.canvasScale = args.scale;
+    },
+
+
 }
 
 export const getters = {

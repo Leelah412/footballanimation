@@ -90,10 +90,6 @@ function redo(){
     Committer.redo();
 }
 
-function change(state){
-    
-}
-
 
 function openFileDialog(ev){
     const input = document.getElementById('load-file');
