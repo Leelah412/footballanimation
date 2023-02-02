@@ -90,13 +90,13 @@ function restoreSession(){
   --light-6: #888;
 
   // font sizes
-  --font-size-0: 48px;
-  --font-size-1: 32px;      // huge
-  --font-size-2: 24px;      // big header
-  --font-size-3: 16px;      // header
-  --font-size-4: 12px;      // standard
-  --font-size-5: 10px;      // smaller
-  --font-size-6: 8px;       // tiny
+  //--font-size-0: 48pt;
+  --font-size-0: 32pt;      // huge
+  --font-size-1: 24pt;      // big header
+  --font-size-2: 16pt;      // header
+  --font-size-3: 12pt;      // standard
+  --font-size-4: 10pt;      // smaller
+  --font-size-5: 8pt;       // tiny
 
     // global margins on the side
   --global-margin: 16px;
@@ -452,6 +452,35 @@ input{
     &.p-8{
         padding:8px;
     }
+    &.filled{
+      background: var(--secondary);
+      color: var(--light);
+    }
+    
+    &.hover-primary-light:hover{
+      color: var(--secondary-primary-light);
+      border-color: var(--secondary-primary-light);
+    }
+    &.hover-primary:hover{
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+    &.hover-primary-dark:hover{
+      color: var(--secondary-primary-dark);
+      border-color: var(--secondary)-primary-dark;
+    }
+    &.hover-secondary-light:hover{
+      color: var(--secondary-light);
+      border-color: var(--secondary-light);
+    }
+    &.hover-secondary:hover{
+      color: var(--secondary);
+      border-color: var(--secondary);
+    }
+    &.hover-secondary-dark:hover{
+      color: var(--secondary-dark);
+      border-color: var(--secondary-dark);
+    }
 }
 
 .btn-square-secondary-light{
@@ -461,6 +490,10 @@ input{
     &:hover{
         color: var(--accent);
         border-color: var(--accent);
+    }
+    &.filled{
+      background: var(--secondary-light);
+      color: var(--light);
     }
 }
 
@@ -472,12 +505,27 @@ input{
         color: var(--accent);
         border-color: var(--accent);
     }
+    &.filled{
+      background: var(--secondary-dark);
+      color: var(--light);
+    }
 }
 
 .btn-square-cl-1{
     @extend .btn-square-secondary;    
     color: var(--cl-1);
     border-color: var(--cl-1);
+    &:hover{
+        color: var(--accent);
+        border-color: var(--accent);
+    }
+}
+
+.btn-square-primary{
+    @extend .btn-square-secondary;    
+    color: var(--primary);
+    border-color: var(--primary);
+    font-size: var(--font-size-3);
     &:hover{
         color: var(--accent);
         border-color: var(--accent);

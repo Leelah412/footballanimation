@@ -15,16 +15,18 @@
             <div class="home-header flex-column" style="height: 33%; max-width: 900px; ">
                 <span class=" m-center-v">RECREATE YOUR FAVOURITE MOMENTS IN FOOTBALL AND SHARE THEM WITH THE WORLD</span>
             </div>
-            <div class="flex-row m-top m-center-h">
-                <router-link to="/editor" class="m-center-v" style="margin-right:16px;">
-                    <button class="btn-square-cl-1">
-                        Create a Match!
+            <div class="flex-column m-top m-center-h">
+                <router-link to="/editor" class="m-center-v">
+                    <button class="btn-square-secondary-light" style="filter: drop-shadow(1px 1px 2px var(--dark)); font-weight: 900;">
+                        CREATE A MATCH
                     </button>
                 </router-link>
 
-                <button class="btn-simple-light">
+                <!--
+                <button class="btn-simple-light" style="margin-top:16px;">
                     View Matches
                 </button>
+                -->
             </div>
         </div>
 
