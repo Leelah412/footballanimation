@@ -19,7 +19,7 @@ import store from "./store";
 import Background from "./components/misc/background.vue";
 
 // hide the navbar for the given routes
-const hideNavbarForRoutes = ['editor', 'login', 'registration'];
+const hideNavbarForRoutes = ['home', 'editor', 'login', 'registration'];
 
 restoreSession();
 const route = useRouter().currentRoute;
@@ -221,6 +221,9 @@ svg{
 }
 .m-bottom{
   margin-top: auto;
+}
+.m-center{
+  margin: auto;
 }
 .m-center-v{
   margin-top: auto;

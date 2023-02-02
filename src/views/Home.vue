@@ -2,72 +2,37 @@
     
 <div id="home">
 
-    <div class="position-relative global-padding" style="height:240px; margin-top:32px;">
-        <div id="presentation-squad" class="position-absolute" style="top:0;left:0; height:120%; width: 120vw; transform: rotate(1deg) translate(10px, -60px); background: var(--primary-dark); box-shadow: 0 0 4px var(--dark);">
+    <div id="home-hero" class="position-relative global-padding flex-column" :style="`height:100vh;`">
 
-        </div>
-        <div id="presentation-match" class="position-absolute" style="top:0;left:0; height:120%; width: 120vw; transform: rotate(-1deg) translate(-10px, -60px); box-shadow: 0 0 4px var(--dark); filter: brightness(0.2);">
-
+        <div id="presentation-match" class="position-absolute" style="top:0;left:0; height:100%; width: 100vw; box-shadow: 0 0 4px var(--dark); filter: brightness(0.2);">
         </div>
 
-        <div class="position-absolute flex-column">
-            <div class="home-header">
-                RECREATE YOUR FAVOURITE MATCHES!
-                <!-- Recreate your favourite football matches! -->
+        <div class="position-absolute flex-column flex-grow align-items-center justify-content-center" style="height:33%; top:0;">
+            <img id="soccer-studio-logo" class="m-center-v" src="@/assets/svg/logo-full.svg" alt="">
+        </div>
+
+        <div class="position-absolute flex-column" style="height:67%; top:33%;">
+            <div class="home-header flex-column" style="height: 33%; max-width: 900px; ">
+                <span class=" m-center-v">RECREATE YOUR FAVOURITE MOMENTS IN FOOTBALL AND SHARE THEM WITH THE WORLD</span>
             </div>
-            <div class="home-description">
-                Create complex 2D animations for your favourite football scenarios and share them online or export them as video!
-            </div>
-            <div class="flex-row" style="margin-top: 64px">
-                <button class="btn-square-cl-1" style="margin-right:16px;">
-                    Create a Match!
-                </button>
+            <div class="flex-row m-top m-center-h">
+                <router-link to="/editor" class="m-center-v" style="margin-right:16px;">
+                    <button class="btn-square-cl-1">
+                        Create a Match!
+                    </button>
+                </router-link>
+
                 <button class="btn-simple-light">
                     View Matches
                 </button>
             </div>
         </div>
 
-        <div id="hero-right">
-
-        </div>
-
     </div>
 
     <div id="home-content" class="flex-column global-padding">
-
-        <div id="home-top-squads" class="flex-column" style="margin-bottom:64px;">
-            <div class="flex-row align-center">
-                <div class="header-standard m-left" style="padding-left:0">TOP SQUADS</div>
-                <button class="btn-square-secondary-light thin p-8" >More Squads</button>
-            </div>
-            <div id="home-top-squad-list" class="card-grid">
-                <CardSquad />
-                <CardSquad />
-                <CardSquad />
-            </div>
-        </div>
-
-        <div id="home-top-squads" class="flex-column">
-            <div class="flex-row align-center">
-                <div class="header-standard m-left" style="padding-left:0">TOP MATCHES</div>
-                <button class="btn-square-secondary-light thin p-8" >More Matches</button>
-            </div>
-            <div id="home-top-squad-list" class="card-grid">
-                <CardSquad />
-                <CardSquad />
-                <CardSquad />
-            </div>
-        </div>
+        
     </div>
-
-<!--     <div id="home-examples" class="global-padding">
-aaaaaaaaa
-    </div>
-
-    <div id="home-register" class="global-padding">
-aaaaaaaaa
-    </div> -->
 
 </div>
 
@@ -76,17 +41,24 @@ aaaaaaaaa
 
 <script lang="ts" setup>
 import { onMounted, onUnmounted, ref } from "vue-demi";
-import CardSquad from "@/components/r_user_profile/CardSquad.vue";
+
+const vh = ref(0);
 
 onMounted(()=>{
+    calcHeight();
     document.addEventListener('scroll', scroll);
-    
+    window.addEventListener('resize', calcHeight); 
 })
 
 onUnmounted(()=>{
     document.removeEventListener('scroll', scroll);
+    window.removeEventListener('resize', calcHeight); 
     
 });
+
+function calcHeight(){
+    vh.value = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+}
 
 function scroll(ev){
     const home = document.getElementById('home-hero');
@@ -105,25 +77,12 @@ function scroll(ev){
 
 
 <style lang="scss" scoped>
-/* 
-#home-register{
-    margin-top: 500px;
-} */
 
 #home{
     box-sizing: border-box;
-    /* width: 100vw; */
     min-height: calc(100vh - var(--navbar-height));
     overflow: hidden;
     color: var(--light);
-    /* background: var(--dark); */
-        
-/*     background: url("../assets/hero.jpg");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-size: 100vw;
-    background-position-y: 80%; */
-/*     padding: 32px; */
 }
 
 .home-header{
@@ -131,14 +90,11 @@ function scroll(ev){
     font-size: var(--font-size-1);
     font-weight: 300;
     /* color: var(--light); */
-    text-align: left;
-    margin-bottom: 16px;
 }
 
 .home-description{
     /* font-family: Nunito, Verdana, Geneva, Tahoma, sans-serif; */
-    text-align: left;
-    font-size: var(--font-size-4);
+    font-size: var(--font-size-3);
 }
 
 #home-hero{
@@ -150,35 +106,22 @@ function scroll(ev){
     box-sizing: border-box;
     width: 100%;
     height: 384px;
-
 /* padding: 256px; */
-
-/*     background: url("../assets/hero.jpg");
-    background-repeat: no-repeat;
-    background-size: 100vw;
-    background-position-y: 80%; */
 
     box-shadow: inset 0 0 4px #000;
 }
 
-#hero-left{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    width: 50%;
-}
-
-#hero-right{
-    width: 50%;
+#soccer-studio-logo{
+    height: 128px;
 }
 
 #presentation-match{
     background: url("../assets/img-squads.jpg");
-    /* background-repeat: no-repeat; */
+    background-repeat: no-repeat;
     background-attachment: fixed;
-    background-size: 100vw;
-    background-position-y: 40%;
+    background-size: 100hw;
+    background-position-y: 50%;
+    background-position-x: 50%;
 }
 
 #presentation-squad{
@@ -189,8 +132,8 @@ function scroll(ev){
 /////////////////
 
 #home-content{
-    padding-top: 32px;
-    padding-bottom: 32px;
+    //padding-top: 32px;
+    //padding-bottom: 32px;
 }
 
 </style>
