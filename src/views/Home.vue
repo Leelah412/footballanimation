@@ -26,12 +26,9 @@
                         CREATE A SQUAD
                     </button>
                 </router-link>
-
-                <!--
-                <button class="btn-simple-light" style="margin-top:16px;">
-                    View Matches
-                </button>
-                -->
+            </div>
+            <div class="m-center-v">
+                &copy; 2023 <a href="https://github.com/Leelah412">Leelah412</a>
             </div>
         </div>
 

@@ -153,6 +153,8 @@ function onMouseMove(ev){
 }
 
 function onMouseUp(ev){
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
 
     if(!dragging){
         if(props.player.isDummy){
@@ -162,11 +164,7 @@ function onMouseUp(ev){
         emit('select', props.player);
     }
 
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-
     dragging = false;
-
 }
 
 

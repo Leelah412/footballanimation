@@ -120,6 +120,13 @@ body{
   background-position-y: calc(50%);
 }
 
+a {
+  color: var(--light);
+  &:hover{
+    color: var(--light-2);
+  }
+}
+
 button{
   @extend .noselect;
   border: none;

@@ -17,14 +17,16 @@
 
         </svg>
 
-        <div v-if="showHUD" id="sc-standard-squad-hud">
-
-            <div id="sc-standard-squad-hud-change-player" class="flex-row">
-                <input class="input-dark-2" type="text" placeholder="Enter name of player..." v-model="addPlayerName">
-                <svg-button-selection :selection="SVG_SELECTION.CLOSE"  :size="24" @click="showHUD = false"/>
+        <div v-if="showHUD" id="sc-standard-squad-hud-container">
+            <div id="sc-standard-squad-hud">
+                <div id="sc-standard-squad-hud-change-player" class="flex-row">
+                    <input class="input-dark-2" type="text" placeholder="Enter name of player..." v-model="addPlayerName">
+                    <svg-button-selection :selection="SVG_SELECTION.SEND" :size="24" @click="changePlayer"/>
+                </div>
+                <div class="flex-column m-center-v" style="margin: auto 8px;">
+                    <svg-button-selection :selection="SVG_SELECTION.CLOSE"  :size="24" @click="showHUD = false"/>
+                </div>
             </div>
-            <svg-button-selection :selection="SVG_SELECTION.SEND" :size="24" @click="changePlayer"/>
-
         </div>
     </div>
 
@@ -235,7 +237,7 @@ function deselectPlayer(ev){
 const playerToChange = ref<Player | null>(null);
 const addPlayerName = ref<string>('');
 
-function activatePlayerChangeHUD(player: Player){
+function activatePlayerChangeHUD(player: Player){    
     showHUD.value = true;
     playerToChange.value = player;
 
@@ -249,6 +251,7 @@ function changePlayer(ev){
     Committer.replaceDummyWithPlayer(playerToChange.value, addPlayerName.value, -1, null);
 
     playerToChange.value = null;
+    addPlayerName.value = "";
 }
 
 </script>
@@ -259,33 +262,33 @@ function changePlayer(ev){
 
 /* SQUAD */
 
-#sc-standard-squad-hud{
+#sc-standard-squad-hud-container{
+    display: flex;
     position: absolute;
+    top: 16px;
     left: 0;
-    top: 0;
-    
+    width: 100%;
+}
+
+#sc-standard-squad-hud{
     display: flex;
     flex-direction: row;
 
-    width: 100%;
-    height: 100%;
-    background: #0009;
-
-    div{
-        position: absolute;
-    }
+    margin-left: auto;
+    margin-right: auto;
+    background: var(--secondary-dark);
+    background: #000;
+    box-shadow: 0 0 1px 1px #000;
+    border: 1px solid var(--accent);
+    border-radius: 8px;
 }
 
 #sc-standard-squad-hud-change-player{
-
-    margin-top: 32px;
-    margin-left: 32px;
-    margin-right: 32px;
-    height:24px;
-    
+    //margin: auto;
     input{
-        margin-right: 16px;
-        padding: 16px;
+        margin: 8px;
+        background: none;
+        width: 240px;
     }
 }
 
