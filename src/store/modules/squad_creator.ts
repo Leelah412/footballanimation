@@ -801,7 +801,7 @@ export const mutations = {
         }
 
         Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize);
-        state.settings.pitchSize.x = args.width;
+        state.settings.pitchSize.x = Number(args.width);
     },
 
     setPitchHeight(state: State, args: {height: number}){
@@ -821,7 +821,7 @@ export const mutations = {
         }
 
         Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize);
-        state.settings.pitchSize.y = args.height;
+        state.settings.pitchSize.y = Number(args.height);
         
     },
 
