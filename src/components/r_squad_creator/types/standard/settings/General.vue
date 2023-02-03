@@ -7,30 +7,40 @@
         <input class="input-dark-2" type="text" v-model.lazy="squadCreatorStore.squadName">
     </div>
 
-    <div class="item flex-row">
-        <input type="checkbox" v-model="squadCreatorStore.settings.showSquadName">
-        <label class="label-right" for="">Show squad name on pitch</label>
-    </div>
-
-    <div class="item flex-row">
-        <input type="checkbox" v-model="squadCreatorStore.settings.showLogo">
-        <label class="label-right" for="">Show Logo</label>
-    </div>
-
-    <div v-show="squadCreatorStore.settings.showLogo" class="item flex-column">
-        <div class="upload-image-container" @click="ev => openFileDialogue('upload-squad-logo')">
-            <div v-if="squadCreatorStore.squadName === ''" class="flex-column m-center-v">
-                <img class="upload-image-icon" />
-                <div class="upload-image-header">
-                    LOGO
+    <div class="item flex-column">
+        <div v-if="squadCreatorStore.squadLogo === ''" class="flex-column m-center-h">
+            <button class="btn-bootstrap-secondary flex-row flex-grow" style="padding: 8px;" @click="ev => openFileDialogue('upload-squad-logo')">
+                <div class="flex-row" style="margin-right: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="0 0 24 24" fill="var(--light)">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+                    </svg>
                 </div>
+                <span class="m-center-v" style="">Upload Logo</span>
+            </button>
+        </div>
+        <div v-else class="flex-column flex-grow m-center-h width-100">
+            <img :src="squadCreatorStore.squadLogo" style="width:100%; height:100%"/>
+            <div class="flex-row">
+                <button class="m-center" style="color:var(--light); margin-top: 8px; margin-bottom: 8px; text-decoration: underline;"
+                    @click="ev => openFileDialogue('upload-squad-logo')">Change</button>
+                <button class="m-center" style="color:var(--red); margin-top: 8px; margin-bottom: 8px; text-decoration: underline;"
+                    @click="ev => deleteSquadLogo()">Delete</button>
             </div>
-            <img v-else :src="squadCreatorStore.squadLogo" style="width:100%; height:100%" />
+        </div>
 
-            <input id="upload-squad-logo" type="file" @change="changeSquadLogo" accept=".svg, image/jpeg, image/png">
+        <input id="upload-squad-logo" type="file" @change="changeSquadLogo" accept=".svg, image/jpeg, image/png">
+    </div>
+
+    <div class="item flex-row align-center">
+        <label class="label-over" for="">TEAM COLORS</label>
+        <div class="flex-column m-right">
+            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[0]">
+        </div>
+        <div class="flex-column m-center-h">
+            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[1]">
         </div>
     </div>
-
+    
     <div class="item flex-column">
         <label class="label-over" for="">BASE FORMATION</label>
         <select class="input-select" name="" @change="formationChanged" v-model="squadCreatorStore.formationKey">
@@ -42,25 +52,26 @@
         <label class="label-over" for="">FORMATION NAME</label>
         <input class="input-dark-2" type="text" v-model.lazy="squadCreatorStore.formationName">
     </div>
+
+    <div class="item flex-row">
+        <input type="checkbox" v-model="squadCreatorStore.settings.showSquadName">
+        <label class="label-right" for="">Show squad name</label>
+    </div>
+
+    <div class="item flex-row">
+        <input type="checkbox" v-model="squadCreatorStore.settings.showLogo">
+        <label class="label-right" for="">Show logo</label>
+    </div>
+
     
     <div class="item flex-row">
         <input type="checkbox" v-model="squadCreatorStore.settings.showFormation">
-        <label class="label-right" for="">Show formation on pitch</label>
+        <label class="label-right" for="">Show formation</label>
     </div>
 
     <div class="item flex-row">
         <input type="checkbox" v-model="squadCreatorStore.settings.lockPositions">
         <label class="label-right" for="">Lock positions</label>
-    </div>
-
-    <div class="item flex-row align-center">
-        <label class="label-over" for="">TEAM COLORS</label>
-        <div class="flex-column m-right">
-            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[0]">
-        </div>
-        <div class="flex-column m-center-h">
-            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[1]">
-        </div>
     </div>
 
 <!--     <div class="item flex-column">
@@ -110,12 +121,16 @@ function changeSquadLogo(ev){
     ev.target.value = '';
 }
 
+function deleteSquadLogo(){
+    Committer.changeSquadLogo(null);
+}
+
 </script>
 
 
 <style lang="scss">
 
-.upload-image-container{
+.upload-logo-container{
     cursor: pointer;
 
     display: flex;
@@ -123,7 +138,7 @@ function changeSquadLogo(ev){
 
     width: 128px;
     height: 128px;
-    border: 2px solid var(--secondary);
+    //border: 2px solid var(--secondary);
     &:hover{
         filter: brightness(1.2);
     }
@@ -139,11 +154,11 @@ function changeSquadLogo(ev){
         margin-top: 4px;
         margin-bottom: auto;
     }
-    input{
-        display:none;
-    }
 }
 
+#upload-squad-logo{
+    display:none;
+}
 
 </style>
 
