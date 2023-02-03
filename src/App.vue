@@ -582,10 +582,10 @@ input{
 }
 
 .btn-bootstrap-primary{
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 12px;
   color: var(--light);
-  font-size: var(--font-size-3);
+  font-size: var(--font-size-4);
   box-shadow: 0 0 6px var(--dark);
   background: var(--primary);
   &:hover{

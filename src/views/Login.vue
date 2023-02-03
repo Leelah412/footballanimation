@@ -10,7 +10,7 @@
 
         <span class="error-msg" style="text-align:left">{{username_error_msg}}</span>
         <div id="login-username" class="flex-row" style="padding-top: 8px">
-            <svg-button-selection :selection="SVG_SELECTION.EMAIL" :size="24" style="margin-right:32px;"/>
+            <svg-button-selection :selection="SVG_SELECTION.USER" :size="24" style="margin-right:32px;"/>
 
             <div class="form-animation-container flex-grow">
                 <input type="text" id="username" name="username" v-model="username" class="form-animation-input width-100"
@@ -40,7 +40,7 @@
             <button class="btn-bootstrap-secondary m-right" @click="login">LOGIN</button>
         </div>
         <div class="flex-column m-center-v" style="font-size:var(--font-size-4); margin-bottom: 0; text-align: left;">
-            <router-link to="/reset-password">Reset Password</router-link>
+            <router-link to="">Reset Password</router-link>
             <router-link to="/registration" style="font-weight: 600; font-size: var(--font-size-3); margin-top: 16px;">No account? Register here!</router-link>
         </div>
     </div>

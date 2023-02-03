@@ -6,6 +6,8 @@
             <img src="@/assets/svg/logo-full.svg" alt="" id="navbar-logo-img">
         </router-link>
 
+        <!--
+
         <div id="navbar-search" class="flex-row" style="margin-left:32px">
             <input type="text" id="navbar-search-input" class="input-bottom-line" placeholder="Search..." style="font-size:var(--font-size-4);">
             <button id="navbar-search-button" class="flex-row align-center" style="">
@@ -14,8 +16,9 @@
                 </svg>
             </button>
         </div>
+        -->
 
-        <div id="navbar-wide">
+        <div id="navbar-wide" class="m-center-h">
 
             <div id="navbar-links">
                 <router-link to="/editor" class="img-button-router">
@@ -34,6 +37,7 @@
                 </router-link>
             </div>
 
+            <!--
             <div class="flex-row" style="font-size:var(--font-size-4);">
                 <router-link to="" style="color:var(--light-2)">
                     SQUADS
@@ -48,6 +52,7 @@
                     BROWSE
                 </router-link>
             </div>
+            -->
 
         </div>
 
@@ -55,7 +60,7 @@
         <div id="navbar-user">
             <div v-if="!store.state.loggedIn" class="flex-row">
                 <router-link to="/login">
-                    <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'"/>
+                    <svg-button-selection :selection="SVG_SELECTION.LOGIN" :size="24" :fill="'var(--light)'" :text="'LOGIN'" :textSize="'var(--font-size-5)'"/>
                 </router-link>
             </div>
 
@@ -286,7 +291,6 @@ nav{
 #navbar-user{
     display: flex;
     flex-direction: row;
-    margin-left: auto;
     --avatar-button-size: 36px;
 
     @media screen and (max-width:900px) {

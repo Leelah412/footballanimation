@@ -11,14 +11,19 @@
             <img id="soccer-studio-logo" class="m-center-v" src="@/assets/svg/logo-full.svg" alt="">
         </div>
 
-        <div class="position-absolute flex-column" style="height:67%; top:33%;">
-            <div class="home-header flex-column" style="height: 33%; max-width: 900px; ">
+        <div class="position-absolute flex-column" style=" max-width: 900px; height:67%; top:33%;">
+            <div class="home-header flex-column" style="height: 33%;">
                 <span class="m-center-v">RECREATE YOUR FAVOURITE MOMENTS IN FOOTBALL AND SHARE THEM WITH THE WORLD</span>
             </div>
-            <div class="flex-column m-top m-center-h">
-                <router-link to="/editor" class="m-center-v">
+            <div id="hero-buttons">
+                <router-link to="/editor">
                     <button class="btn-square-secondary-light" style="filter: drop-shadow(1px 1px 2px var(--dark)); font-weight: 900;">
                         CREATE A SCENE
+                    </button>
+                </router-link>
+                <router-link to="/squad-creator">
+                    <button class="btn-square-primary" style="filter: drop-shadow(1px 1px 2px var(--dark)); font-weight: 900;">
+                        CREATE A SQUAD
                     </button>
                 </router-link>
 
@@ -89,6 +94,20 @@ function scroll(ev){
     box-shadow: inset 0 0 4px #000;
 }
 
+#hero-buttons{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto auto auto;
+    padding: 0 32px;
+    width: calc(100% - 64px);
+    a{
+        margin-bottom: 16px;
+        button{
+            width:100%;
+        }
+    }
+}
+
 .home-header{
     font-family: Unispace, Verdana, Geneva, Tahoma, sans-serif;
     font-size: var(--font-size-2);
@@ -124,6 +143,16 @@ function scroll(ev){
 @media screen and (min-width: 601px){
     .home-header{
         font-size: var(--font-size-1);
+    }
+    #hero-buttons{
+        flex-direction: row;
+        width: auto;
+        a{
+            margin: 0 16px 16px 16px;
+            button{
+                width:100%;
+            }
+        }
     }
     #soccer-studio-logo{
         height: 128px;
