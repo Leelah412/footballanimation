@@ -102,6 +102,7 @@
         </div>
     </div>
 
+<!--
     <div id="navbar-user" style="margin:0">
         <div v-if="!store.state.loggedIn" class="flex-row">
             <router-link to="/login">
@@ -121,8 +122,6 @@
                     <img :src="store.getters.getAvatarURL()" alt="">
                     <span style="font-size: var(--font-size-3);">{{store.state.username}}</span>
                 </div>
-<!--                     <div class="navbar-user-menu-item noselect"></div>
-                <div class="navbar-user-menu-item noselect"></div> -->
 
                 <div class="navbar-user-menu-item noselect" @click="logout">
                     <svg-button-selection :selection="SVG_SELECTION.LOGOUT" :size="24" :fill="'var(--light)'" />
@@ -132,6 +131,9 @@
             </div>
         </div>
     </div>
+
+-->
+
 
 </div>
 

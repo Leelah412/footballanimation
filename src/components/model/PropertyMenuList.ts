@@ -24,6 +24,12 @@ export default {
     teamSettings: {
         id: 'teamSettings',
         header: 'Team Settings',
+        avatar: '',
+        tooltip: 'Edit the team attributes for both the home and the away team.'
+    },
+    playerList: {
+        id: 'playerList',
+        header: 'Player List',
         avatar: '<svg xmlns:svg="http://www.w3.org/2000/svg"  \
                 xmlns="http://www.w3.org/2000/svg" \
                 viewBox="0 0 8.4666662 8.4666667"> \
@@ -136,15 +142,6 @@ export default {
             </g> \
         </svg> \
         ',
-        tooltip: 'Edit the team attributes for both the home and the away team.'
-    },
-    playerList: {
-        id: 'playerList',
-        header: 'Player List',
-        avatar: "<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"var(--light)\">\
-                    <path d=\"M0 0h24v24H0z\" fill=\"none\"/>\
-                    <path d=\"M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z\"/>\
-                </svg>",
         tooltip: "Edit the (list of) players on and off the field."
     },
     scoreBarSettings: {

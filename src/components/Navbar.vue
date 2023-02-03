@@ -19,14 +19,14 @@
 
             <div id="navbar-links">
                 <router-link to="/editor" class="img-button-router">
-                    <img src="@/assets/svg/match-creator.svg" height="24">
+                    <img src="@/assets/svg/football/match-creator.svg" height="24">
                     <div class="flex-column">
                         <span style="font-family: Unispace; font-size: var(--font-size-4);">MATCH</span>
                         <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
                     </div>
                 </router-link>
                 <router-link to="/squad-creator" class="img-button-router">
-                    <img src="@/assets/svg/squad-builder.svg" height="24">
+                    <img src="@/assets/svg/football/squad-builder.svg" height="24">
                     <div class="flex-column">
                         <span style="font-family: Unispace; font-size: var(--font-size-4);">SQUAD</span>
                         <span style="font-size: var(--font-size-6); transform: translateY(2px);">CREATOR</span>
