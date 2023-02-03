@@ -37,9 +37,9 @@
 
     <div class="navbar-divider"></div>
 
+    <!--
     <button :class="`navbar-button${(showJersey ? '-active' : '')}`" id="navbar-toggle-jersey" @click="onShowJersey">
         <Jersey :jersey="visualizationJersey" :isVisual="true" :width="32" :height="32"/>
-        <!-- <span>JERSEY</span> -->
     </button>
 
     <div class="navbar-divider"></div>
@@ -101,6 +101,8 @@
             </label>
         </div>
     </div>
+    
+    -->
 
 <!--
     <div id="navbar-user" style="margin:0">

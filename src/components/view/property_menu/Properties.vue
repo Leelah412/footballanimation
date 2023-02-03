@@ -1,10 +1,7 @@
 <template>
 
 <div id="property-menu-properties">
-    
-    <PitchProperties v-if="(selected === null)" />
-    <PlayerProperties v-else-if="(selected instanceof Player)" :player="selected"/>
-
+    <PlayerProperties v-if="(selected instanceof Player)" :player="selected"/>
 </div>
 
 </template>
@@ -17,7 +14,6 @@ import { Committer } from '@/store/modules/editor_committer';
 import CanvasObject from '@/components/model/CanvasObject';
 import PlayerProperties from './properties/PlayerProperties.vue';
 import Player from '@/components/model/Player';
-import PitchProperties from './properties/PitchProperties.vue';
 import { onUpdated } from 'vue';
 
 interface Props{
@@ -25,13 +21,6 @@ interface Props{
 }
 
 const props = defineProps<Props>();
-
-const pw = ref(store.state.editorStore.pitch.size.x);
-const ph = ref(store.state.editorStore.pitch.size.y);
-
-function onPitchSizeChange(ev){
-    Committer.pitchSizeChange(pw.value, ph.value);
-}
 
 interface Default{
     showGrid: boolean

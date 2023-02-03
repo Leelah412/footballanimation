@@ -329,6 +329,7 @@ svg{
 
 .label-checkbox{
   margin-left: 8px;
+  text-align: left;
 }
 
 input{
