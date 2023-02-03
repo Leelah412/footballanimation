@@ -122,7 +122,7 @@
                 <PlayerProperties :player="selectedPlayer"/>
             </scrollarea>
             <scrollarea v-else-if="tabState === TAB_STATE.PITCH" :width="'100%'" :height="'100%'">
-                <PitchSettings :resize="resize"/>
+                <PitchSettings/>
             </scrollarea>
             <scrollarea v-else-if="tabState === TAB_STATE.PLAYERS" :width="'100%'" :height="'100%'">
                 <PlayersSettings />
@@ -195,6 +195,10 @@ function resize(){
         Committer.setCanvasScale((squadCreatorStore.settings.canvasHeight / size.x) * 0.8);
     }
 }
+
+defineExpose({
+    resize
+});
 
 function changeTabState(newTab: TAB_STATE){
     tabState.value = newTab;

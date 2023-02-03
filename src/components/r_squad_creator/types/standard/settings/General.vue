@@ -33,7 +33,7 @@
 
     <div class="item flex-column">
         <label class="label-over" for="">BASE FORMATION</label>
-        <select class="input-select" name="" @change="formationChanged" v-model="squadCreatorStore.formation">
+        <select class="input-select" name="" @change="formationChanged" v-model="squadCreatorStore.formationKey">
             <option v-for="(val,key) in FormationList" :key="'formation-' + key" :value="key">{{val.name}}</option>
         </select>
     </div>

@@ -22,3 +22,4 @@ pnpm-debug.log*
 *.sln
 *.sw?
 src/assets/svg/football/desktop.ini
+src/assets/svg/material/desktop.ini

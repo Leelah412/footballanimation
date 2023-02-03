@@ -4,7 +4,7 @@
 
     <div class="item flex-column">
         <label class="label-over" for="">PITCH ORIENTATION</label>
-        <select class="input-select" name="" @change="resize" v-model="store.state.squadCreatorStore.settings.pitchOrientation">
+        <select class="input-select" name="" v-model="store.state.squadCreatorStore.settings.pitchOrientation">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
         </select>
@@ -73,7 +73,7 @@ import { onMounted, ref } from "vue-demi";
 
 
 interface Props{
-    resize: ()=>void
+    
 }
 
 const props = defineProps<Props>();

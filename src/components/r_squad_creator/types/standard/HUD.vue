@@ -3,12 +3,12 @@
 <!-- TODO: refactor this, such that logo, squad name and formation are all in one translated g element -->
 <g :transform="`rotate(${squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
 
-    <image v-if="squadCreatorStore.settings.showLogo && (squadCreatorStore.squadLogo !== '')" width="8" height="8" :xlink:href="squadCreatorStore.squadLogo" 
+    <image v-if="logoExists()" width="8" height="8" :xlink:href="squadCreatorStore.squadLogo" 
     :x="squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -squadCreatorStore.settings.pitchSize.x/2 : -squadCreatorStore.settings.pitchSize.y/2"
             :y="squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -squadCreatorStore.settings.pitchSize.y/2 - 10 : -squadCreatorStore.settings.pitchSize.x/2 - 10"
             />
 
-    <g :transform="`translate(${squadCreatorStore.squadLogo !== '' ? '8' : '0'},0)`">
+    <g :transform="`translate(${logoExists() ? '8' : '0'},0)`">
         <text v-if="squadCreatorStore.settings.showFormation" fill="var(--light)" font-size="2" opacity="0.5" font-family="Unispace"
         :x="squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -squadCreatorStore.settings.pitchSize.x/2 + 2 : -squadCreatorStore.settings.pitchSize.y/2 + 2"
             :y="squadCreatorStore.settings.pitchOrientation === 'horizontal' ? -squadCreatorStore.settings.pitchSize.y/2 - 2 : -squadCreatorStore.settings.pitchSize.x/2 - 2"
@@ -36,7 +36,7 @@ import { onMounted, ref } from "vue-demi";
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
 function logoExists(): Boolean{
-    return squadCreatorStore.settings.showLogo && (squadCreatorStore.squadLogo !== '');
+    return squadCreatorStore.value.settings.showLogo && (squadCreatorStore.value.squadLogo !== '');
 }
 
 </script>

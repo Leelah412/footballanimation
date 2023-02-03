@@ -57,7 +57,7 @@
     </div>
 
     <div id="sc-content">
-        <SCStandard v-if="mounted" :formation-changed="formationChanged"/>
+        <SCStandard v-if="mounted" ref="scContent" :formation-changed="formationChanged"/>
     </div>
 
 </div>
@@ -81,6 +81,7 @@ import { Committer } from "@/store/modules/squad_creator_committer";
 const STORAGE = 'squadCreator';
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
+const scContent = ref(null);
 
 function undo(){
     Committer.undo();
@@ -154,8 +155,8 @@ function formationChanged(){
 }
 
 function assignPosition(player: Player, position: Position){
-    player.position.x = position.vector.x * store.state.squadCreatorStore.settings.pitchSize.x;
-    player.position.y = position.vector.y * store.state.squadCreatorStore.settings.pitchSize.y;
+    player.position.x = position.vector.x * squadCreatorStore.value.settings.pitchSize.x;
+    player.position.y = position.vector.y * squadCreatorStore.value.settings.pitchSize.y;
     player.positionName = position.name;
     player.positionShort = position.short;
 }
@@ -164,6 +165,10 @@ function assignPosition(player: Player, position: Position){
 function eraseSquad(){
     localStorage.setItem(STORAGE, '');
     Committer.setDefault();
+    // to fill field again
+    checkPlayerCount();
+    if(scContent.value)
+        scContent.value.resize();
 }
 
 ////////////
@@ -183,7 +188,6 @@ onMounted(()=>{
     Committer.loadSquad();
     // add players to the first team, if necessary
     checkPlayerCount();
-
     mounted.value = true;
 })
 
