@@ -140,7 +140,7 @@ import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
 import FormationList from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
-import { onMounted, onUnmounted, ref } from 'vue-demi'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue-demi'
 import Pitch from './standard/Pitch.vue'
 import PlayerVue from './standard/Player.vue'
 import HUD from './standard/HUD.vue'
@@ -159,7 +159,7 @@ interface Props{
 }
 
 const props = defineProps<Props>();
-const squadCreatorStore = store.state.squadCreatorStore;
+const squadCreatorStore = ref(store.state.squadCreatorStore);
 
 enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
@@ -178,6 +178,13 @@ onUnmounted(()=>{
     window.removeEventListener('resize', resize);
 })
 
+
+// resize canvas at pitch size change
+const pitchSize = ref(store.state.squadCreatorStore.settings.pitchSize);
+watch(pitchSize.value, (currentValue, oldValue) => {
+    resize();
+});
+
 function resize(){
     const content = document.getElementById('sc-content');
     const sc_squad = document.getElementById('sc-standard-squad');
@@ -187,12 +194,12 @@ function resize(){
     Committer.setCanvasWidth(sc_squad.getBoundingClientRect().width);
     Committer.setCanvasHeight(sc_squad.getBoundingClientRect().height);
 
-    const size: Vector2 = squadCreatorStore.settings.pitchSize;
-    if(squadCreatorStore.settings.pitchOrientation === 'horizontal'){
-        Committer.setCanvasScale((squadCreatorStore.settings.canvasWidth / size.x) * 0.8);
+    const size: Vector2 = squadCreatorStore.value.settings.pitchSize;
+    if(squadCreatorStore.value.settings.pitchOrientation === 'horizontal'){
+        Committer.setCanvasScale((squadCreatorStore.value.settings.canvasWidth / size.x) * 0.8);
     }
     else{
-        Committer.setCanvasScale((squadCreatorStore.settings.canvasHeight / size.x) * 0.8);
+        Committer.setCanvasScale((squadCreatorStore.value.settings.canvasHeight / size.x) * 0.8);
     }
 }
 

@@ -15,26 +15,23 @@
     <div class="item flex-column">
         <label class="label-over" for="">CIRCLE STYLE</label>
 
-            <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.circleStyle">
-            <div class="slider-container">
-                <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle - 1)"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">
-                    <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
-                </svg>
+        <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.circleStyle">
+        <div class="slider-container">
+            <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle - 1)"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">
+                <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
+            </svg>
 
-                <div class="slider-pull" id="slider-pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')">
-                    <div class="pull" id="pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')"></div>
-                </div>
-
-                <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle + 1)"
-                    xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                    <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
-                </svg>
-
+            <div class="slider-pull" id="slider-pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')">
+                <div class="pull" id="pull-circle-style" @mousedown="ev => onPullDown(ev, 'circle-style')"></div>
             </div>
 
+            <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle + 1)"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
+            </svg>
+        </div>
     </div>
-
 </div>
 
 </template>

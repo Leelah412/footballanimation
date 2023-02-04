@@ -871,12 +871,12 @@ export const mutations = {
     setCanvasScale(state: State, args: {scale: number}){
         state.settings.canvasScale = args.scale;
     },
-
-
 }
 
 export const getters = {
-
+    pitchSize(state: State): Vector2{
+        return state.settings.pitchSize;
+    }
 }
 
 export default {

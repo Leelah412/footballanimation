@@ -66,7 +66,7 @@
 
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue-demi";
+import { onMounted, onUnmounted, ref, watch } from "vue-demi";
 import Pitch from "@/components/view/Pitch.vue";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
@@ -90,7 +90,6 @@ function undo(){
 function redo(){
     Committer.redo();
 }
-
 
 function openFileDialog(ev){
     const input = document.getElementById('load-file');
@@ -235,9 +234,7 @@ function resize(){
     display: flex;
     flex-direction: row;
     align-items: center;
-    
     border-radius: 4px;
-
 }
 
 .sc-buttons{

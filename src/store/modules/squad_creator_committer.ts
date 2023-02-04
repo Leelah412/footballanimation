@@ -72,4 +72,7 @@ setCanvasScale: (scale: number) => store.commit(storePath + 'setCanvasScale', {s
 }
 
 export const Getter = {
+
+pitchSize: () => store.getters.pitchSize()
+
 }
