@@ -319,7 +319,8 @@ export const mutations = {
         const u: UndoRedo | UndoRedo[] | undefined = state.undoList.pop();
         if(u === undefined) return;
 
-        console.log("undoing");
+        console.log("undoing:");
+        console.log(u);        
 
         // SINGLE UNDO
         if(!Array.isArray(u)){
@@ -784,23 +785,23 @@ export const mutations = {
         state.settings.lineColor = args.lineColor;
     },
 
-    setPitchWidth(state: State, args: {width: number}){
+    setPitchWidth(state: State, args: {width: number}){        
         if(args.width < 90){
             if(state.settings.pitchSize.x === 90) return;
 
-            Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize);
+            Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize.x);
             state.settings.pitchSize.x = 90;
             return;
         }
         if(args.width > 120){
             if(state.settings.pitchSize.x === 120) return;
 
-            Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize);
+            Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize.x);
             state.settings.pitchSize.x = 120;
             return;
         }
 
-        Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize);
+        Committer.pushToUndoList(state.settings.pitchSize, 'x', state.settings.pitchSize.x);
         state.settings.pitchSize.x = Number(args.width);
     },
 
@@ -808,21 +809,29 @@ export const mutations = {
         if(args.height < 60){
             if(state.settings.pitchSize.y === 60) return;
 
-            Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize);
+            Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize.y);
             state.settings.pitchSize.y = 60;
             return;
         }
         if(args.height > 90){
             if(state.settings.pitchSize.y === 90) return;
 
-            Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize);
+            Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize.y);
             state.settings.pitchSize.y = 90;
             return;
         }
 
-        Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize);
+        Committer.pushToUndoList(state.settings.pitchSize, 'y', state.settings.pitchSize.y);
         state.settings.pitchSize.y = Number(args.height);
         
+    },
+
+    setPitchOrientation(state: State, args: {orientation: string}){        
+        if(args.orientation == state.settings.pitchOrientation ||
+            ((args.orientation !== "horizontal") && (args.orientation !== "vertical"))) return;
+
+        Committer.pushToUndoList(state.settings, "pitchOrientation", state.settings.pitchOrientation);
+        state.settings.pitchOrientation = args.orientation;    
     },
 
     setPitchStyle(state: State, args: {style: number}){
@@ -876,6 +885,9 @@ export const mutations = {
 export const getters = {
     pitchSize(state: State): Vector2{
         return state.settings.pitchSize;
+    },
+    pitchOrientation(state: State): string{
+        return state.settings.pitchOrientation;
     }
 }
 

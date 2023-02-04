@@ -4,7 +4,7 @@
 
     <div class="item flex-column">
         <label class="label-over" for="">PITCH ORIENTATION</label>
-        <select class="input-select" name="" v-model="store.state.squadCreatorStore.settings.pitchOrientation">
+        <select class="input-select" name="" @change="ev => Committer.setPitchOrientation(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchOrientation">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
         </select>
@@ -15,13 +15,13 @@
             <label class="label-over" style="text-align:center" for="">
                 {{store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'WIDTH' : 'HEIGHT'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
             </label>
-            <input class="input-dark-2" type="number" min="60" max="90" @change="ev => Committer.setPitchHeight(ev.target.value)" v-model.lazy="store.state.squadCreatorStore.settings.pitchSize.y">
+            <input class="input-dark-2" type="number" min="60" max="90" @change="ev => Committer.setPitchHeight(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchSize.y">
         </div>
         <div class="flex-column m-center-h">
             <label class="label-over" style="text-align:center" for="">
                 {{store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'HEIGHT' : 'WIDTH'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
             </label>
-            <input class="input-dark-2" type="number" min="90" max="120" @change="ev => Committer.setPitchWidth(ev.target.value)" v-model.lazy="store.state.squadCreatorStore.settings.pitchSize.x">
+            <input class="input-dark-2" type="number" min="90" max="120" @change="ev => Committer.setPitchWidth(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchSize.x">
         </div>
 
     </div>

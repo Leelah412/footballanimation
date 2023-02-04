@@ -8,6 +8,7 @@
     </div>
 
     <div class="item flex-column">
+        <label class="label-over" for="">LOGO</label>
         <div v-if="squadCreatorStore.squadLogo === ''" class="flex-column m-center-h">
             <button class="btn-bootstrap-secondary flex-row flex-grow" style="padding: 8px;" @click="ev => openFileDialogue('upload-squad-logo')">
                 <div class="flex-row" style="margin-right: 8px;">
@@ -32,7 +33,7 @@
     </div>
 
     <div class="item flex-row align-center">
-        <label class="label-over" for="">TEAM COLORS</label>
+        <label class="label-over" for="" style="margin: 0;">TEAM COLORS</label>
         <div class="flex-column m-right">
             <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[0]">
         </div>

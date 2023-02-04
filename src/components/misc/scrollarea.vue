@@ -20,7 +20,6 @@
 
 
 <script lang="ts" setup>
-import { UNREF } from "@vue/compiler-core";
 import { onMounted, onUnmounted, ref } from "vue-demi";
 
 
@@ -55,9 +54,9 @@ function resize(){
     const visualHeight = content.value.getBoundingClientRect().height;      // height of visible part 
     const scrollHeight = content.value.scrollHeight;                        // total height of all contents
     const diff = scrollHeight - visualHeight;
-    console.log(diff);
-    console.log('scrollarea vh: ', visualHeight);
-    console.log('scrollarea sh: ', scrollHeight);
+    //console.log(diff);
+    //console.log('scrollarea vh: ', visualHeight);
+    //console.log('scrollarea sh: ', scrollHeight);
     
     if(!(diff > 1)){
         showScrollbarV.value = false;

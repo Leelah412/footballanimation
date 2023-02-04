@@ -60,6 +60,7 @@ setLogoPosition: (logoPosition: Vector2) => store.commit(storePath + 'setShowFor
 
 setPitchWidth: (width: number) => store.commit(storePath + 'setPitchWidth', {width}),
 setPitchHeight: (height: number) => store.commit(storePath + 'setPitchHeight', {height}),
+setPitchOrientation: (orientation: string) => store.commit(storePath + 'setPitchOrientation', {orientation}),
 setPitchStyle: (style: number) => store.commit(storePath + 'setPitchStyle', {style}),
 setPitchColor: (pitchColor: string) => store.commit(storePath + 'setPitchColor', {pitchColor}),
 setLineColor: (lineColor: string) => store.commit(storePath + 'setLineColor', {lineColor}),
@@ -72,7 +73,5 @@ setCanvasScale: (scale: number) => store.commit(storePath + 'setCanvasScale', {s
 }
 
 export const Getter = {
-
-pitchSize: () => store.getters.pitchSize()
 
 }

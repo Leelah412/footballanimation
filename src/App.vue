@@ -400,6 +400,7 @@ input{
   font-size: var(--font-size-5);
   color: var(--light-5);
   font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .label-right{
@@ -407,6 +408,7 @@ input{
   font-size: var(--font-size-4);
   font-weight: 400;
   margin-left: 8px;
+  margin-bottom: 0;
 }
 
 .input-select{

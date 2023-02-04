@@ -179,9 +179,16 @@ onUnmounted(()=>{
 })
 
 
-// resize canvas at pitch size change
+// resize canvas at pitch size or orientation change
 const pitchSize = ref(store.state.squadCreatorStore.settings.pitchSize);
+const settings = ref(store.state.squadCreatorStore.settings);
 watch(pitchSize.value, (currentValue, oldValue) => {
+    resize();
+});
+watch(settings.value, (currentValue, oldValue) => {
+    resize();
+});
+watch(squadCreatorStore.value, (currentValue, oldValue) => {
     resize();
 });
 
@@ -288,7 +295,7 @@ function changePlayer(ev){
     margin-left: auto;
     margin-right: auto;
     background: var(--secondary-dark);
-    background: #000;
+    background: var(--dark);
     box-shadow: 0 0 1px 1px #000;
     border: 1px solid var(--accent);
     border-radius: 8px;
@@ -315,8 +322,6 @@ function changePlayer(ev){
     &:hover{
         opacity: 1;
     }
-
-    
 }
 
 #sc-standard-squad-hud-orientation{
@@ -371,10 +376,6 @@ function changePlayer(ev){
         }
     }
 }
-
-
-
-
 
 $properties-width: 256px;
 
