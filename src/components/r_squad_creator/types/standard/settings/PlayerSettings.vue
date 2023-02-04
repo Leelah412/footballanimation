@@ -15,7 +15,7 @@
     <div class="item flex-column">
         <label class="label-over" for="">CIRCLE STYLE</label>
 
-        <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.circleStyle">
+        <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" :value="store.state.squadCreatorStore.settings.circleStyle">
         <div class="slider-container">
             <svg class="slider-arrow" @click="Committer.setCircleStyle(store.state.squadCreatorStore.settings.circleStyle - 1)"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">

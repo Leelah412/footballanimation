@@ -179,7 +179,7 @@ onUnmounted(()=>{
 })
 
 
-// resize canvas at pitch size or orientation change
+// resize canvas at pitch size or orientation change, or when new squad is created
 const pitchSize = ref(store.state.squadCreatorStore.settings.pitchSize);
 const settings = ref(store.state.squadCreatorStore.settings);
 watch(pitchSize.value, (currentValue, oldValue) => {

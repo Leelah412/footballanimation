@@ -674,7 +674,7 @@ export const mutations = {
         state.settings.playerStyle = args.style;
     },
 
-    setCircleStyle(state: State, args: {style: PlayerStyle}){
+    setCircleStyle(state: State, args: {style: number}){
         
         if(args.style < 0){
             if(state.settings.circleStyle === 0) return;
@@ -688,7 +688,8 @@ export const mutations = {
 
         const styles = document.getElementsByClassName('sc-circle-style');
         if(styles === undefined || styles === null) return;
-
+        console.log("styles: ", styles.length);
+        
         if(styles.length === 0){
             if(state.settings.circleStyle === 0) return;
 

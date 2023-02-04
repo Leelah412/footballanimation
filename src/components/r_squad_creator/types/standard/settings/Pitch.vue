@@ -41,7 +41,7 @@
     <div class="item flex-column">
         <label class="label-over" for="">PATTERN</label>
 
-            <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" v-model.lazy="store.state.squadCreatorStore.settings.pitchStyle">
+            <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" :value="store.state.squadCreatorStore.settings.pitchStyle">
             <div class="slider-container">
                 <svg class="slider-arrow" @click="Committer.setPitchStyle(store.state.squadCreatorStore.settings.pitchStyle - 1)"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">

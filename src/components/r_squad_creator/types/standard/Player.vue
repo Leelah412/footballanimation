@@ -50,18 +50,24 @@
     <g v-else>
 
     <!-- CIRCLE STYLES -->
+    <!-- TODO: circle styles can only be set, if players exist, and are only correct, if 11 players are set, change that! -->
+
+    <g class="sc-circle-style" v-html="getCircleStyle(0, store.state.squadCreatorStore.settings.teamColors[0], store.state.squadCreatorStore.settings.teamColors[1], selected)">
+    </g>
 
     <!-- STYLE 0 -->
+    <!-- 
     <g class="sc-circle-style">
         <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 0" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
             :fill="store.state.squadCreatorStore.settings.teamColors[0]" :stroke="store.state.squadCreatorStore.settings.teamColors[1]" :stroke-width="1" />
     </g>
+     -->
 
     <!-- STYLE 1 -->
-    <g class="sc-circle-style">
+<!--     <g class="sc-circle-style">
         <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 1" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
-            :fill="store.state.squadCreatorStore.settings.teamColors[0]" :stroke="store.state.squadCreatorStore.settings.teamColors[1]" :stroke-width="1" />
-    </g>
+            :fill="store.state.squadCreatorStore.settings.teamColors[1]" :stroke="store.state.squadCreatorStore.settings.teamColors[0]" :stroke-width="1" />
+    </g> -->
 
     <!-- SELECTED HIGHLIGHTERS -->
     <circle v-if="selected" style="pointer-events:none;" cx="0" cy="0" r="2.5" fill="var(--light)" opacity="0.3"/>
@@ -86,7 +92,7 @@
 import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
-
+import { getCircleStyle } from "@/components/model/SquadCreator/standard/CircleStyles";
 
 interface Props{
     player: Player,
