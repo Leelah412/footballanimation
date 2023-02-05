@@ -3,7 +3,7 @@
 import Vector2 from "../math/Vector2"
 
 export interface Position{
-    vector: Vector2
+    position: Vector2
     name: string
     short: string
     isGoalkeeper?: boolean
@@ -20,132 +20,132 @@ export interface FormationList {
 
 // list of all positions one can put a player on, if position lock is active
 // vector is relative to the center of the pitch normalized to a range of [-0.5, 0.5] for x and y
-export const LockedPositions = {
+export const LockedPositions: {[key: string]: Position} = {
     GK: {
         name: 'Goalkeeper',
         short: 'GK',
-        vector: new Vector2(-0.4, 0),
+        position: new Vector2(-0.4, 0),
         isGoalkeeper: true
     },
     
     LB: {
         name: 'Left-Back',
         short: 'LB',
-        vector: new Vector2(-0.3, -0.4),
+        position: new Vector2(-0.3, -0.4),
     },
     LCB: {
         name: 'Center-Back',
         short: 'CB',
-        vector: new Vector2(-0.3, -0.15),
+        position: new Vector2(-0.3, -0.15),
     },
     CCB: {
         name: 'Center-Back',
         short: 'CB',
-        vector: new Vector2(-0.3, 0.0),
+        position: new Vector2(-0.3, 0.0),
     },
     RCB: {
         name: 'Center-Back',
         short: 'CB',
-        vector: new Vector2(-0.3, 0.15),
+        position: new Vector2(-0.3, 0.15),
     },
     RB: {
         name: 'Right-Back',
         short: 'RB',
-        vector: new Vector2(-0.3, 0.4),
+        position: new Vector2(-0.3, 0.4),
     },
 
     LWB: {
         name: 'Left Wing-Back',
         short: 'LWB',
-        vector: new Vector2(-0.15, -0.4),
+        position: new Vector2(-0.15, -0.4),
     },
     LDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.15, -0.15),
+        position: new Vector2(-0.15, -0.15),
     },
     CDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.15, 0.0),
+        position: new Vector2(-0.15, 0.0),
     },
     RDM: {
         name: 'Defensive Midfielder',
         short: 'DM',
-        vector: new Vector2(-0.15, 0.15),
+        position: new Vector2(-0.15, 0.15),
     },
     RWB: {
         name: 'Right Wing-Back',
         short: 'RWB',
-        vector: new Vector2(-0.15, 0.4),
+        position: new Vector2(-0.15, 0.4),
     },
 
     LM: {
         name: 'Left Midfielder',
         short: 'LM',
-        vector: new Vector2(0.0, -0.4),
+        position: new Vector2(0.0, -0.4),
     },
     LCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.0, -0.15),
+        position: new Vector2(0.0, -0.15),
     },
     CCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.0, 0.0),
+        position: new Vector2(0.0, 0.0),
     },
     RCM: {
         name: 'Central Midfielder',
         short: 'CM',
-        vector: new Vector2(0.0, 0.15),
+        position: new Vector2(0.0, 0.15),
     },
     RM: {
         name: 'Right Midfielder',
         short: 'RM',
-        vector: new Vector2(0.0, 0.4),
+        position: new Vector2(0.0, 0.4),
     },
 
     LW: {
         name: 'Left Winger',
         short: 'LW',
-        vector: new Vector2(0.3, -0.4),
+        position: new Vector2(0.3, -0.4),
     },
     LOM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.2, -0.15),
+        position: new Vector2(0.2, -0.15),
     },
     COM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.2, 0.0),
+        position: new Vector2(0.2, 0.0),
     },
     ROM: {
         name: 'Offensive Midfielder',
         short: 'OM',
-        vector: new Vector2(0.2, 0.15),
+        position: new Vector2(0.2, 0.15),
     },
     RW: {
         name: 'Right Winger',
         short: 'RW',
-        vector: new Vector2(0.3, 0.4),
+        position: new Vector2(0.3, 0.4),
     },
 
     LS: {
         name: 'Striker',
         short: 'ST',
-        vector: new Vector2(0.45, -0.15),
+        position: new Vector2(0.45, -0.15),
     },
     ST: {
         name: 'Striker',
         short: 'ST',
-        vector: new Vector2(0.45, 0.0),
+        position: new Vector2(0.45, 0.0),
     },
     RS: {
         name: 'Striker',
         short: 'ST',
-        vector: new Vector2(0.45, 0.15),
+        position: new Vector2(0.45, 0.15),
     },
 }
 

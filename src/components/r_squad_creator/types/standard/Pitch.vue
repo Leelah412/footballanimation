@@ -1,16 +1,16 @@
 <template>
     
-<g id="sc-standard-pitch" class="noselect" :transform="`translate(${-store.state.squadCreatorStore.settings.pitchSize.x/2}, ${-store.state.squadCreatorStore.settings.pitchSize.y/2})`">
+<g id="sc-standard-pitch" class="noselect" :transform="`translate(${-squadCreatorStore.settings.pitchSize.x/2}, ${-squadCreatorStore.settings.pitchSize.y/2})`">
     
    <!-- BACKGROUND -->
    <rect
        style="stroke-width:0.5;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       :fill="store.state.squadCreatorStore.settings.pitchColor"
+       :fill="squadCreatorStore.settings.pitchColor"
        stroke="#0006"
-       :width="store.state.squadCreatorStore.settings.pitchSize.x + 16 + (store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 4 : 0)"
-       :height="store.state.squadCreatorStore.settings.pitchSize.y + 16 + (store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)"
+       :width="squadCreatorStore.settings.pitchSize.x + 16 + (squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 4 : 0)"
+       :height="squadCreatorStore.settings.pitchSize.y + 16 + (squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)"
        :x="-8"
-       :y="-8 - (store.state.squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)" 
+       :y="-8 - (squadCreatorStore.settings.pitchOrientation === 'horizontal' ? 4 : 0)" 
        :rx="2"
        :ry="2"/>
 
@@ -28,14 +28,14 @@
 
     <!-- Style 1 -->
     <g class="sc-pitch-style">
-      <g v-if="store.state.squadCreatorStore.settings.pitchStyle === 1">
+      <g v-if="squadCreatorStore.settings.pitchStyle === 1">
          <rect v-for="i in 8" :key="`style-1-rect-${i}`"
-            :x="(store.state.squadCreatorStore.settings.pitchSize.x / 8) * (i-1)" y="0"
-            :width="(store.state.squadCreatorStore.settings.pitchSize.x / (8 * 2))" :height="store.state.squadCreatorStore.settings.pitchSize.y" fill="#0002"/>
+            :x="(squadCreatorStore.settings.pitchSize.x / 8) * (i-1)" y="0"
+            :width="(squadCreatorStore.settings.pitchSize.x / (8 * 2))" :height="squadCreatorStore.settings.pitchSize.y" fill="#0002"/>
 
-         <rect v-for="i in 4" :key="`style-1-rect-${i + store.state.squadCreatorStore.settings.pitchSize.x}`"
-            x="0" :y="(store.state.squadCreatorStore.settings.pitchSize.y / 4) * (i-1) + 4"
-            :width="store.state.squadCreatorStore.settings.pitchSize.x" :height="(store.state.squadCreatorStore.settings.pitchSize.y / (4 * 2))" fill="#0002"/>
+         <rect v-for="i in 4" :key="`style-1-rect-${i + squadCreatorStore.settings.pitchSize.x}`"
+            x="0" :y="(squadCreatorStore.settings.pitchSize.y / 4) * (i-1) + 4"
+            :width="squadCreatorStore.settings.pitchSize.x" :height="(squadCreatorStore.settings.pitchSize.y / (4 * 2))" fill="#0002"/>
       </g>
     </g>
 
@@ -45,39 +45,39 @@
     <rect
        style="stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        fill="#0000"
-       :stroke="store.state.squadCreatorStore.settings.lineColor"
+       :stroke="squadCreatorStore.settings.lineColor"
        id="outer-lines"
-       :width="store.state.squadCreatorStore.settings.pitchSize.x"
-       :height="store.state.squadCreatorStore.settings.pitchSize.y"
+       :width="squadCreatorStore.settings.pitchSize.x"
+       :height="squadCreatorStore.settings.pitchSize.y"
        :x="0"
        :y="0" />
 
     <path
        style="fill:none;stroke-width:0.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       :stroke="store.state.squadCreatorStore.settings.lineColor" :d="`m ${store.state.squadCreatorStore.settings.pitchSize.x/2},0 v ${store.state.squadCreatorStore.settings.pitchSize.y}`"
+       :stroke="squadCreatorStore.settings.lineColor" :d="`m ${squadCreatorStore.settings.pitchSize.x/2},0 v ${squadCreatorStore.settings.pitchSize.y}`"
        id="center-line" />
     <g
-       id="center-circle" :transform="`translate(${store.state.squadCreatorStore.settings.pitchSize.x/2},${store.state.squadCreatorStore.settings.pitchSize.y/2})`">
+       id="center-circle" :transform="`translate(${squadCreatorStore.settings.pitchSize.x/2},${squadCreatorStore.settings.pitchSize.y/2})`">
       <circle
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          id="path1079"
          cx="0"
          cy="0"
          r="9.15" />
       <circle
          style="fill-opacity:1;stroke:none;"
-         :fill="store.state.squadCreatorStore.settings.lineColor"
+         :fill="squadCreatorStore.settings.lineColor"
          id="path1079-5"
          cx="0"
          cy="0"
          r="0.4" />
     </g>
     <g
-       id="penarea-left" :transform="`translate(0, ${store.state.squadCreatorStore.settings.pitchSize.y/2 - 20.15})`">
+       id="penarea-left" :transform="`translate(0, ${squadCreatorStore.settings.pitchSize.y/2 - 20.15})`">
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          id="area-left"
          width="16.5"
          height="40.3"
@@ -85,7 +85,7 @@
          y="0" />
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          id="five-m-left"
          width="5.5"
          height="18.32"
@@ -94,21 +94,21 @@
       <path
          id="half-circle-left"
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          d="m 16.5,20.15 v 8.25 a 9.15,9.15 0 0 0 4.89737,-8.1008 9.15,9.15 0 0 0 -4.89737,-8.10131 z" />
       <circle
          style="fill-opacity:1;stroke:none;stroke-width:0.0111663;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :fill="store.state.squadCreatorStore.settings.lineColor"
+         :fill="squadCreatorStore.settings.lineColor"
          id="path1079-5-8"
          cx="11"
          cy="20.15"
          r="0.4" />
     </g>
     <g
-       id="penarea-right" :transform="`translate(${store.state.squadCreatorStore.settings.pitchSize.x}, ${store.state.squadCreatorStore.settings.pitchSize.y/2 - 20.15}), scale(-1,1)`">
+       id="penarea-right" :transform="`translate(${squadCreatorStore.settings.pitchSize.x}, ${squadCreatorStore.settings.pitchSize.y/2 - 20.15}), scale(-1,1)`">
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          id="area-left"
          width="16.5"
          height="40.3"
@@ -116,7 +116,7 @@
          y="0" />
       <rect
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          id="five-m-left"
          width="5.5"
          height="18.32"
@@ -125,11 +125,11 @@
       <path
          id="half-circle-left"
          style="fill:none;stroke-width:0.25;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :stroke="store.state.squadCreatorStore.settings.lineColor" 
+         :stroke="squadCreatorStore.settings.lineColor" 
          d="m 16.5,20.15 v 8.25 a 9.15,9.15 0 0 0 4.89737,-8.1008 9.15,9.15 0 0 0 -4.89737,-8.10131 z" />
       <circle
          style="fill-opacity:1;stroke:none;stroke-width:0.0111663;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         :fill="store.state.squadCreatorStore.settings.lineColor"
+         :fill="squadCreatorStore.settings.lineColor"
          id="path1079-5-8"
          cx="11"
          cy="20.15"
@@ -188,8 +188,10 @@
 </template>
 
 <script lang="ts" setup>
-import Pitch1 from '@/components/view/Pitch.vue';
 import store from '@/store';
+import { ref } from 'vue-demi';
+
+const squadCreatorStore = ref(store.state.squadCreatorStore);
 
 
 </script>

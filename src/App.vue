@@ -472,7 +472,10 @@ input{
 
 .input-color-wrapper{
   overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 0 0 1px 1px var(--dark);
   border-radius: 1000px;
+  border: 1px solid var(--accent);
   width: 32px;
   height: 32px;
   input[type=color]{

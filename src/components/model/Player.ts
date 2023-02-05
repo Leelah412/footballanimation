@@ -1,10 +1,7 @@
+import { LockedPositions, Position } from "../helper/FormationList";
 import Vector2 from "../math/Vector2";
 import CanvasObject from "./CanvasObject";
 import Team from "./Team";
-
-export interface PlayerList{
-    [key: string]: Player
-}
 
 export default class Player extends CanvasObject{
     number: number = -1;                // -1 meaning no back number
@@ -35,3 +32,25 @@ export default class Player extends CanvasObject{
         return pl;
     }
 }
+
+export interface PlayerList{
+    [key: string]: Player
+}
+
+function createPlaceholders(): PlayerList{
+    var players: PlayerList = {};
+    const lpkeys = Object.keys(LockedPositions);
+
+    for(var key in lpkeys){
+        const val: Position = LockedPositions[lpkeys[key]];        
+        const pl: Player = new Player(val.position.copy(), 0, null);
+        pl.isGoalkeeper = (val.isGoalkeeper !== undefined ? val.isGoalkeeper : false);
+        pl.isDummy = true;
+        pl.positionName = lpkeys[key];
+        players[pl.id] = pl;
+    }
+ 
+    return players;
+}
+
+export const SquadCreatorPlaceholderPlayers = createPlaceholders(); 

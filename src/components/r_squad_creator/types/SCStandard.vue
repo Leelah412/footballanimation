@@ -2,17 +2,23 @@
     
 <div id="sc-standard" class="sc-squad-type">
     
+    <!-- TODO: add ability to delete players -->
+
     <div id="sc-standard-squad" class="sc-squad">
 
         <svg id="sc-standard-squad-svg" :width="squadCreatorStore.settings.canvasWidth" :height="squadCreatorStore.settings.canvasHeight"
             :viewBox="'0 0 ' + squadCreatorStore.settings.canvasWidth + ' ' + squadCreatorStore.settings.canvasHeight">
-            <!-- <rect :width="squadCreatorStore.settings.canvasWidth" :height="squadCreatorStore.settings.canvasHeight" fill="#000" opacity="0.5"/> -->
             <g :transform="`translate(${squadCreatorStore.settings.canvasWidth/2},${squadCreatorStore.settings.canvasHeight/2}), scale(${squadCreatorStore.settings.canvasScale}),
                 rotate(${squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '-90' : '0'})`">
                 <Pitch />
                 <HUD />
-                <PlayerVue v-for="(val, key) in squadCreatorStore.firstTeam" :key="'player-' + key" :player="val"
-                     :selected="selectedPlayer === val ? true : false" v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD"/>
+                <!-- Show placeholders, when dragging a player and placeholders are active -->
+                <g v-show="showPlaceholders" id="sc-placeholder-players">
+                    <PlayerVue v-for="(val, key) in sqpp" :key="'placeholder-player-' + key" :player="val" :placeholder="true"/>
+                </g>
+
+                <PlayerVue v-for="(val, key) in squadCreatorStore.firstTeam" :key="'player-' + key" :player="val" :selected="selectedPlayer === val ? true : false"
+                v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD" v-on:drag-start="onPlayerDragStart" v-on:drag-end="onPlayerDragEnd"/>
             </g>
 
         </svg>
@@ -137,7 +143,7 @@
 
 <script lang="ts" setup>
 import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
-import FormationList from '@/components/helper/FormationList'
+import FormationList, { LockedPositions } from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue-demi'
@@ -148,11 +154,10 @@ import { Committer } from '@/store/modules/squad_creator_committer'
 import GeneralSettings from './standard/settings/General.vue'
 import PitchSettings from './standard/settings/Pitch.vue'
 import PlayersSettings from './standard/settings/PlayerSettings.vue'
-import Player from '@/components/model/Player'
+import Player, { SquadCreatorPlaceholderPlayers } from '@/components/model/Player'
 import PlayerProperties from './standard/settings/PlayerProperties.vue'
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue'
 import Scrollarea from '@/components/misc/scrollarea.vue'
-
 
 interface Props{
     formationChanged: ()=>void
@@ -161,12 +166,22 @@ interface Props{
 const props = defineProps<Props>();
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
+const sqpp = ref(SquadCreatorPlaceholderPlayers);
+
+function setSquadCreatorPlaceholderPlayersSize(){
+    for(var id in sqpp.value){        
+        sqpp.value[id].position.x = LockedPositions[sqpp.value[id].positionName].position.x * squadCreatorStore.value.settings.pitchSize.x;
+        sqpp.value[id].position.y = LockedPositions[sqpp.value[id].positionName].position.y * squadCreatorStore.value.settings.pitchSize.y;
+    }
+}
+
 enum TAB_STATE {GENERAL, PITCH, PLAYERS};
 
 const tabState = ref<TAB_STATE>(TAB_STATE.GENERAL);
 const showScrollbar = ref<boolean>(false);
 const scrollOffset = ref<number>(0);
 const showHUD = ref<boolean>(false);
+const showPlaceholders = ref<boolean>(false);
 const selectedPlayer = ref<Player | null>(null);
 
 onMounted(()=>{
@@ -208,6 +223,7 @@ function resize(){
     else{
         Committer.setCanvasScale((squadCreatorStore.value.settings.canvasHeight / size.x) * 0.8);
     }
+    setSquadCreatorPlaceholderPlayersSize();
 }
 
 defineExpose({
@@ -250,6 +266,14 @@ function deselectPlayer(ev){
     console.log("deselect");
     selectedPlayer.value = null;
     
+}
+
+// for placeholder display
+function onPlayerDragStart(player: Player){
+    showPlaceholders.value = true;
+}
+function onPlayerDragEnd(player: Player){
+    showPlaceholders.value = false;
 }
 
 const playerToChange = ref<Player | null>(null);

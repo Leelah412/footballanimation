@@ -1,4 +1,5 @@
-# footballanimation
+# Soccer Studio
+A simple tool for creating football squads, animations and scenarios.
 
 ## Project setup
 ```

@@ -234,6 +234,7 @@ export const mutations = {
         if(!Array.isArray(dec.firstTeam)) return;
     
         // TODO: load with committer instead of setting directly
+        // TODO: save logo as string
 
         state.squadName = dec.squadName;
         state.squadLogo = dec.squadLogo;
@@ -571,7 +572,7 @@ export const mutations = {
         var eq_count: number = 0;
         for(var i = 0; i < positions.length; i++){
             // count the number of players, whose positions haven't changed
-            if( positions[i].vector.x * state.settings.pitchSize.x) eq_count++;
+            if( positions[i].position.x * state.settings.pitchSize.x) eq_count++;
         }
 
         // no need to 
@@ -579,9 +580,10 @@ export const mutations = {
 
         Committer.pushMultipleToUndoList(undos);
 
+        // TODO: why is this even here?
         function assignPosition(player: Player, position: Position){
-            player.position.x = position.vector.x * state.settings.pitchSize.x;
-            player.position.y = position.vector.y * state.settings.pitchSize.y;
+            player.position.x = position.position.x * state.settings.pitchSize.x;
+            player.position.y = position.position.y * state.settings.pitchSize.y;
             player.positionName = position.name;
             player.positionShort = position.short;
         }

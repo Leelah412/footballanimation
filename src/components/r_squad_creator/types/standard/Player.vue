@@ -3,8 +3,9 @@
 <g :transform="`translate(${player.position.x},${player.position.y}),
         rotate(${squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
 
-    <!-- DUMMY PLAYER -->
-    <g v-if="player.isDummy" class="sc-dummy" transform="translate(-4.25, -4.5)" @mousedown="onMouseDown">
+    <!-- DUMMY/PLACEHOLDER PLAYER -->
+    <g v-if="player.isDummy || placeholder" :id="`dummy-${player.id}`" :class="`sc-dummy ${placeholder ? 'placeholder' : ''}`" transform="translate(-4.25, -4.5)"
+        @mousedown="onMouseDown">
         <defs>
         <linearGradient id="linearGradient1375" x1="66.152" x2="71.374" y1="93.947" y2="93.947" gradientTransform="translate(-64.715 -89.557)" gradientUnits="userSpaceOnUse">
             <stop style="stop-color:#0b0b0b" offset="0"/>
@@ -48,15 +49,10 @@
     </g>
 
     <g v-else>
-
-    <!-- CIRCLE -->
-    <g :class="`sc-circle ${selected ? 'active' : ''}`" v-html="getCircleStyle()"
-        @mousedown="onMouseDown">
-    </g>
-
-    <!-- SELECTED HIGHLIGHTERS -->
-    <circle v-if="selected" style="pointer-events:none;" cx="0" cy="0" r="2.5" fill="var(--light)" opacity="0.3"/>
-
+        <!-- CIRCLE -->
+        <g :id="`player-${player.id}`" :class="`sc-circle ${selected ? 'active' : ''}`" v-html="getCircleStyle()" @mousedown="onMouseDown"></g>
+        <!-- SELECTED HIGHLIGHTERS -->
+        <circle v-if="selected" pointer-events="none" cx="0" cy="0" r="2.5" fill="var(--light)" opacity="0.3"/>
     </g>
 
     <!-- PLAYER -->
@@ -64,9 +60,6 @@
         <tspan v-if="player.positionShort !== ''" fill="var(--accent-light)" style="font-weight: 600; font-family: Unispace;">{{player.positionShort}}</tspan>
         <tspan v-if="!player.isDummy">&ensp;{{player.name}}</tspan>
     </text>
-
-
-
 </g>
 
 </template>
@@ -77,17 +70,19 @@ import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
-import { ref } from "vue-demi";
+import { onMounted, ref } from "vue-demi";
 
 interface Props{
     player: Player,
-    selected: boolean
+    selected: boolean,
+    placeholder: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
-    selected: false
+    selected: false,
+    placeholder: false
 });
-const emit = defineEmits(['select', 'changePlayer']);
+const emit = defineEmits(['select', 'changePlayer', 'dragStart', 'dragEnd']);
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
@@ -96,7 +91,11 @@ var dragStartPlayerPos: Vector2 = new Vector2();
 var dragging: boolean = false;
 
 function onMouseDown(ev){
-    
+    if(props.placeholder === true){
+        ev.preventDefault();
+        return;
+    }
+
     dragStart.x = ev.clientX;
     dragStart.y = ev.clientY;
     if(squadCreatorStore.value.settings.pitchOrientation !== 'horizontal'){
@@ -105,6 +104,11 @@ function onMouseDown(ev){
     }
     else{
         dragStartPlayerPos = props.player.position.copy();
+    }
+
+    const pl = document.getElementById(`${props.player.isDummy ? 'dummy' : 'player'}-${props.player.id}`);
+    if(pl !== undefined && (pl !== null)){
+        pl.style.pointerEvents = 'none';
     }
 
     document.addEventListener('mousemove', onMouseMove);
@@ -116,6 +120,8 @@ function onMouseMove(ev){
         if(dragStart.length(new Vector2(ev.clientX, ev.clientY)) < 8) return;
         
         dragging = true;
+        emit('dragStart', props.player);
+
     }
 
     const scs = squadCreatorStore.value;
@@ -148,6 +154,11 @@ function onMouseMove(ev){
 function onMouseUp(ev){
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
+    
+    const pl = document.getElementById(`${props.player.isDummy ? 'dummy' : 'player'}-${props.player.id}`);
+    if(pl !== undefined && (pl !== null)){
+        pl.style.pointerEvents = 'all';
+    }
 
     if(!dragging){
         if(props.player.isDummy){
@@ -155,8 +166,10 @@ function onMouseUp(ev){
             return;
         }
         emit('select', props.player);
+        return;
     }
 
+    emit('dragEnd', props.player);
     dragging = false;
 }
 
@@ -174,6 +187,13 @@ function getCircleStyle(){
     filter: drop-shadow(0 0 0.5px var(--dark));
     &:hover{
         filter: drop-shadow(0 0 0.5px var(--dark)) brightness(1.2);
+    }
+    &.placeholder{
+        opacity: 0.2;
+        transition-duration: 0.2s;
+        &:hover{
+            opacity: 1.0;
+        }
     }
 }
 

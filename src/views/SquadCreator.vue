@@ -134,8 +134,6 @@ function checkPlayerCount(){
         player.name = '';
         ft[player.id] = player;
     }
-
-
 }
 
 // reposition players
@@ -154,8 +152,8 @@ function formationChanged(){
 }
 
 function assignPosition(player: Player, position: Position){
-    player.position.x = position.vector.x * squadCreatorStore.value.settings.pitchSize.x;
-    player.position.y = position.vector.y * squadCreatorStore.value.settings.pitchSize.y;
+    player.position.x = position.position.x * squadCreatorStore.value.settings.pitchSize.x;
+    player.position.y = position.position.y * squadCreatorStore.value.settings.pitchSize.y;
     player.positionName = position.name;
     player.positionShort = position.short;
 }
