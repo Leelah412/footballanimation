@@ -1,4 +1,4 @@
-import { PlayerStyle } from "@/components/helper/enums";
+import { KeyPlayerStyleMap, PlayerStyle } from "@/components/helper/enums";
 import FormationList, { Formation, Position } from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import Player, { PlayerList } from "@/components/model/Player";
@@ -155,7 +155,7 @@ export const mutations = {
             reserves: [],
 
             settings: {
-                playerStyle: PlayerStyle[state.settings.playerStyle],
+                playerStyle: state.settings.playerStyle,
                 circleRadius: state.settings.circleRadius,
                 circleStyle: state.settings.circleStyle,
             
@@ -233,6 +233,8 @@ export const mutations = {
         if(typeof dec.formationName !== 'string') return;
         if(!Array.isArray(dec.firstTeam)) return;
     
+        // TODO: load with committer instead of setting directly
+
         state.squadName = dec.squadName;
         state.squadLogo = dec.squadLogo;
         state.formationKey = dec.formationKey;
@@ -255,9 +257,9 @@ export const mutations = {
 
         if(dec.settings === undefined) return;
 
-        if(typeof dec.settings.playerStyle === 'string') state.settings.playerStyle = dec.settings.playerStyle;
+        if(typeof dec.settings.playerStyle === 'number') Committer.setPlayerStyle(dec.settings.playerStyle);
         if(typeof dec.settings.circleRadius === 'number') state.settings.circleRadius = dec.settings.circleRadius;
-        if(typeof dec.settings.circleStyle === 'number') state.settings.circleStyle = dec.settings.circleStyle;
+        if(typeof dec.settings.circleStyle === 'number') Committer.setCircleStyle(dec.settings.circleStyle);
 
         if(typeof dec.settings.showNumbers === 'boolean') state.settings.showNumbers = dec.settings.showNumbers;
         if(typeof dec.settings.showNames === 'boolean') state.settings.showNames = dec.settings.showNames;
@@ -669,8 +671,7 @@ export const mutations = {
     //////////////
 
     setPlayerStyle(state: State, args: {style: PlayerStyle}){
-        if(args.style === state.settings.pitchStyle) return;
-
+        if(args.style === state.settings.pitchStyle) return;        
         Committer.pushToUndoList(state.settings, 'playerStyle', state.settings.playerStyle);
         state.settings.playerStyle = args.style;
     },

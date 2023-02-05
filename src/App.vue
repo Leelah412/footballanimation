@@ -172,6 +172,25 @@ button{
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
+.font-size-0{
+  font-size: var(--font-size-0);
+}
+.font-size-1{
+  font-size: var(--font-size-1);
+}
+.font-size-2{
+  font-size: var(--font-size-2);
+}
+.font-size-3{
+  font-size: var(--font-size-3);
+}
+.font-size-4{
+  font-size: var(--font-size-4);
+}
+.font-size-5{
+  font-size: var(--font-size-5);
+}
+
 .hide-scrollbar{
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
@@ -403,6 +422,12 @@ input{
   margin-bottom: 4px;
 }
 
+.label-under{
+  @extend .label-over;
+  margin: 0;
+  margin-top: 4px;
+}
+
 .label-right{
   @extend .label-over;
   font-size: var(--font-size-4);
@@ -442,6 +467,34 @@ input{
 
   &:focus{
     border-bottom-color: var(--accent);
+  }
+}
+
+.input-color-wrapper{
+  overflow: hidden;
+  border-radius: 1000px;
+  width: 32px;
+  height: 32px;
+  input[type=color]{
+    width: 100%;
+    height: 100%;
+  }
+
+  &.s16{
+    width: 16px;
+    height: 16px;
+  }
+  &.s32{
+    width: 32px;
+    height: 32px;
+  }
+  &.s48{
+    width: 48px;
+    height: 48px;
+  }
+  &.s64{
+    width: 64px;
+    height: 64px;
   }
 }
 

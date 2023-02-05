@@ -32,13 +32,15 @@
         <input id="upload-squad-logo" type="file" @change="changeSquadLogo" accept=".svg, image/jpeg, image/png">
     </div>
 
-    <div class="item flex-row align-center">
+    <div class="item flex-column">
         <label class="label-over" for="" style="margin: 0;">TEAM COLORS</label>
-        <div class="flex-column m-right">
-            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[0]">
-        </div>
-        <div class="flex-column m-center-h">
-            <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[1]">
+        <div class="flex-row align-center" style="margin: 8px 0;">
+            <div class="input-color-wrapper" :style="`background: ${squadCreatorStore.settings.teamColors[0]};`">
+                <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[0]">
+            </div>
+            <div class="input-color-wrapper m-left" :style="`background: ${squadCreatorStore.settings.teamColors[1]}; margin-left: 8px;`">
+                <input type="color" name="" id="" v-model="squadCreatorStore.settings.teamColors[1]">
+            </div>
         </div>
     </div>
     

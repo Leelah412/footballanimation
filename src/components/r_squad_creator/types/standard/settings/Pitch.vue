@@ -4,46 +4,53 @@
 
     <div class="item flex-column">
         <label class="label-over" for="">PITCH ORIENTATION</label>
-        <select class="input-select" name="" @change="ev => Committer.setPitchOrientation(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchOrientation">
+        <select class="input-select" name="" @change="ev => Committer.setPitchOrientation(ev.target.value)" :value="squadCreatorStore.settings.pitchOrientation">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
         </select>
     </div>
-    <div class="item flex-row align-center">
+    <div class="item flex-column">
         <label class="label-over" for="">PITCH SIZE</label>
-        <div class="flex-column m-right">
-            <label class="label-over" style="text-align:center" for="">
-                {{store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'WIDTH' : 'HEIGHT'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
-            </label>
-            <input class="input-dark-2" type="number" min="60" max="90" @change="ev => Committer.setPitchHeight(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchSize.y">
+        <div class="flex-row align-center" style="margin: 8px 0;">
+            <div class="flex-column m-right">
+                <input class="input-bottom-line" style="text-align:center; font-size: var(--font-size-4);" type="number" min="60" max="90" @change="ev => Committer.setPitchHeight(ev.target.value)" :value="squadCreatorStore.settings.pitchSize.y">
+                <label class="label-under" style="text-align:center; margin-top: 8px;" for="">
+                    {{squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'WIDTH' : 'HEIGHT'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
+                </label>
+            </div>
+            <div class="flex-column m-center-h">
+                <input class="input-bottom-line" style="text-align:center; font-size: var(--font-size-4);" type="number" min="90" max="120" @change="ev => Committer.setPitchWidth(ev.target.value)" :value="squadCreatorStore.settings.pitchSize.x">
+                <label class="label-under" style="text-align:center; margin-top: 8px;" for="">
+                    {{squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'HEIGHT' : 'WIDTH'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
+                </label>
+            </div>
         </div>
-        <div class="flex-column m-center-h">
-            <label class="label-over" style="text-align:center" for="">
-                {{store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? 'HEIGHT' : 'WIDTH'}} <span style="font-size:var(--font-size-6); opacity: 0.8;">(m)</span> 
-            </label>
-            <input class="input-dark-2" type="number" min="90" max="120" @change="ev => Committer.setPitchWidth(ev.target.value)" :value="store.state.squadCreatorStore.settings.pitchSize.x">
-        </div>
-
     </div>
 
-    <div class="item flex-row align-center">
+    <div class="item flex-column">
         <label class="label-over" for="">COLORS</label>
-        <div class="flex-column m-right">
-            <label class="label-over" for="" style="text-align:center">PITCH</label>
-            <input type="color" name="" id="" v-model="store.state.squadCreatorStore.settings.pitchColor">
-        </div>
-        <div class="flex-column m-center-h">
-            <label class="label-over" for="" style="text-align:center">LINE</label>
-            <input type="color" name="" id="" v-model="store.state.squadCreatorStore.settings.lineColor">
+        <div class="flex-row align-center" style="margin: 8px 0;">
+            <div class="flex-column">
+                <div class="input-color-wrapper" :style="`background:${squadCreatorStore.settings.pitchColor};`">
+                    <input type="color" name="" id="" v-model="squadCreatorStore.settings.pitchColor">
+                </div>
+                <label class="label-under" for="" style="text-align:center;">PITCH</label>
+            </div>
+            <div class="flex-column m-left" style="margin-left: 16px;">
+                <div class="input-color-wrapper" :style="`background:${squadCreatorStore.settings.lineColor};`">
+                    <input type="color" name="" id="" v-model="squadCreatorStore.settings.lineColor">
+                </div>
+                <label class="label-under" for="" style="text-align:center;">LINE</label>
+            </div>
         </div>
     </div>
 
     <div class="item flex-column">
         <label class="label-over" for="">PATTERN</label>
 
-            <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" :value="store.state.squadCreatorStore.settings.pitchStyle">
+            <input class="input-dark-2 m-center-h" style="background:none;" type="number" name="" id="" :value="squadCreatorStore.settings.pitchStyle">
             <div class="slider-container">
-                <svg class="slider-arrow" @click="Committer.setPitchStyle(store.state.squadCreatorStore.settings.pitchStyle - 1)"
+                <svg class="slider-arrow" @click="Committer.setPitchStyle(squadCreatorStore.settings.pitchStyle - 1)"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" transform="scale(-1,1)">
                     <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
                 </svg>
@@ -52,7 +59,7 @@
                     <div class="pull" id="pull-style" @mousedown="ev => onPullDown(ev, 'style')"></div>
                 </div>
 
-                <svg class="slider-arrow" @click="Committer.setPitchStyle(store.state.squadCreatorStore.settings.pitchStyle + 1)"
+                <svg class="slider-arrow" @click="Committer.setPitchStyle(squadCreatorStore.settings.pitchStyle + 1)"
                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                     <path d="M8 5v14l11-7z" fill="var(--accent-light)" stroke="var(--accent-dark)" stroke-width="2"/>
                 </svg>
@@ -77,6 +84,7 @@ interface Props{
 }
 
 const props = defineProps<Props>();
+const squadCreatorStore = store.state.squadCreatorStore;
 const pitchStyleAmount = ref(1);
 
 onMounted(()=>{
