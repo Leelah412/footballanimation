@@ -262,12 +262,13 @@ function activatePlayerChangeHUD(player: Player){
 }
 
 function changePlayer(ev){
-    showHUD.value = false;
-
     if(playerToChange.value === null) return;
-
+    // we don't want no-name players!
+    if(addPlayerName.value === '') return;
+    
     Committer.replaceDummyWithPlayer(playerToChange.value, addPlayerName.value, -1, null);
 
+    showHUD.value = false;
     playerToChange.value = null;
     addPlayerName.value = "";
 }

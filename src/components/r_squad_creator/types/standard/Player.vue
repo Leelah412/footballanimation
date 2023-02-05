@@ -1,7 +1,7 @@
 <template>
     
 <g :transform="`translate(${player.position.x},${player.position.y}),
-        rotate(${store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
+        rotate(${squadCreatorStore.settings.pitchOrientation !== 'horizontal' ? '90' : '0'})`">
 
     <!-- DUMMY PLAYER -->
     <g v-if="player.isDummy" class="sc-dummy" transform="translate(-4.25, -4.5)" @mousedown="onMouseDown">
@@ -49,31 +49,15 @@
 
     <g v-else>
 
-    <!-- CIRCLE STYLES -->
-    <!-- TODO: circle styles can only be set, if players exist, and are only correct, if 11 players are set, change that! -->
-
-    <g class="sc-circle-style" v-html="getCircleStyle(0, store.state.squadCreatorStore.settings.teamColors[0], store.state.squadCreatorStore.settings.teamColors[1], selected)">
+    <!-- CIRCLE -->
+    <g :class="`sc-circle ${selected ? 'active' : ''}`" v-html="getCircleStyle()"
+        @mousedown="onMouseDown">
     </g>
-
-    <!-- STYLE 0 -->
-    <!-- 
-    <g class="sc-circle-style">
-        <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 0" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
-            :fill="store.state.squadCreatorStore.settings.teamColors[0]" :stroke="store.state.squadCreatorStore.settings.teamColors[1]" :stroke-width="1" />
-    </g>
-     -->
-
-    <!-- STYLE 1 -->
-<!--     <g class="sc-circle-style">
-        <circle v-if="store.state.squadCreatorStore.settings.circleStyle === 1" :class="`player-circle${selected ? '-active' : ''}`" @mousedown="onMouseDown" cx="0" cy="0" r="2"
-            :fill="store.state.squadCreatorStore.settings.teamColors[1]" :stroke="store.state.squadCreatorStore.settings.teamColors[0]" :stroke-width="1" />
-    </g> -->
 
     <!-- SELECTED HIGHLIGHTERS -->
     <circle v-if="selected" style="pointer-events:none;" cx="0" cy="0" r="2.5" fill="var(--light)" opacity="0.3"/>
 
     </g>
-
 
     <!-- PLAYER -->
     <text fill="var(--light)" font-size="2" text-anchor="middle" y="6">
@@ -92,7 +76,8 @@
 import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
-import { getCircleStyle } from "@/components/model/SquadCreator/standard/CircleStyles";
+import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
+import { ref } from "vue-demi";
 
 interface Props{
     player: Player,
@@ -104,6 +89,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(['select', 'changePlayer']);
 
+const squadCreatorStore = ref(store.state.squadCreatorStore);
+
 var dragStart: Vector2 = new Vector2();
 var dragStartPlayerPos: Vector2 = new Vector2();
 var dragging: boolean = false;
@@ -112,7 +99,7 @@ function onMouseDown(ev){
     
     dragStart.x = ev.clientX;
     dragStart.y = ev.clientY;
-    if(store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal'){
+    if(squadCreatorStore.value.settings.pitchOrientation !== 'horizontal'){
         dragStartPlayerPos.x = props.player.position.y;
         dragStartPlayerPos.y = props.player.position.x;
     }
@@ -131,14 +118,14 @@ function onMouseMove(ev){
         dragging = true;
     }
 
-    const scs = store.state.squadCreatorStore;
+    const scs = squadCreatorStore.value;
 
     const dragCurr = new Vector2(ev.clientX, ev.clientY);
     const dragDiff = new Vector2(dragCurr.x - dragStart.x, dragCurr.y - dragStart.y);
     const pitchSize: Vector2 = scs.settings.pitchSize;
     var dragNewPlayerPos;
 
-    if(store.state.squadCreatorStore.settings.pitchOrientation !== 'horizontal'){
+    if(scs.settings.pitchOrientation !== 'horizontal'){
         dragNewPlayerPos = new Vector2(-dragDiff.y / scs.settings.canvasScale + dragStartPlayerPos.y, dragDiff.x / scs.settings.canvasScale + dragStartPlayerPos.x);
         if(dragNewPlayerPos.y < -pitchSize.y/2) dragNewPlayerPos.y = -pitchSize.y/2
         else if(dragNewPlayerPos.y > pitchSize.y/2) dragNewPlayerPos.y = pitchSize.y/2
@@ -173,28 +160,30 @@ function onMouseUp(ev){
     dragging = false;
 }
 
+function getCircleStyle(){
+    return CircleStyles[squadCreatorStore.value.settings.circleStyle](squadCreatorStore.value.settings.teamColors[0], squadCreatorStore.value.settings.teamColors[1]);
+}
 
 </script>
 
 
 <style lang="scss" scoped>
 
-.player-circle{
-    filter: drop-shadow(0 0 0.5px var(--dark));
-    &:hover{
-        filter: drop-shadow(0 0 2px var(--dark));
-    }
-}
-
-.player-circle-active{
-    filter: drop-shadow(0 0 2px var(--dark));
-}
-
 .sc-dummy{
     cursor: pointer;
     filter: drop-shadow(0 0 0.5px var(--dark));
     &:hover{
         filter: drop-shadow(0 0 0.5px var(--dark)) brightness(1.2);
+    }
+}
+
+.sc-circle{
+    filter: drop-shadow(0 0 0.5px var(--dark));
+    &:hover{
+        filter: drop-shadow(0 0 2px var(--dark));
+    }
+    &.active{
+        filter: drop-shadow(0 0 2px var(--dark));
     }
 }
 

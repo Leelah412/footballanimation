@@ -2,6 +2,7 @@ import { PlayerStyle } from "@/components/helper/enums";
 import FormationList, { Formation, Position } from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import Player, { PlayerList } from "@/components/model/Player";
+import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
 import { Committer } from "./squad_creator_committer";
 
 
@@ -685,9 +686,7 @@ export const mutations = {
         }
 
         const prev = state.settings.circleStyle;
-
-        const styles = document.getElementsByClassName('sc-circle-style');
-        if(styles === undefined || styles === null) return;
+        const styles = CircleStyles;
         console.log("styles: ", styles.length);
         
         if(styles.length === 0){
@@ -698,11 +697,11 @@ export const mutations = {
             return;
         }
 
-        if(args.style >= styles.length/11){
-            if(state.settings.circleStyle === styles.length/11 - 1) return;
+        if(args.style >= styles.length){
+            if(state.settings.circleStyle === styles.length - 1) return;
 
             Committer.pushToUndoList(state.settings, 'circleStyle', state.settings.circleStyle);
-            state.settings.circleStyle = styles.length/11 - 1;
+            state.settings.circleStyle = styles.length - 1;
             return;
         }
         
