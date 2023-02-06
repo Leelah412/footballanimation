@@ -45,9 +45,9 @@
             <input type="file" id="load-file" style="display:none" @change="loadFile">
         </div>
         <div class="sc-buttons m-left">
-            <svg-button-selection :selection="SVG_SELECTION.UNDO" :size="24" @click="undo"
+            <svg-button-selection :selection="SVG_SELECTION.UNDO" :size="24" @click="Committer.undo"
                 :fill="squadCreatorStore.undoList.length !== 0 ? 'var(--light)' : 'var(--light-6)'"/>
-            <svg-button-selection :selection="SVG_SELECTION.REDO" :size="24" @click="redo"
+            <svg-button-selection :selection="SVG_SELECTION.REDO" :size="24" @click="Committer.redo"
                 :fill="squadCreatorStore.redoList.length !== 0 ? 'var(--light)' : 'var(--light-6)'"/>
         </div>
         <div class="sc-buttons m-right">
@@ -83,14 +83,6 @@ const STORAGE = 'squadCreator';
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 const scContent = ref(null);
 
-function undo(){
-    Committer.undo();
-}
-
-function redo(){
-    Committer.redo();
-}
-
 function openFileDialog(ev){
     const input = document.getElementById('load-file');
     if(input === null || input === undefined) return;
@@ -114,7 +106,7 @@ function loadFile(ev){
 }
 
 function checkPlayerCount(){
-    var ft: PlayerList = squadCreatorStore.value.firstTeam;
+    const ft: PlayerList = squadCreatorStore.value.firstTeam;
     const ft_keys = Object.keys(ft);
     const ft_count = squadCreatorStore.value.settings.firstTeamCount;
     const diff = ft_count - ft_keys.length;
@@ -129,7 +121,7 @@ function checkPlayerCount(){
     // add dummy players to the first team based on current base formation
     for(var i = 0; i < diff; i++){
         const player = new Player();
-        assignPosition(player, formation.positions[11 - diff + i]);
+        player.setPosition(formation.positions[11 - diff + i].id, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
         player.isDummy = true;
         player.name = '';
         ft[player.id] = player;
@@ -138,24 +130,23 @@ function checkPlayerCount(){
 
 // reposition players
 function formationChanged(){
-    var ft: PlayerList = squadCreatorStore.value.firstTeam;
+    const ft: PlayerList = squadCreatorStore.value.firstTeam;
     const ft_keys = Object.keys(ft);
     
     if(!(squadCreatorStore.value.formationKey in FormationList)) return;
 
     const formation: Formation = FormationList[squadCreatorStore.value.formationKey];
-    if(formation.positions.length !== 11) return;
+    if(formation.positions.length !== 11){
+        console.warn("Formation does not have 11 players! Abort.");
+        return;
+    }
 
     for(var i = 0; i < ft_keys.length && i < 11; i++){
-        assignPosition(ft[ft_keys[i]], formation.positions[i]);
+        ft[ft_keys[i]].setPosition(formation.positions[i].id, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
     }
-}
 
-function assignPosition(player: Player, position: Position){
-    player.position.x = position.position.x * squadCreatorStore.value.settings.pitchSize.x;
-    player.position.y = position.position.y * squadCreatorStore.value.settings.pitchSize.y;
-    player.positionName = position.name;
-    player.positionShort = position.short;
+    if(scContent.value)
+        scContent.value.createPlaceholderPlayers();
 }
 
 // deletes the entire squad from screen and local storage
@@ -164,8 +155,10 @@ function eraseSquad(){
     Committer.setDefault();
     // to fill field again
     checkPlayerCount();
-    if(scContent.value)
+    if(scContent.value){
+        scContent.value.createPlaceholderPlayers();
         scContent.value.resize();
+    }
 }
 
 ////////////
@@ -177,7 +170,6 @@ function eraseSquad(){
 const mounted = ref(false);
 
 onMounted(()=>{
-
     resize();
     window.addEventListener('resize', resize);
 
@@ -185,6 +177,7 @@ onMounted(()=>{
     Committer.loadSquad();
     // add players to the first team, if necessary
     checkPlayerCount();
+    
     mounted.value = true;
 })
 
@@ -225,7 +218,6 @@ function resize(){
 #squad-creator{
     display: flex;
     flex-direction: column;
-    /* background: var(--dark-2); */
 }
 
 #sc-header{
@@ -249,10 +241,6 @@ function resize(){
 //////////////////////
 
 #sc-content{
-    /* box-shadow: 0 0 2px #000; */
-    /* border-radius: 4px; */
-/*     height: 100vh;
-    margin-bottom: 32px; */
     overflow: hidden;
 }
 

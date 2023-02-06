@@ -14,11 +14,13 @@
                 <HUD />
                 <!-- Show placeholders, when dragging a player and placeholders are active -->
                 <g v-show="showPlaceholders" id="sc-placeholder-players">
-                    <PlayerVue v-for="(val, key) in sqpp" :key="'placeholder-player-' + key" :player="val" :placeholder="true"/>
+                    <PlayerVue v-for="(val, key) in sqpp" :key="'placeholder-player-' + key" :player="val" :placeholder="true"
+                        v-on:mouse-enter="onMouseEnter" v-on:mouse-leave="onMouseLeave"/>
                 </g>
 
                 <PlayerVue v-for="(val, key) in squadCreatorStore.firstTeam" :key="'player-' + key" :player="val" :selected="selectedPlayer === val ? true : false"
-                v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD" v-on:drag-start="onPlayerDragStart" v-on:drag-end="onPlayerDragEnd"/>
+                v-on:select="selectPlayer" v-on:changePlayer="activatePlayerChangeHUD" v-on:drag-start="onPlayerDragStart" v-on:drag-end="onPlayerDragEnd"
+                v-on:mouse-enter="onMouseEnter" v-on:mouse-leave="onMouseLeave"/>
             </g>
 
         </svg>
@@ -143,7 +145,7 @@
 
 <script lang="ts" setup>
 import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
-import FormationList, { LockedPositions } from '@/components/helper/FormationList'
+import FormationList, { LockedPositions, Position } from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue-demi'
@@ -154,7 +156,7 @@ import { Committer } from '@/store/modules/squad_creator_committer'
 import GeneralSettings from './standard/settings/General.vue'
 import PitchSettings from './standard/settings/Pitch.vue'
 import PlayersSettings from './standard/settings/PlayerSettings.vue'
-import Player, { SquadCreatorPlaceholderPlayers } from '@/components/model/Player'
+import Player, { createPlaceholders, PlayerList } from '@/components/model/Player'
 import PlayerProperties from './standard/settings/PlayerProperties.vue'
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue'
 import Scrollarea from '@/components/misc/scrollarea.vue'
@@ -166,12 +168,36 @@ interface Props{
 const props = defineProps<Props>();
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
-const sqpp = ref(SquadCreatorPlaceholderPlayers);
+const sqpp = ref<PlayerList>({});
+createPlaceholderPlayers();
 
+// Create the placeholders to be displayed, when moving players around, depending on current players
+function createPlaceholderPlayers(){    
+    const ft: PlayerList = squadCreatorStore.value.firstTeam;
+    const ft_keys = Object.keys(ft);
+
+    // only create placeholders for empty positions
+    var possible_ph_keys = Object.keys(LockedPositions);
+    for(var pl in ft){        
+        const index = possible_ph_keys.indexOf(ft[pl].positionKey);
+        console.log("key: ", ft[pl].positionKey, "; index: ", index);
+        
+        if (index > -1) {
+            possible_ph_keys.splice(index, 1);
+        }
+    }
+    var phs: {[key: string]: Position} = {};
+    for(var ph in possible_ph_keys){
+        if(!(possible_ph_keys[ph] in LockedPositions)) continue;
+        phs[possible_ph_keys[ph]] = LockedPositions[possible_ph_keys[ph]];
+    }
+
+    sqpp.value = createPlaceholders(phs);
+    setSquadCreatorPlaceholderPlayersSize();
+}
 function setSquadCreatorPlaceholderPlayersSize(){
-    for(var id in sqpp.value){        
-        sqpp.value[id].position.x = LockedPositions[sqpp.value[id].positionName].position.x * squadCreatorStore.value.settings.pitchSize.x;
-        sqpp.value[id].position.y = LockedPositions[sqpp.value[id].positionName].position.y * squadCreatorStore.value.settings.pitchSize.y;
+    for(var id in sqpp.value){
+        sqpp.value[id].setPosition(sqpp.value[id].positionKey, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
     }
 }
 
@@ -182,6 +208,10 @@ const showScrollbar = ref<boolean>(false);
 const scrollOffset = ref<number>(0);
 const showHUD = ref<boolean>(false);
 const showPlaceholders = ref<boolean>(false);
+const hoveredPlayer = ref<Player | null>(null);
+const playerDrag = ref<Player | null>(null);
+const playerPositionBeforeDrag = ref<Vector2>(new Vector2());
+const playerPositionKeyBeforeDrag = ref<string>("");
 const selectedPlayer = ref<Player | null>(null);
 
 onMounted(()=>{
@@ -197,15 +227,9 @@ onUnmounted(()=>{
 // resize canvas at pitch size or orientation change, or when new squad is created
 const pitchSize = ref(store.state.squadCreatorStore.settings.pitchSize);
 const settings = ref(store.state.squadCreatorStore.settings);
-watch(pitchSize.value, (currentValue, oldValue) => {
-    resize();
-});
-watch(settings.value, (currentValue, oldValue) => {
-    resize();
-});
-watch(squadCreatorStore.value, (currentValue, oldValue) => {
-    resize();
-});
+watch(pitchSize.value, (currentValue, oldValue) => {resize();});
+watch(settings.value, (currentValue, oldValue) => {resize();});
+watch(squadCreatorStore.value, (currentValue, oldValue) => {resize();});
 
 function resize(){
     const content = document.getElementById('sc-content');
@@ -227,7 +251,8 @@ function resize(){
 }
 
 defineExpose({
-    resize
+    resize,
+    createPlaceholderPlayers
 });
 
 function changeTabState(newTab: TAB_STATE){
@@ -242,7 +267,6 @@ function selectPlayer(player: Player | null){
         squad.removeEventListener('mouseup', deselectPlayer);
         return;
     }
-    console.log('select player ', player);
     
     selectedPlayer.value = player;
 
@@ -263,17 +287,46 @@ function selectPlayer(player: Player | null){
 }
 
 function deselectPlayer(ev){
-    console.log("deselect");
-    selectedPlayer.value = null;
-    
+    selectedPlayer.value = null;    
 }
 
-// for placeholder display
+// for placeholder display and drop
 function onPlayerDragStart(player: Player){
+    playerPositionBeforeDrag.value = player.position.copy();
+    playerPositionKeyBeforeDrag.value = player.positionKey;
     showPlaceholders.value = true;
+    playerDrag.value = player;
 }
-function onPlayerDragEnd(player: Player){
+function onPlayerDragEnd(player: Player){    
+    if(showPlaceholders.value){
+        // to new position
+        if(hoveredPlayer.value !== null){
+            // switch positions
+            player.setPosition(hoveredPlayer.value.positionKey, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
+            hoveredPlayer.value.setPosition(playerPositionKeyBeforeDrag.value, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
+        }
+        // to pre-drag position
+        else{
+            if(playerPositionKeyBeforeDrag.value in LockedPositions)
+                player.setPosition(playerPositionKeyBeforeDrag.value, squadCreatorStore.value.settings.pitchSize.x, squadCreatorStore.value.settings.pitchSize.y);
+            else
+                player.setPositionFree(playerPositionBeforeDrag.value.copy());
+        }
+    }
+
     showPlaceholders.value = false;
+    playerDrag.value = null;
+    playerPositionKeyBeforeDrag.value = "";
+    playerPositionBeforeDrag.value = new Vector2();
+}
+
+function onMouseEnter(player: Player){
+    if(!playerDrag.value) return;
+    hoveredPlayer.value = player;
+}
+
+function onMouseLeave(player: Player){
+    hoveredPlayer.value = null;
 }
 
 const playerToChange = ref<Player | null>(null);
@@ -282,7 +335,6 @@ const addPlayerName = ref<string>('');
 function activatePlayerChangeHUD(player: Player){    
     showHUD.value = true;
     playerToChange.value = player;
-
 }
 
 function changePlayer(ev){

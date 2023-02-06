@@ -7,16 +7,41 @@ export default class Player extends CanvasObject{
     number: number = -1;                // -1 meaning no back number
     name: string = "Player " + this.id;
     avatar: Blob | string | null = null;
+    positionKey: string = "";           // Key of the position fo the placeholder list
     positionName: string = "";
     positionShort: string = "";
 
-    team: Team | null = null;           // the team this player belongs to
-    isGoalkeeper: boolean = false;      // necessary to differentiate, which jersey to use for this player
-    isDummy: boolean = false;           // if true, visualize players with standard dummy object
+    team: Team | null = null;           // Team this player belongs to
+    isGoalkeeper: boolean = false;      // Necessary to differentiate, which jersey to use for this player
+    isDummy: boolean = false;           // Visualize players with standard dummy object, if true
 
     constructor(position: Vector2 = new Vector2(), rotation: number = 0, team: Team | null = null){
         super(position, rotation);
         this.team = team;
+    }
+
+    // Sets the position by the given key value
+    // Position can also be scaled by the given values
+    setPosition(positionKey: string, xScale: number = 1.0, yScale: number = 1.0){
+        if(!(positionKey in LockedPositions)){
+            console.warn("Trying to set position, that doesn't exist!");
+            return;
+        }        
+        const pos = LockedPositions[positionKey];
+        this.positionKey = positionKey;
+        this.position = new Vector2(pos.position.x * xScale, pos.position.y * yScale);
+        this.positionName = pos.name;
+        this.positionShort = pos.short;
+        this.isGoalkeeper = pos.isGoalkeeper !== undefined ? pos.isGoalkeeper : false;
+    }
+    // Sets the position freely
+    // TODO: approximate position names
+    setPositionFree(position: Vector2, positionName: string = "", positionShort: string = "", isGoalkeeper: boolean = false){
+        this.positionKey = "";
+        this.position = position.copy();
+        this.positionName = positionName;
+        this.positionShort = positionShort;
+        this.isGoalkeeper = isGoalkeeper;
     }
 
     // returns a copy of this instance
@@ -37,20 +62,17 @@ export interface PlayerList{
     [key: string]: Player
 }
 
-function createPlaceholders(): PlayerList{
+export function createPlaceholders(positions: {[key: string]: Position}): PlayerList{
     var players: PlayerList = {};
-    const lpkeys = Object.keys(LockedPositions);
+    const lpkeys = Object.keys(positions);
 
     for(var key in lpkeys){
-        const val: Position = LockedPositions[lpkeys[key]];        
-        const pl: Player = new Player(val.position.copy(), 0, null);
-        pl.isGoalkeeper = (val.isGoalkeeper !== undefined ? val.isGoalkeeper : false);
+        const val: Position = positions[lpkeys[key]];        
+        const pl: Player = new Player();
+        pl.setPosition(lpkeys[key]);
         pl.isDummy = true;
-        pl.positionName = lpkeys[key];
         players[pl.id] = pl;
     }
  
     return players;
 }
-
-export const SquadCreatorPlaceholderPlayers = createPlaceholders(); 

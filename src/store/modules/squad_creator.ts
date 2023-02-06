@@ -136,6 +136,7 @@ export const mutations = {
                 number: pl.number,
                 positionX: pl.position.x,
                 positionY: pl.position.y,
+                positionKey: pl.positionKey,
                 positionName: pl.positionName,
                 positionShort: pl.positionShort,
                 isGoalkeeper: pl.isGoalkeeper,
@@ -248,6 +249,7 @@ export const mutations = {
             player = new Player(new Vector2(pl.positionX, pl.positionY));
             player.name = pl.name;
             player.number = pl.number;
+            player.positionKey = pl.positionKey;
             player.positionName = pl.positionName;
             player.positionShort = pl.positionShort;
             player.isGoalkeeper = pl.isGoalkeeper;

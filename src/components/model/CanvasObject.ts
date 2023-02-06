@@ -6,11 +6,11 @@ export interface EntityList{
 }
 
 export default class CanvasObject{
-    private _id: number;
-    get id(): number {
+    private _id: string;
+    get id(): string {
         return this._id;
     }
-    set id(value: number) {
+    set id(value: string) {
         this._id = value;
     }
 
@@ -20,7 +20,7 @@ export default class CanvasObject{
     rotation: number;
     
     constructor(position: Vector2 = new Vector2(), rotation: number = 0){
-        this._id = CanvasObject.objectCount++;
+        this._id = String(CanvasObject.objectCount++);
         this.position = position;
         this.rotation = rotation;
     }

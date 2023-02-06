@@ -5,7 +5,7 @@
 
     <!-- DUMMY/PLACEHOLDER PLAYER -->
     <g v-if="player.isDummy || placeholder" :id="`dummy-${player.id}`" :class="`sc-dummy ${placeholder ? 'placeholder' : ''}`" transform="translate(-4.25, -4.5)"
-        @mousedown="onMouseDown">
+        @mousedown="onMouseDown" @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
         <defs>
         <linearGradient id="linearGradient1375" x1="66.152" x2="71.374" y1="93.947" y2="93.947" gradientTransform="translate(-64.715 -89.557)" gradientUnits="userSpaceOnUse">
             <stop style="stop-color:#0b0b0b" offset="0"/>
@@ -70,7 +70,7 @@ import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
-import { onMounted, ref } from "vue-demi";
+import { ref } from "vue-demi";
 
 interface Props{
     player: Player,
@@ -82,7 +82,7 @@ const props = withDefaults(defineProps<Props>(), {
     selected: false,
     placeholder: false
 });
-const emit = defineEmits(['select', 'changePlayer', 'dragStart', 'dragEnd']);
+const emit = defineEmits(['select', 'changePlayer', 'dragStart', 'dragEnd', 'mouseEnter', 'mouseLeave']);
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 
@@ -147,14 +147,13 @@ function onMouseMove(ev){
         if(dragNewPlayerPos.y < -pitchSize.y/2) dragNewPlayerPos.y = -pitchSize.y/2
         else if(dragNewPlayerPos.y > pitchSize.y/2) dragNewPlayerPos.y = pitchSize.y/2
     }
-
-    props.player.position = dragNewPlayerPos;
+    props.player.setPositionFree(dragNewPlayerPos);
 }
 
 function onMouseUp(ev){
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
-    
+
     const pl = document.getElementById(`${props.player.isDummy ? 'dummy' : 'player'}-${props.player.id}`);
     if(pl !== undefined && (pl !== null)){
         pl.style.pointerEvents = 'all';
@@ -171,6 +170,14 @@ function onMouseUp(ev){
 
     emit('dragEnd', props.player);
     dragging = false;
+}
+
+function onMouseEnter(ev){
+    emit('mouseEnter', props.player);
+}
+
+function onMouseLeave(ev){
+    emit('mouseLeave', props.player);
 }
 
 function getCircleStyle(){
@@ -192,7 +199,7 @@ function getCircleStyle(){
         opacity: 0.2;
         transition-duration: 0.2s;
         &:hover{
-            opacity: 1.0;
+            opacity: 0.6;
         }
     }
 }
