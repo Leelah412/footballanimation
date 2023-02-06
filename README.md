@@ -2,19 +2,8 @@
 A simple tool for creating football squads, animations and scenarios.
 
 ## Project setup
-```
-npm install
-```
+Run `npm install` to install the dependencies and `npm run serve` to run the project.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[Screenshot 1](docs/screenshot1.PNG)
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Screenshot 2](docs/screenshot2.PNG)

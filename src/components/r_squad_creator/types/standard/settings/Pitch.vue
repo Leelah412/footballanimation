@@ -3,14 +3,14 @@
 <div class="content">
 
     <div class="item flex-column">
-        <label class="label-over" for="">PITCH ORIENTATION</label>
+        <label class="label-over" for="">ORIENTATION</label>
         <select class="input-select" name="" @change="ev => Committer.setPitchOrientation(ev.target.value)" :value="squadCreatorStore.settings.pitchOrientation">
             <option value="horizontal">Horizontal</option>
             <option value="vertical">Vertical</option>
         </select>
     </div>
     <div class="item flex-column">
-        <label class="label-over" for="">PITCH SIZE</label>
+        <label class="label-over" for="">SIZE</label>
         <div class="flex-row align-center" style="margin: 8px 0;">
             <div class="flex-column m-right">
                 <input class="input-bottom-line" style="text-align:center; font-size: var(--font-size-4);" type="number" min="60" max="90" @change="ev => Committer.setPitchHeight(ev.target.value)" :value="squadCreatorStore.settings.pitchSize.y">
