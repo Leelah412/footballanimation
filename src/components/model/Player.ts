@@ -1,4 +1,4 @@
-import { LockedPositions, Position } from "../helper/FormationList";
+import { LockedPositions, Position } from "../util/FormationList";
 import Vector2 from "../math/Vector2";
 import CanvasObject from "./CanvasObject";
 import Team from "./Team";

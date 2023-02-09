@@ -60,19 +60,19 @@
 </template>
 
 <script lang="ts" setup>
-import Player from '../model/Player';
-import PlayerVue from '../view/Player.vue';
-import CanvasObject, { EntityList } from '../model/CanvasObject';
+import Player from '@/components/model/Player';
+import PlayerVue from '@/components/view/Player.vue';
+import CanvasObject, { EntityList } from '@/components/model/CanvasObject';
 import { ref } from '@vue/reactivity';
-import PlayerProperties from '../view/PlayerProperties.vue';
-import Global from '../helper/Global';
-import Vector2 from '../math/Vector2';
-import Snapshot from '../model/Snapshot';
-import Settings from '../model/CanvasSettings';
+import PlayerProperties from '@/components/view/PlayerProperties.vue';
+import Global from '@/components/util/Global';
+import Vector2 from '@/components/math/Vector2';
+import Snapshot from '@/components/model/Snapshot';
+import Settings from '@/components/model/CanvasSettings';
 import { onMounted, onUnmounted } from '@vue/runtime-core';
-import { DropdownItem } from '../misc/dropdown-menu.vue';
+import { DropdownItem } from '@/components/misc/dropdown-menu.vue';
 import store from '@/store/index';
-import Pitch from '../view/Pitch.vue';
+import Pitch from '@/components/view/Pitch.vue';
 import { Committer } from '@/store/modules/editor_committer';
 
 interface Props{

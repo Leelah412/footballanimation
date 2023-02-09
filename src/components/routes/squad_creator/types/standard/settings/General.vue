@@ -99,7 +99,7 @@
 
 
 <script lang="ts" setup>
-import FormationList from "@/components/helper/FormationList";
+import FormationList from "@/components/util/FormationList";
 import Player from "@/components/model/Player";
 import store from "@/store";
 import { Committer } from "@/store/modules/squad_creator_committer";

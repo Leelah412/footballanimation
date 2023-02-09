@@ -29,7 +29,7 @@
 
 
 <script lang="ts" setup>
-import FormationList from "@/components/helper/FormationList";
+import FormationList from "@/components/util/FormationList";
 import store from "@/store";
 import { ref } from "@vue/reactivity";
 

@@ -146,7 +146,7 @@ import Player, { PlayerList } from '@/components/model/Player'
 import Team from '@/components/model/Team';
 import { ref } from '@vue/reactivity';
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue';
-import { SVG_SELECTION } from '@/components/helper/enums';
+import { SVG_SELECTION } from '@/components/util/enums';
 import { DropdownItem } from '@/components/misc/dropdown-menu.vue';
 import { Committer } from '@/store/modules/editor_committer';
 import store from '@/store/index';

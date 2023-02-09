@@ -1,6 +1,6 @@
-// list of preset formations with information about position vectors and names
+import Vector2 from "@/components/math/Vector2"
 
-import Vector2 from "../math/Vector2"
+// list of preset formations with information about position vectors and names
 
 export interface Position{
     id: string

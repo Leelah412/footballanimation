@@ -118,7 +118,7 @@
 
 
 <script lang="ts" setup>
-import { SVG_SELECTION } from '../helper/enums';
+import { SVG_SELECTION } from '@/components/util/enums';
 
 interface Props{
     selection: SVG_SELECTION

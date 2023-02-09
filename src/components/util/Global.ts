@@ -1,6 +1,4 @@
-import { Ref } from "vue";
-import Rect from "../math/Rect";
-import Vector2 from "../math/Vector2";
+import Vector2 from "@/components/math/Vector2";
 
 export enum EntityType {NONE, BALL, PLAYERHOME, PLAYERAWAY, LINE};
 

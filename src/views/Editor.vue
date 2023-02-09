@@ -50,36 +50,36 @@
 <script lang="ts" setup>
 
 import { ref } from "@vue/reactivity";
-import Vector2 from "../components/math/Vector2";
-import Rect from "../components/math/Rect";
-import CanvasObject, {EntityList} from "../components/model/CanvasObject";
-import Pitch from "../components/model/Pitch";
-import Player, { PlayerList } from "../components/model/Player";
-import PitchVue from "../components/view/Pitch.vue";
-import PlayerContainer from "../components/view/PlayerContainer.vue";
-import SnapshotEditor from "../components/view/SnapshotEditor.vue";
+import Vector2 from "@/components/math/Vector2";
+import Rect from "@/components/math/Rect";
+import CanvasObject, {EntityList} from "@/components/model/CanvasObject";
+import Pitch from "@/components/model/Pitch";
+import Player, { PlayerList } from "@/components/model/Player";
+import PitchVue from "@/components/view/Pitch.vue";
+import PlayerContainer from "@/components/view/PlayerContainer.vue";
+import SnapshotEditor from "@/components/view/SnapshotEditor.vue";
 import { onMounted, onUnmounted} from "@vue/runtime-core";
-import Global, { EntityType} from "../components/helper/Global";
-import PlayerVue from "../components/view/Player.vue";
-import PlayerProperties from "../components/view/PlayerProperties.vue";
-import CanvasVue from "../components/editor/Canvas.vue";
-import EntityToolbar from "../components/editor/EntityToolbar.vue";
-import EditorTools from "../components/editor/EditorTools.vue";
-import Snapshot from "../components/model/Snapshot";
-import Toolbar from "../components/editor/Toolbar.vue";
-import PropertyMenu from "../components/editor/PropertyMenu.vue";
-import Navbar from "../components/editor/Navbar.vue";
-import Statusbar from "../components/editor/Statusbar.vue";
+import Global, { EntityType} from "@/components/util/Global";
+import PlayerVue from "@/components/view/Player.vue";
+import PlayerProperties from "@/components/view/PlayerProperties.vue";
+import CanvasVue from "@/components/routes/editor/Canvas.vue";
+import EntityToolbar from "@/components/routes/editor/EntityToolbar.vue";
+import EditorTools from "@/components/routes/editor/EditorTools.vue";
+import Snapshot from "@/components/model/Snapshot";
+import Toolbar from "@/components/routes/editor/Toolbar.vue";
+import PropertyMenu from "@/components/routes/editor/PropertyMenu.vue";
+import Navbar from "@/components/routes/editor/Navbar.vue";
+import Statusbar from "@/components/routes/editor/Statusbar.vue";
 import SettingsVue from "@/components/view/property_menu/Settings.vue";
-import PropertyMenuList from "../components/model/PropertyMenuList";
-import PlayerListVue from "../components/view/property_menu/PlayerList.vue";
-import TeamSettings from "../components/view/property_menu/TeamSettings.vue";
-import Team from "../components/model/Team";
-import DropdownMenu, { DropdownItem } from "../components/misc/dropdown-menu.vue";
-import { IObject } from "../components/helper/enums";
+import PropertyMenuList from "@/components/model/PropertyMenuList";
+import PlayerListVue from "@/components/view/property_menu/PlayerList.vue";
+import TeamSettings from "@/components/view/property_menu/TeamSettings.vue";
+import Team from "@/components/model/Team";
+import DropdownMenu, { DropdownItem } from "@/components/misc/dropdown-menu.vue";
+import { IObject } from "@/components/util/enums";
 import store from "@/store/index";
 import { Committer } from "@/store/modules/editor_committer";
-import Properties from "../components/view/property_menu/Properties.vue";
+import Properties from "@/components/view/property_menu/Properties.vue";
 
 
 //////////////

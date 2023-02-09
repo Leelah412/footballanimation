@@ -42,10 +42,10 @@
 </template>
 
 <script lang="ts" setup>
-import Vector2 from "../math/Vector2";
-import Player from "../model/Player";
-import PitchVue from '@/components/routes/r_squad_creator/types/standard/Pitch.vue'
-import PlayerVue from '@/components/routes/r_squad_creator/types/standard/Player.vue'
+import Vector2 from "@/components/math/Vector2";
+import Player from "@/components/model/Player";
+import PitchVue from '@/components/routes/squad_creator/types/standard/Pitch.vue'
+import PlayerVue from '@/components/routes/squad_creator/types/standard/Player.vue'
 import { ref } from "@vue/reactivity";
 import { onMounted, onUnmounted } from "@vue/runtime-core";
 

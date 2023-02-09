@@ -21,11 +21,11 @@
 import { ref } from "@vue/reactivity";
 import { onUpdated, watch } from "@vue/runtime-core";
 import { extend } from "@vue/shared";
-import Global from "../helper/Global";
-import Vector2 from "../math/Vector2";
+import Global from "@/components/util/Global";
+import Vector2 from "@/components/math/Vector2";
 import dropdownMenuVue, { DropdownItem } from "../misc/dropdown-menu.vue";
-import Jersey from "../model/Jersey";
-import Player from "../model/Player";
+import Jersey from "@/components/model/Jersey";
+import Player from "@/components/model/Player";
 
 interface Props{
     player: Player

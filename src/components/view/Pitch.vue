@@ -144,8 +144,8 @@
 <script lang="ts" setup>
 import store from '@/store/index';
 import { ref } from '@vue/reactivity';
-import Vector2 from '../math/Vector2';
-import Pitch from '../model/Pitch';
+import Vector2 from '@/components/math/Vector2';
+import Pitch from '@/components/model/Pitch';
 
 // pitch size calculation based on real pitches
 //

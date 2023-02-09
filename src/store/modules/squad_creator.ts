@@ -1,5 +1,5 @@
-import { KeyPlayerStyleMap, PlayerStyle } from "@/components/helper/enums";
-import FormationList, { Formation, Position } from "@/components/helper/FormationList";
+import { KeyPlayerStyleMap, PlayerStyle } from "@/components/util/enums";
+import FormationList, { Formation, Position } from "@/components/util/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import Player, { PlayerList } from "@/components/model/Player";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";

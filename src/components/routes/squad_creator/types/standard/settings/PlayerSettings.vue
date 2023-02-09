@@ -39,7 +39,7 @@
 
 
 <script lang="ts" setup>
-import { PlayerStyle, KeyPlayerStyleMap } from "@/components/helper/enums";
+import { PlayerStyle, KeyPlayerStyleMap } from "@/components/util/enums";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
 import store from "@/store";
 import { Committer } from "@/store/modules/squad_creator_committer";

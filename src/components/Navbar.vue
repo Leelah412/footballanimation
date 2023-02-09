@@ -109,12 +109,11 @@
 
 
 <script lang="ts" setup>
-import API from "@/services/API";
 import Authentication from "@/services/Authentication";
 import store from "@/store";
 import { onUpdated, ref } from "@vue/runtime-core";
-import { SVG_SELECTION } from "./helper/enums";
-import SvgButtonSelection from "./misc/svg-button-selection.vue";
+import { SVG_SELECTION } from "@/components/util/enums";
+import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 
 const openUserMenu = ref<boolean>(false);
 

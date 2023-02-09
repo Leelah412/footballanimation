@@ -9,7 +9,7 @@
 
 <script lang="ts" setup>
 
-import Player from '../model/Player';
+import Player from '@/components/model/Player';
 import PlayerVue from './Player.vue';
 
 const props = defineProps({

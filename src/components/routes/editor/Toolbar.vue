@@ -15,7 +15,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "@vue/runtime-core";
-import { PropertyMenuListItem } from "../model/PropertyMenuList";
+import { PropertyMenuListItem } from "@/components/model/PropertyMenuList";
 
 interface Props{
     id: number

@@ -30,13 +30,13 @@
 
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
-import Vector2 from '../math/Vector2';
-import Player from '../model/Player';
-import Settings from '../model/CanvasSettings';
-import PlayerVue from '../view/Player.vue';
-import LineVue from '../view/CanvasObject/Line.vue';
-import { EntityType } from '../helper/Global';
-import Line from '../model/CanvasObject/Line';
+import Vector2 from '@/components/math/Vector2';
+import Player from '@/components/model/Player';
+import Settings from '@/components/model/CanvasSettings';
+import PlayerVue from '@/components/view/Player.vue';
+import LineVue from '@/components/view/CanvasObject/Line.vue';
+import { EntityType } from '@/components/util/Global';
+import Line from '@/components/model/CanvasObject/Line';
 import store from '@/store/index';
 
 interface Props{

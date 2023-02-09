@@ -50,7 +50,7 @@
 
 
 <script lang="ts" setup>
-import { SVG_SELECTION } from "@/components/helper/enums";
+import { SVG_SELECTION } from "@/components/util/enums";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import Authentication from "@/services/Authentication";
 import router from "@/router";

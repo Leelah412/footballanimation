@@ -144,8 +144,8 @@
 </template>
 
 <script lang="ts" setup>
-import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
-import FormationList, { LockedPositions, Position } from '@/components/helper/FormationList'
+import { PlayerStyle, SVG_SELECTION } from '@/components/util/enums'
+import FormationList, { LockedPositions, Position } from '@/components/util/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
 import Pitch from './standard/Pitch.vue'

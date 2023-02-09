@@ -66,8 +66,8 @@
 
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
-import { PropertyType } from '../helper/Global';
-import Pitch from '../model/Pitch';
+import { PropertyType } from '@/components/util/enums';
+import Pitch from '@/components/model/Pitch';
 
 interface Props{
     propertyType: PropertyType,

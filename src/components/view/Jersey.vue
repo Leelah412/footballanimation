@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts" setup>
-import Jersey from "../model/Jersey";
+import Jersey from "@/components/model/Jersey";
 
 
 interface Props{

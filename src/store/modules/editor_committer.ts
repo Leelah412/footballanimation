@@ -1,4 +1,4 @@
-import { EntityType } from "@/components/helper/Global";
+import { EntityType } from "@/components/util/Global";
 import CanvasObject, { EntityList } from "@/components/model/CanvasObject";
 import Match from "@/components/model/Match";
 import Player from "@/components/model/Player";

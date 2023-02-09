@@ -1,4 +1,4 @@
-import { PlayerStyle } from "@/components/helper/enums";
+import { PlayerStyle } from "@/components/util/enums";
 import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "..";

@@ -15,13 +15,13 @@
 
 <script lang="ts" setup>
 import { ref } from '@vue/reactivity';
-import Vector2 from '../math/Vector2';
-import CanvasObject, { EntityList } from '../model/CanvasObject';
-import Pitch from '../model/Pitch';
-import Player from '../model/Player';
-import Snapshot from '../model/Snapshot';
-import SnapshotEditor from '../view/SnapshotEditor.vue';
-import MatchEditor from '../view/MatchEditor.vue';
+import Vector2 from '@/components/math/Vector2';
+import CanvasObject, { EntityList } from '@/components/model/CanvasObject';
+import Pitch from '@/components/model/Pitch';
+import Player from '@/components/model/Player';
+import Snapshot from '@/components/model/Snapshot';
+import SnapshotEditor from '@/components/view/SnapshotEditor.vue';
+import MatchEditor from '@/components/view/MatchEditor.vue';
 
 interface Props{
     

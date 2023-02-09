@@ -87,7 +87,6 @@
 import { ref } from '@vue/reactivity';
 import store from '@/store/index';
 import { Committer } from '@/store/modules/editor_committer';
-import CanvasObject from '@/components/model/CanvasObject';
 
 // TODO: rename this file
 

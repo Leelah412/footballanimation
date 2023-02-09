@@ -54,7 +54,6 @@
 
 <script lang="ts" setup>
 import Player from '@/components/model/Player';
-import Team from '@/components/model/Team';
 import store from '@/store';
 import { Committer } from '@/store/modules/editor_committer';
 import { onUpdated, ref, watch } from '@vue/runtime-core';

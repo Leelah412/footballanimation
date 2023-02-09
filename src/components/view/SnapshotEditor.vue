@@ -73,8 +73,8 @@ import CanvasObject, { EntityList } from '../model/CanvasObject';
 import Player from '../model/Player';
 import Snapshot from '../model/Snapshot';
 import SvgButtonSelection from '../misc/svg-button-selection.vue';
-import { SVG_SELECTION } from '../helper/enums';
-import Vector2 from '../math/Vector2';
+import { SVG_SELECTION } from '@/components/util/enums';
+import Vector2 from '@/components/math/Vector2';
 
 interface Props {
     

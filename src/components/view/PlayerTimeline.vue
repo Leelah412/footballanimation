@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import Player from '../model/Player';
+import Player from '@/components/model/Player';
 
 
 const props = defineProps({

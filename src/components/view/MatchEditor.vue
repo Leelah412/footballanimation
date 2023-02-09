@@ -166,15 +166,13 @@
 
 <script lang="ts" setup>
 import store from '@/store';
-import { parse } from '@babel/parser';
-import Vector2 from '../math/Vector2';
-import CanvasObject, { EntityList } from '../model/CanvasObject';
-import Match, { Frame } from '../model/Match';
-import { ObjectTimeline, Timestamp } from '../model/Match';
-import Player from '../model/Player';
-import SvgButtonSelection from '../misc/svg-button-selection.vue';
-import { SVG_SELECTION } from '../helper/enums';
-import Rect from '../math/Rect';
+import Vector2 from '@/components/math/Vector2';
+import CanvasObject, { EntityList } from '@/components/model/CanvasObject';
+import Match, { Frame, ObjectTimeline, Timestamp } from '@/components/model/Match';
+import Player from '@/components/model/Player';
+import SvgButtonSelection from '@/components/misc/svg-button-selection.vue';
+import { SVG_SELECTION } from '@/components/util/enums';
+import Rect from '@/components/math/Rect';
 import { ref } from '@vue/reactivity';
 import { onMounted } from '@vue/runtime-core';
 

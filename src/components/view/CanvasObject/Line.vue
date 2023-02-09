@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
-import Line from "../../model/CanvasObject/Line";
+import Line from "@/components/model/CanvasObject/Line";
 
 const props = defineProps({
     line: {

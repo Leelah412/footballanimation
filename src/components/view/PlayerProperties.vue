@@ -13,7 +13,7 @@
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
-import Player from "../model/Player";
+import Player from "@/components/model/Player";
 
 
 const props = defineProps({
