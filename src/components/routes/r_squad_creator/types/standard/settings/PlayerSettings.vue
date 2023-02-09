@@ -43,7 +43,7 @@ import { PlayerStyle, KeyPlayerStyleMap } from "@/components/helper/enums";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
 import store from "@/store";
 import { Committer } from "@/store/modules/squad_creator_committer";
-import { ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 

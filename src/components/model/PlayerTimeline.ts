@@ -78,6 +78,7 @@ export default class ElementTimeline{
             this.timeline = {
                 time: current.time,
                 position: current.position,
+                rotation: 0,
 
                 prev: null,
                 next: current.next,
@@ -88,11 +89,10 @@ export default class ElementTimeline{
         }
 
         // traverse the timeline, until every next frame happens later than the current
-        var current: Frame | null = this.timeline;
+        var current: Frame = this.timeline;
         while(current.next !== null){
-            if(current.time > current.next.time){
-                current = current.next;
-            }
+            if(current.time <= current.next.time) break;
+            current = current.next;
         }
 
         // insert the new frame inbetween the current frame and the next frame
@@ -109,7 +109,5 @@ export default class ElementTimeline{
             next.prev = frame;
             frame.toNext = new PlayerPosition(frame.position, next.position);
         }
-
-
     }
 }

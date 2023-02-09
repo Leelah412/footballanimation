@@ -42,11 +42,12 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue-demi";
 import Vector2 from "../math/Vector2";
 import Player from "../model/Player";
-import PitchVue from '@/components/r_squad_creator/types/standard/Pitch.vue'
-import PlayerVue from '@/components/r_squad_creator/types/standard/Player.vue'
+import PitchVue from '@/components/routes/r_squad_creator/types/standard/Pitch.vue'
+import PlayerVue from '@/components/routes/r_squad_creator/types/standard/Player.vue'
+import { ref } from "@vue/reactivity";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
 
 const cardSize = ref<Vector2>(new Vector2(360, 360 * (9/16)));
 const pitchScale = ref(1);

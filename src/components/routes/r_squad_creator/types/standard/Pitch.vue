@@ -189,7 +189,7 @@
 
 <script lang="ts" setup>
 import store from '@/store';
-import { ref } from 'vue-demi';
+import { ref } from '@vue/reactivity';
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 

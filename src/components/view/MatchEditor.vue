@@ -167,7 +167,6 @@
 <script lang="ts" setup>
 import store from '@/store';
 import { parse } from '@babel/parser';
-import { onMounted, onUpdated, ref } from 'vue-demi';
 import Vector2 from '../math/Vector2';
 import CanvasObject, { EntityList } from '../model/CanvasObject';
 import Match, { Frame } from '../model/Match';
@@ -176,6 +175,8 @@ import Player from '../model/Player';
 import SvgButtonSelection from '../misc/svg-button-selection.vue';
 import { SVG_SELECTION } from '../helper/enums';
 import Rect from '../math/Rect';
+import { ref } from '@vue/reactivity';
+import { onMounted } from '@vue/runtime-core';
 
 const props = defineProps({
 })
@@ -423,7 +424,7 @@ var dragStart: number = 0;
 var dragPrev: number = 0;
 var leftMBDown: boolean = false;
 
-const hoveredObjectID = ref(-1);
+const hoveredObjectID = ref<String>("");
 const hoverPosition = ref(-1);
 var hoverPositionClientX = -1;          // helper for calculation hoverPosition, when moving mouse over frame
 
@@ -532,7 +533,7 @@ function onFrameMove(ev){
 // reset hover, when mouse leaves frame
 function onFrameLeave(){
     hoverPosition.value = -1;
-    hoveredObjectID.value = -1;
+    hoveredObjectID.value = "";
     hoverPositionClientX = -1;
 }
 

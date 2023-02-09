@@ -78,13 +78,13 @@
 
 
 <script lang="ts" setup>
-import { ref, watch } from "vue-demi"
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
 import CardSquad from "../components/r_user_profile/CardSquad.vue";
 import router from "@/router";
 import API, { domain } from "@/services/API";
 import store from "@/store";
+import { ref } from "@vue/reactivity";
 
 
 

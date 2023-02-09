@@ -1,5 +1,5 @@
 export default class SquadType{
-    name: string;
+    name: string = "";
 
     
     constructor(){

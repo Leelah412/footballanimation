@@ -31,7 +31,7 @@
 <script lang="ts" setup>
 import FormationList from "@/components/helper/FormationList";
 import store from "@/store";
-import { onMounted, ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 
 const squadCreatorStore = ref(store.state.squadCreatorStore);
 

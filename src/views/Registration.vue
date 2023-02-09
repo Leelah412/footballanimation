@@ -121,7 +121,7 @@
 
 <script lang="ts" setup>
 import Authentication from "@/services/Authentication";
-import { ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 
 enum STEP {BASIC, USER_INFO, DONE};
 var step = ref<STEP>(STEP.BASIC);

@@ -103,7 +103,7 @@ import FormationList from "@/components/helper/FormationList";
 import Player from "@/components/model/Player";
 import store from "@/store";
 import { Committer } from "@/store/modules/squad_creator_committer";
-import { ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 
 interface Props{
     formationChanged: ()=>void

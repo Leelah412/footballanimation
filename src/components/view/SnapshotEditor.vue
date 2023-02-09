@@ -75,7 +75,6 @@ import Snapshot from '../model/Snapshot';
 import SvgButtonSelection from '../misc/svg-button-selection.vue';
 import { SVG_SELECTION } from '../helper/enums';
 import Vector2 from '../math/Vector2';
-import func from 'vue-temp/vue-editor-bridge';
 
 interface Props {
     

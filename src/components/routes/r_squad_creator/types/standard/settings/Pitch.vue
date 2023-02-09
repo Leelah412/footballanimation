@@ -76,8 +76,8 @@
 <script lang="ts" setup>
 import store from "@/store";
 import { Committer } from "@/store/modules/squad_creator_committer";
-import { onMounted, ref } from "vue-demi";
-
+import { ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
 
 interface Props{
     

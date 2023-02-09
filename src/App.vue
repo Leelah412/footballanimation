@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import Navbar from "./components/Navbar.vue";
 import Authentication from "./services/Authentication";

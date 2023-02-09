@@ -20,7 +20,8 @@
 
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
 
 
 interface Props{

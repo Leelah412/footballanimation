@@ -62,8 +62,7 @@
 
 
 <script lang="ts" setup>
-import { ref } from "vue-demi";
-
+import { ref } from "@vue/reactivity";
 
 enum STEP {SEND_CODE, ENTER_CODE, NEW_PASSWORD};
 

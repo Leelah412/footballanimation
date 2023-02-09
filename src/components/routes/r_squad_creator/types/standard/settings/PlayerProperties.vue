@@ -28,7 +28,6 @@
 
 <script lang="ts" setup>
 import Player from "@/components/model/Player";
-import { ref } from "vue-demi";
 
 interface Props{
     player: Player

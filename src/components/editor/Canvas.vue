@@ -71,7 +71,6 @@ import Snapshot from '../model/Snapshot';
 import Settings from '../model/CanvasSettings';
 import { onMounted, onUnmounted } from '@vue/runtime-core';
 import { DropdownItem } from '../misc/dropdown-menu.vue';
-import func from 'vue-temp/vue-editor-bridge';
 import store from '@/store/index';
 import Pitch from '../view/Pitch.vue';
 import { Committer } from '@/store/modules/editor_committer';

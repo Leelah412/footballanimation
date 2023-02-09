@@ -66,17 +66,18 @@
 
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref, watch } from "vue-demi";
 import Pitch from "@/components/view/Pitch.vue";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import { SVG_SELECTION } from "@/components/helper/enums";
 import PlayerVue from "@/components/view/Player.vue";
 import Player, { PlayerList } from "@/components/model/Player";
-import SCStandard from "@/components/r_squad_creator/types/SCStandard.vue";
+import SCStandard from "@/components/routes/r_squad_creator/types/SCStandard.vue";
 import store from "@/store";
 import FormationList, { Formation, Position } from "@/components/helper/FormationList";
 import Vector2 from "@/components/math/Vector2";
 import { Committer } from "@/store/modules/squad_creator_committer";
+import { ref } from "@vue/reactivity";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
 
 const STORAGE = 'squadCreator';
 

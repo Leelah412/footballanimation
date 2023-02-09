@@ -112,7 +112,7 @@
 import API from "@/services/API";
 import Authentication from "@/services/Authentication";
 import store from "@/store";
-import { onUpdated, ref } from "vue-demi";
+import { onUpdated, ref } from "@vue/runtime-core";
 import { SVG_SELECTION } from "./helper/enums";
 import SvgButtonSelection from "./misc/svg-button-selection.vue";
 

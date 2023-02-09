@@ -70,7 +70,7 @@ import Vector2 from "@/components/math/Vector2";
 import Player from "@/components/model/Player";
 import store from "@/store";
 import CircleStyles from "@/components/model/SquadCreator/standard/CircleStyles";
-import { ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
 
 interface Props{
     player: Player,

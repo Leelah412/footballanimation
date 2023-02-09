@@ -44,7 +44,8 @@
 
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from "vue-demi";
+import { onMounted, onUnmounted } from "@vue/runtime-core";
+
 
 onMounted(()=>{
     document.addEventListener('scroll', scroll);

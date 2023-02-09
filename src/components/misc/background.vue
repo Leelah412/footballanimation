@@ -12,10 +12,9 @@
 
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue-demi";
+import { ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
 import Vector2 from "../math/Vector2";
-
-
 
 const points = ref<Vector2[]>([]);
 

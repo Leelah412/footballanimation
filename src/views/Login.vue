@@ -2,7 +2,6 @@
     
 <div id="login" class="global-padding">
 
-    
     <div class="center-container">
         <div class="header-standard-p-16">LOGIN</div>
 
@@ -52,11 +51,11 @@
 
 <script lang="ts" setup>
 import { SVG_SELECTION } from "@/components/helper/enums";
-import { ref } from "vue-demi";
 import SvgButtonSelection from "@/components/misc/svg-button-selection.vue";
 import Authentication from "@/services/Authentication";
 import router from "@/router";
 import store from "@/store";
+import { ref } from "@vue/reactivity";
 
 const username = ref<string>('');
 const password = ref<string>('');

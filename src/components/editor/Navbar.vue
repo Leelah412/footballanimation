@@ -147,12 +147,12 @@ import Authentication from '@/services/Authentication';
 import store from '@/store/index';
 import { Committer } from '@/store/modules/editor_committer';
 import { ref } from '@vue/reactivity';
-import { onUpdated } from 'vue-demi';
 import { SVG_SELECTION } from '../helper/enums';
 import {visualizationJersey} from '../model/Jersey';
 import Pitch, {visualizationPitch} from '../model/Pitch';
 import Jersey from '../view/Jersey.vue';
 import SvgButtonSelection from '../misc/svg-button-selection.vue';
+import { onUpdated } from '@vue/runtime-core';
 
 interface Props{
     

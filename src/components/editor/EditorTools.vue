@@ -19,7 +19,7 @@ import Vector2 from '../math/Vector2';
 import CanvasObject, { EntityList } from '../model/CanvasObject';
 import Pitch from '../model/Pitch';
 import Player from '../model/Player';
-import Snapshot, { EntitySnapshot } from '../model/Snapshot';
+import Snapshot from '../model/Snapshot';
 import SnapshotEditor from '../view/SnapshotEditor.vue';
 import MatchEditor from '../view/MatchEditor.vue';
 

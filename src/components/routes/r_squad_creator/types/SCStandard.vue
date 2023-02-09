@@ -148,7 +148,6 @@ import { PlayerStyle, SVG_SELECTION } from '@/components/helper/enums'
 import FormationList, { LockedPositions, Position } from '@/components/helper/FormationList'
 import Vector2 from '@/components/math/Vector2'
 import store from '@/store'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue-demi'
 import Pitch from './standard/Pitch.vue'
 import PlayerVue from './standard/Player.vue'
 import HUD from './standard/HUD.vue'
@@ -160,6 +159,8 @@ import Player, { createPlaceholders, PlayerList } from '@/components/model/Playe
 import PlayerProperties from './standard/settings/PlayerProperties.vue'
 import SvgButtonSelection from '@/components/misc/svg-button-selection.vue'
 import Scrollarea from '@/components/misc/scrollarea.vue'
+import { ref } from '@vue/reactivity'
+import { onMounted, onUnmounted, watch } from '@vue/runtime-core'
 
 interface Props{
     formationChanged: ()=>void
